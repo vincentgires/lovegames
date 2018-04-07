@@ -1,11 +1,13 @@
+require 'player'
 require 'utils'
 
 function love.load()
-    player_angle = 0
-    player_speed = .1
+    player.key_left = 'left'
+    player.key_right = 'right'
     
-    camera_angle = 0
-    camera_speed = 2
+    camera = {}
+    camera.angle = 0
+    camera.speed = 2
     
     segments = 5
 end
@@ -13,17 +15,11 @@ end
 function love.update(dt)
     
     -- camera
-    camera_angle = camera_angle + dt * camera_speed
+    camera.angle = camera.angle + dt * camera.speed
     
     -- player
-    
-    if love.keyboard.isDown('left') then
-        player_angle = player_angle - player_speed
-    end
-    
-    if love.keyboard.isDown('right') then
-        player_angle = player_angle + player_speed
-    end
+    player.update(dt)
+
 end
 
 function love.draw()
@@ -33,7 +29,7 @@ function love.draw()
     love.graphics.translate(width/2, height/2)
     
     -- camera
-    love.graphics.rotate(camera_angle)
+    love.graphics.rotate(camera.angle)
     
     -- background
     love.graphics.setColor(50, 50, 50)
@@ -52,11 +48,7 @@ function love.draw()
     love.graphics.rectangle('line', -5, -5, 10, 10)
     
     -- player
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.rotate(player_angle)
-    love.graphics.translate(0, -50)
-    local vertices = {-5, 0, 5, 0, 0, -10}
-    love.graphics.polygon('fill', vertices)
+    player.draw()
 end
 
 function love.keypressed(key)
