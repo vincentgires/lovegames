@@ -1,4 +1,4 @@
-require 'player'
+require 'utils'
 
 function love.load()
     player_angle = 0
@@ -13,7 +13,7 @@ end
 function love.update(dt)
     
     -- camera
---     camera_angle = camera_angle + dt * camera_speed
+    camera_angle = camera_angle + dt * camera_speed
     
     -- player
     
@@ -37,16 +37,12 @@ function love.draw()
     
     -- background
     love.graphics.setColor(50, 50, 50)
---     local slice = math.pi / 5
---     love.graphics.arc( "fill", 0, 0, 100, slice, (math.pi * 2) - slice*8)
     -- circle
-    local x, y, r = 0, 0, 100
-    for i = 1, 360, 360/segments do
-        local angle = i * math.pi / 180
-        local ptx, pty = x + r * math.cos( angle ), y + r * math.sin( angle )
-        local stars = {ptx, pty}
-        love.graphics.points(stars)
-    end
+    love.graphics.setPointSize(4)
+    local points = circle_points(100)
+    local points2 = circle_points(200)
+    love.graphics.points(points)
+    love.graphics.points(points2)
     
     love.graphics.setColor(100, 100, 100)
     love.graphics.circle("line", 0, 0, 40, 5)
