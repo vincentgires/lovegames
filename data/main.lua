@@ -13,13 +13,14 @@ function love.load()
 end
 
 function love.update(dt)
-    
     -- camera
-    camera.angle = camera.angle + dt * camera.speed
+--     camera.angle = camera.angle + dt * camera.speed
     
     -- player
     player.update(dt)
-
+    
+    -- force console output
+    io.flush()
 end
 
 function love.draw()
@@ -35,10 +36,12 @@ function love.draw()
     love.graphics.setColor(50, 50, 50)
     -- circle
     love.graphics.setPointSize(4)
-    local points = circle_points(100)
-    local points2 = circle_points(200)
-    love.graphics.points(points)
-    love.graphics.points(points2)
+--     local points = circle_points(100)
+--     local points2 = circle_points(200)
+--     love.graphics.points(points)
+--     love.graphics.points(points2)
+    local test = block_points()
+    love.graphics.points(test)
     
     love.graphics.setColor(100, 100, 100)
     love.graphics.circle("line", 0, 0, 40, 5)

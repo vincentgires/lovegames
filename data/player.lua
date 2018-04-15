@@ -1,13 +1,15 @@
 player = {}
 player.angle = 0
-player.speed = .1
+player.speed = 0.1
 
 function player:update(dt)
     if love.keyboard.isDown(player.key_left) then
+--         print('left')
         player.angle = player.angle - player.speed
     end
     
     if love.keyboard.isDown(player.key_right) then
+--         print('right')
         player.angle = player.angle + player.speed
     end
 end
