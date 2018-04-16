@@ -1,7 +1,10 @@
 require 'player'
 require 'utils'
+require 'block'
+require 'scene'
 
 function love.load()
+    player = Player:new()
     player.key_left = 'left'
     player.key_right = 'right'
     
@@ -17,7 +20,7 @@ function love.update(dt)
 --     camera.angle = camera.angle + dt * camera.speed
     
     -- player
-    player.update(dt)
+    player:update(dt)
     
     -- force console output
     io.flush()
@@ -47,7 +50,7 @@ function love.draw()
     love.graphics.rectangle('line', -5, -5, 10, 10)
     
     -- player
-    player.draw()
+    player:draw()
 end
 
 function love.keypressed(key)
