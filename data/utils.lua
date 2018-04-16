@@ -1,5 +1,5 @@
 function merge_tables(t1, t2)
-   for k,v in ipairs(t2) do
+   for k,v in pairs(t2) do
       table.insert(t1, v)
    end 
    return t1
@@ -29,13 +29,16 @@ function points_from_angle(radius, angle)
 end
 
 
-function block_points()
+function block_points(position)
     local points = {}
     
-    points = merge_tables(points, points_from_angle(100, 90))
-    points = merge_tables(points, points_from_angle(120, 90))
-    points = merge_tables(points, points_from_angle(100, 40))
-    points = merge_tables(points, points_from_angle(120, 40))
+    local slice = 360/segments
+    local angle = slice + slice * position
+    
+    points = merge_tables(points, points_from_angle(100, angle))
+    points = merge_tables(points, points_from_angle(120, angle))
+    points = merge_tables(points, points_from_angle(100, angle+slice))
+    points = merge_tables(points, points_from_angle(120, angle+slice))
     
     return points
 end

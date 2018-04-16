@@ -36,11 +36,7 @@ function love.draw()
     love.graphics.setColor(50, 50, 50)
     -- circle
     love.graphics.setPointSize(4)
---     local points = circle_points(100)
---     local points2 = circle_points(200)
---     love.graphics.points(points)
---     love.graphics.points(points2)
-    local test = block_points()
+    local test = block_points(1)
     love.graphics.points(test)
     
     love.graphics.setColor(100, 100, 100)
