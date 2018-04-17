@@ -1,5 +1,5 @@
 function merge_tables(t1, t2)
-   for k,v in pairs(t2) do
+   for k, v in pairs(t2) do
       table.insert(t1, v)
    end 
    return t1
@@ -24,7 +24,8 @@ function points_from_angle(radius, angle)
     local angle = angle * math.pi / 180
     local ptx = x + r * math.cos(angle)
     local pty = y + r * math.sin(angle)
-    table.insert(points, {ptx, pty})
+    table.insert(points, ptx)
+    table.insert(points, pty)
     return points
 end
 

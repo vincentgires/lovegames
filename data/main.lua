@@ -23,13 +23,12 @@ end
 
 function love.update(dt)
     -- camera
---     camera.angle = camera.angle + dt * camera.speed
+    camera.angle = camera.angle + dt * camera.speed
     
     -- player
-    player:update(dt)
---     for k, v in pairs(players) do
---         v:update(dt)
---     end
+    for k, v in pairs(players) do
+        v:update(dt)
+    end
     
     -- force console output
     io.flush()
@@ -59,10 +58,9 @@ function love.draw()
     love.graphics.rectangle('line', -5, -5, 10, 10)
     
     -- player
-    player:draw()
---     for k, v in pairs(players) do
---         v:draw()
---     end
+    for k, v in pairs(players) do
+        v:draw()
+    end
 end
 
 function love.keypressed(key)

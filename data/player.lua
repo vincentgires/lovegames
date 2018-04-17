@@ -1,6 +1,8 @@
 Player = {
     angle = 0,
-    speed = 0.1
+    speed = 5,
+    size = 5,
+    center = 70
 }
 
 function Player:new()
@@ -22,8 +24,17 @@ end
 
 function Player:draw()
     love.graphics.setColor(255, 255, 255)
-    love.graphics.rotate(self.angle)
-    love.graphics.translate(0, -50)
-    local vertices = {-5, 0, 5, 0, 0, -10}
-    love.graphics.polygon('fill', vertices)
+    local angle = self.angle * math.pi / 180 -- convert to radians
+    local points = {-self.size, -self.size, self.size*1.5, 0, -self.size, self.size}
+    local offset_points = points_from_angle(self.center, self.angle)
+    
+    for k, v in ipairs(points) do
+        if k%2 == 1 then
+            x = points[k] * math.cos(angle) - points[k+1] * math.sin(angle)
+            y = points[k+1] * math.cos(angle) + points[k] * math.sin(angle)
+            points[k] = x + offset_points[1]
+            points[k+1] = y + offset_points[2]
+        end
+    end
+    love.graphics.polygon('fill', points)
 end
