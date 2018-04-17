@@ -8,6 +8,12 @@ function love.load()
     player.key_left = 'left'
     player.key_right = 'right'
     
+    player2 = Player:new()
+    player2.key_left = 'q'
+    player2.key_right = 'd'
+    
+    players = {player, player2}
+    
     camera = {}
     camera.angle = 0
     camera.speed = 2
@@ -21,6 +27,9 @@ function love.update(dt)
     
     -- player
     player:update(dt)
+--     for k, v in pairs(players) do
+--         v:update(dt)
+--     end
     
     -- force console output
     io.flush()
@@ -51,6 +60,9 @@ function love.draw()
     
     -- player
     player:draw()
+--     for k, v in pairs(players) do
+--         v:draw(dt)
+--     end
 end
 
 function love.keypressed(key)
