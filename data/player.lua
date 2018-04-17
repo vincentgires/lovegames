@@ -6,10 +6,10 @@ Player = {
 }
 
 function Player:new()
-    local obj = {}
-    setmetatable(obj, self)
+    local instance = {}
+    setmetatable(instance, self)
     self.__index = self
-    return obj
+    return instance
 end
 
 function Player:update(dt)

@@ -29,16 +29,3 @@ function points_from_angle(radius, angle)
     return points
 end
 
-function block_points(position)
-    local points = {}
-    
-    local slice = 360/segments
-    local angle = slice + slice * position
-    
-    points = merge_tables(points, points_from_angle(100, angle))
-    points = merge_tables(points, points_from_angle(120, angle))
-    points = merge_tables(points, points_from_angle(100, angle+slice))
-    points = merge_tables(points, points_from_angle(120, angle+slice))
-    
-    return points
-end

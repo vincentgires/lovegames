@@ -23,8 +23,11 @@ end
 
 function love.update(dt)
     -- camera
-    camera.angle = camera.angle + dt * camera.speed
+--     camera.angle = camera.angle + dt * camera.speed
     
+    -- blocks
+    Block:update(dt)
+
     -- player
     for k, v in pairs(players) do
         v:update(dt)
@@ -45,11 +48,11 @@ function love.draw()
     
     -- background
     love.graphics.setColor(50, 50, 50)
-    -- circle
-    love.graphics.setPointSize(4)
-    local test = block_points(1)
-    love.graphics.points(test)
     
+    -- blocks
+    Block:draw()
+    
+    -- circle
     love.graphics.setColor(100, 100, 100)
     love.graphics.circle("line", 0, 0, 40, 5)
     
