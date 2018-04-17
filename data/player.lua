@@ -12,12 +12,10 @@ end
 
 function Player:update(dt)
     if love.keyboard.isDown(self.key_left) then
---         print('left')
         self.angle = self.angle - self.speed
     end
     
     if love.keyboard.isDown(self.key_right) then
---         print('right')
         self.angle = self.angle + self.speed
     end
 end

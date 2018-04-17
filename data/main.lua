@@ -61,7 +61,7 @@ function love.draw()
     -- player
     player:draw()
 --     for k, v in pairs(players) do
---         v:draw(dt)
+--         v:draw()
 --     end
 end
 

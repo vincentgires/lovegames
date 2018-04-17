@@ -28,7 +28,6 @@ function points_from_angle(radius, angle)
     return points
 end
 
-
 function block_points(position)
     local points = {}
     
