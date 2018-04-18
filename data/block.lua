@@ -1,7 +1,8 @@
 Block = {
     position = 1,
     size = 20,
-    offset = 600
+    offset = 600,
+    finished = false
 }
 
 function Block:new()
@@ -27,8 +28,7 @@ end
 function Block:update(dt)
     self.offset = self.offset - 5
     if self.offset <= 0 then
-        print('stop')
-        self = nil
+        self.finished = true
     end
 end
 

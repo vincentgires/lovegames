@@ -14,6 +14,9 @@ function love.load()
     
     players = {player, player2}
     
+    block = Block:new()
+    blocks = {block}
+    
     camera = {}
     camera.angle = 0
     camera.speed = 2
@@ -26,8 +29,21 @@ function love.update(dt)
 --     camera.angle = camera.angle + dt * camera.speed
     
     -- blocks
-    Block:update(dt)
-
+    for k, v in pairs(blocks) do
+        if v.finished == true then
+            table.remove(blocks, k)
+            
+            -- add new block
+            local position = math.random(1, segments)
+            local block = Block:new()
+            block.position = position
+            table.insert(blocks, block)
+        
+        else
+            v:update()
+        end
+    end
+    
     -- player
     for k, v in pairs(players) do
         v:update(dt)
@@ -50,7 +66,9 @@ function love.draw()
     love.graphics.setColor(50, 50, 50)
     
     -- blocks
-    Block:draw()
+    for k, v in pairs(blocks) do
+        v:draw()
+    end
     
     -- circle
     love.graphics.setColor(100, 100, 100)
