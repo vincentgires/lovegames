@@ -25,7 +25,7 @@ end
 function Player:draw()
     love.graphics.setColor(255, 255, 255)
     local angle = self.angle * math.pi / 180 -- convert to radians
-    local points = {-self.size, -self.size, self.size*1.5, 0, -self.size, self.size}
+    local points = {-self.size, -self.size, self.size, 0, -self.size, self.size}
     local offset_points = points_from_angle(self.center, self.angle)
     
     for k, v in ipairs(points) do

@@ -1,7 +1,6 @@
 require 'player'
 require 'utils'
 require 'block'
-require 'scene'
 
 function love.load()
     player = Player:new()
@@ -14,14 +13,22 @@ function love.load()
     
     players = {player, player2}
     
-    block = Block:new()
-    blocks = {block}
+    blocks = {}
+    for k, b in pairs(block_sequence_a.blocks) do
+        local block = Block:new()
+        block.position = b['position']
+        block.offset = b['offset']
+        table.insert(blocks, block)
+    end
     
-    camera = {}
-    camera.angle = 0
-    camera.speed = 2
+    camera = {
+        angle = 0,
+        speed = 2    
+    }
     
-    segments = 5
+    scene = {
+        segments = 5
+    }
 end
 
 function love.update(dt)
@@ -31,14 +38,7 @@ function love.update(dt)
     -- blocks
     for k, v in pairs(blocks) do
         if v.finished == true then
-            table.remove(blocks, k)
-            
-            -- add new block
-            local position = math.random(1, segments)
-            local block = Block:new()
-            block.position = position
-            table.insert(blocks, block)
-        
+            blocks[k] = nil
         else
             v:update()
         end

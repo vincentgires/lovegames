@@ -1,3 +1,0 @@
-scene = {
-    segments = 5,
-}
