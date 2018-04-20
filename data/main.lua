@@ -13,14 +13,6 @@ function love.load()
     
     players = {player, player2}
     
-    blocks = {}
-    for k, b in pairs(block_sequence_a.blocks) do
-        local block = Block:new()
-        block.position = b['position']
-        block.offset = b['offset']
-        table.insert(blocks, block)
-    end
-    
     camera = {
         angle = 0,
         speed = 2    
@@ -29,19 +21,27 @@ function love.load()
     scene = {
         segments = 5
     }
+    
+    blocks = get_blocks_from_sequence()
+    
 end
 
 function love.update(dt)
     -- camera
---     camera.angle = camera.angle + dt * camera.speed
+    camera.angle = camera.angle + dt * camera.speed
     
     -- blocks
-    for k, v in pairs(blocks) do
-        if v.finished == true then
-            blocks[k] = nil
-        else
-            v:update()
+    if table_length(blocks) ~= 0 then
+        for k, v in pairs(blocks) do
+            if v.finished == true then
+                blocks[k] = nil
+            else
+                v:update()
+            end
         end
+    else
+        -- create next pattern
+        blocks = get_blocks_from_sequence()
     end
     
     -- player

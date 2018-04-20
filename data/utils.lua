@@ -5,6 +5,15 @@ function merge_tables(t1, t2)
    return t1
 end
 
+function table_length(t)
+    local cpt = 0
+    for k, v in pairs(t) do
+        cpt = cpt + 1
+    end
+    return cpt
+end
+
+
 function circle_points(radius)
     local points = {}
     local x, y, r = 0, 0, radius

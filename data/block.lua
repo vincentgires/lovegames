@@ -39,18 +39,51 @@ function Block:draw()
     love.graphics.polygon('fill', points)
 end
 
-block_sequence_a = {
-    segments = 5,
-    blocks = {
-        {position = 1, offset = 0},
-        {position = 2, offset = 0},
-        {position = 3, offset = 0},
-        {position = 5, offset = 6},
-        {position = 4, offset = 6},
-    }
-}
-
-for k, block in pairs(block_sequence_a.blocks) do
-    print(block['offset'])
+function get_blocks_from_sequence(sequence)
+    local nbr = math.random(1, table_length(block_sequences))
+    print(table_length(block_sequences), nbr)
+    sequence = sequence or block_sequences[nbr] -- default pattern
+    
+    scene.segments = sequence.segments
+    
+    local blocks = {}
+    for k, b in pairs(sequence.blocks) do
+        local block = Block:new()
+        block.position = b['position']
+        block.offset = b['offset']
+        table.insert(blocks, block)
+    end
+    
+    return blocks
 end
 
+block_sequences = {
+    
+    {
+        segments = 5,
+        blocks = {
+            {position = 1, offset = 0},
+            {position = 2, offset = 0},
+            {position = 3, offset = 0},
+            {position = 5, offset = 6},
+            {position = 4, offset = 6},
+            {position = 6, offset = 9},
+            {position = 7, offset = 9},
+            {position = 3, offset = 9}
+        }
+    },
+
+    {
+        segments = 4,
+        blocks = {
+            {position = 1, offset = 0},
+            {position = 3, offset = 0},
+            {position = 5, offset = 4},
+            {position = 4, offset = 4},
+            {position = 6, offset = 9},
+            {position = 7, offset = 9},
+            {position = 3, offset = 9}
+        }
+    }
+
+}
