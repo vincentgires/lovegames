@@ -72,7 +72,7 @@ function love.draw()
     
     -- circle
     love.graphics.setColor(100, 100, 100)
-    love.graphics.circle("line", 0, 0, 40, 5)
+    love.graphics.circle("line", 0, 0, 40, scene.segments)
     
     -- center
     love.graphics.setColor(0, 255, 0)
