@@ -3,6 +3,8 @@ require 'utils'
 require 'block'
 
 function love.load()
+    love.window.setTitle('Super Polygon')
+    
     player = Player:new()
     player.key_left = 'left'
     player.key_right = 'right'
@@ -19,7 +21,8 @@ function love.load()
     }
     
     scene = {
-        segments = 5
+        segments = 5,
+        seconds = 0
     }
     
     blocks = get_blocks_from_sequence()
@@ -92,6 +95,14 @@ function love.keypressed(key)
 --     if key == 'right' then
 --         print('right')
 --     end
+
+    if key == 'f' then
+        if love.window.getFullscreen() then
+            love.window.setFullscreen(false, "desktop")
+        else
+            love.window.setFullscreen(true, "desktop")
+        end
+    end
     
     if key == 'escape' then
         love.event.quit()

@@ -2,7 +2,8 @@ Player = {
     angle = 0,
     speed = 5,
     size = 5,
-    center = 70
+    center = 70,
+    points = nil
 }
 
 function Player:new()
@@ -20,10 +21,12 @@ function Player:update(dt)
     if love.keyboard.isDown(self.key_right) then
         self.angle = self.angle + self.speed
     end
+    
+    self:update_points()
+    
 end
 
-function Player:draw()
-    love.graphics.setColor(255, 255, 255)
+function Player:update_points()
     local angle = self.angle * math.pi / 180 -- convert to radians
     local points = {-self.size, -self.size, self.size, 0, -self.size, self.size}
     local offset_points = points_from_angle(self.center, self.angle)
@@ -36,5 +39,14 @@ function Player:draw()
             points[k+1] = y + offset_points[2]
         end
     end
-    love.graphics.polygon('fill', points)
+    
+    self.points = points
+end
+
+
+function Player:draw()
+    love.graphics.setColor(255, 255, 255)
+    if self.points then
+        love.graphics.polygon('fill', self.points)
+    end
 end

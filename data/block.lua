@@ -3,7 +3,8 @@ Block = {
     offset = 0,
     size = 30,
     radius = 600,
-    finished = false
+    finished = false,
+    points = nil
 }
 
 function Block:new()
@@ -13,7 +14,7 @@ function Block:new()
     return instance
 end
 
-function Block:points(position)
+function Block:update_points(position)
     local points = {}
     local slice = 360/scene.segments
     local angle = slice + slice * position
@@ -23,7 +24,7 @@ function Block:points(position)
     points = merge_tables(points, points_from_angle(self.radius+self.size+(self.offset*self.size), angle+slice))
     points = merge_tables(points, points_from_angle(self.radius+self.size+(self.offset*self.size), angle))
     
-    return points
+    self.points = points
 end
 
 function Block:update(dt)
@@ -31,19 +32,21 @@ function Block:update(dt)
     if self.radius+(self.offset*self.size) <= 0 then
         self.finished = true
     end
+    
+    self:update_points(self.position)
 end
 
 function Block:draw()
     love.graphics.setPointSize(4)
-    local points = self:points(self.position)
-    love.graphics.polygon('fill', points)
+    if self.points then
+        love.graphics.polygon('fill', self.points)
+    end
 end
 
 function get_blocks_from_sequence(sequence)
     local nbr = math.random(1, table_length(block_sequences))
-    print(table_length(block_sequences), nbr)
     sequence = sequence or block_sequences[nbr] -- default pattern
-    
+--     
     scene.segments = sequence.segments
     
     local blocks = {}
