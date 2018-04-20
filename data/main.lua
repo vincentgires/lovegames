@@ -5,15 +5,17 @@ require 'block'
 function love.load()
     love.window.setTitle('Super Polygon')
     
-    player = Player:new()
-    player.key_left = 'left'
-    player.key_right = 'right'
+    local player1 = Player:new()
+    player1.key_left = 'left'
+    player1.key_right = 'right'
+    player1.color = {1, 0, 1}
     
-    player2 = Player:new()
+    local player2 = Player:new()
     player2.key_left = 'q'
     player2.key_right = 'd'
+    player2.color = {0, 1, 1}
     
-    players = {player, player2}
+    players = {player1, player2}
     
     camera = {
         angle = 0,
@@ -22,6 +24,7 @@ function love.load()
     
     scene = {
         segments = 5,
+        base_time = 0,
         seconds = 0
     }
     
@@ -30,6 +33,15 @@ function love.load()
 end
 
 function love.update(dt)
+    -- scene
+    print(dt)
+    -- seconds
+    scene.base_time = scene.base_time + dt
+    if scene.base_time > 1 then
+        scene.base_time = scene.base_time - 1
+        scene.seconds = scene.seconds + 1
+    end
+    
     -- camera
     camera.angle = camera.angle + dt * camera.speed
     
@@ -61,12 +73,8 @@ function love.draw()
     local height = love.graphics.getHeight()
     
     love.graphics.translate(width/2, height/2)
-    
     -- camera
     love.graphics.rotate(camera.angle)
-    
-    -- background
-    love.graphics.setColor(50, 50, 50)
     
     -- blocks
     for k, v in pairs(blocks) do
@@ -74,17 +82,23 @@ function love.draw()
     end
     
     -- circle
-    love.graphics.setColor(100, 100, 100)
+    love.graphics.setColor(1, 1, 1)
     love.graphics.circle("line", 0, 0, 40, scene.segments)
     
     -- center
-    love.graphics.setColor(0, 255, 0)
+    love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle('line', -5, -5, 10, 10)
     
     -- player
     for k, v in pairs(players) do
         v:draw()
     end
+    
+    -- text overlay
+    love.graphics.reset()
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.print(scene.seconds, 0, 0)
+    
 end
 
 function love.keypressed(key)

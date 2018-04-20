@@ -3,6 +3,7 @@ Player = {
     speed = 5,
     size = 5,
     center = 70,
+    color = {1, 1, 1},
     points = nil
 }
 
@@ -45,7 +46,7 @@ end
 
 
 function Player:draw()
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(self.color)
     if self.points then
         love.graphics.polygon('fill', self.points)
     end
