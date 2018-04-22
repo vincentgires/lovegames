@@ -42,6 +42,10 @@ function Player:update_points()
     end
     
     self.points = points
+    
+    if self.angle == 360 or self.angle == -360 then
+        self.angle = 0
+    end
 end
 
 

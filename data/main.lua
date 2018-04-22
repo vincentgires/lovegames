@@ -1,6 +1,7 @@
 require 'player'
 require 'utils'
 require 'block'
+require 'collision'
 
 function love.load()
     love.window.setTitle('Super Polygon')
@@ -15,7 +16,8 @@ function love.load()
     player2.key_right = 'd'
     player2.color = {0, 1, 1}
     
-    players = {player1, player2}
+--     players = {player1, player2}
+    players = {player1}
     
     camera = {
         angle = 0,
@@ -34,7 +36,7 @@ end
 
 function love.update(dt)
     -- scene
-    print(dt)
+    
     -- seconds
     scene.base_time = scene.base_time + dt
     if scene.base_time > 1 then
@@ -43,7 +45,7 @@ function love.update(dt)
     end
     
     -- camera
-    camera.angle = camera.angle + dt * camera.speed
+--     camera.angle = camera.angle + dt * camera.speed
     
     -- blocks
     if table_length(blocks) ~= 0 then
@@ -63,6 +65,9 @@ function love.update(dt)
     for k, v in pairs(players) do
         v:update(dt)
     end
+    
+    -- check collisions
+    check_collision()
     
     -- force console output
     io.flush()
