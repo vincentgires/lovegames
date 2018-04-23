@@ -18,7 +18,7 @@ function circle_points(radius)
     local points = {}
     local x, y, r = 0, 0, radius
     
-    for i = 1, 360, 360/scene.segments do
+    for i=1, 360, 360/scene.segments do
         local angle = i * math.pi / 180
         local ptx = x + r * math.cos(angle)
         local pty = y + r * math.sin(angle)

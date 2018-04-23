@@ -35,12 +35,12 @@ function Player:update_points()
     local points = {-s, -s, s, 0, -s, s}
     local offset_points = points_from_angle(self.center, self.angle)
     
-    for k, v in ipairs(points) do
-        if k%2 == 1 then
-            x = points[k] * math.cos(angle) - points[k+1] * math.sin(angle)
-            y = points[k+1] * math.cos(angle) + points[k] * math.sin(angle)
-            points[k] = x + offset_points[1]
-            points[k+1] = y + offset_points[2]
+    for i, p in ipairs(points) do
+        if i%2 == 1 then
+            x = points[i] * math.cos(angle) - points[i+1] * math.sin(angle)
+            y = points[i+1] * math.cos(angle) + points[i] * math.sin(angle)
+            points[i] = x + offset_points[1]
+            points[i+1] = y + offset_points[2]
         end
     end
     

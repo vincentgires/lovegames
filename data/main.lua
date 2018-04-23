@@ -49,23 +49,26 @@ function love.update(dt)
     camera.angle = camera.angle + dt * camera.speed
 
     -- blocks
-    print(table_length(blocks))
     if table_length(blocks) ~= 0 then
-        for k, v in pairs(blocks) do
-            if v.finished == true then
-                blocks[k] = nil
+        for i, block in pairs(blocks) do
+            if block.finished == true then
+                blocks[i] = nil
             else
-                v:update()
+                for i, player in pairs(players) do
+                    if player.failure == 0 then
+                        block:update()
+                    end
+                end
             end
         end
-    else
-        -- create next pattern
-        blocks = get_blocks_from_sequence()
+    elseif table_length(blocks) <= 5 then
+        -- add next pattern
+        blocks = merge_tables(blocks, get_blocks_from_sequence())
     end
     
     -- player
-    for k, v in pairs(players) do
-        v:update(dt)
+    for i, player in pairs(players) do
+        player:update(dt)
     end
     
     -- check collisions
@@ -84,8 +87,8 @@ function love.draw()
     love.graphics.rotate(camera.angle)
     
     -- blocks
-    for k, v in pairs(blocks) do
-        v:draw()
+    for i, block in pairs(blocks) do
+        block:draw()
     end
     
     -- circle
@@ -97,8 +100,8 @@ function love.draw()
     love.graphics.rectangle('line', -5, -5, 10, 10)
     
     -- player
-    for k, v in pairs(players) do
-        v:draw()
+    for i, player in pairs(players) do
+        player:draw()
     end
     
     -- text overlay

@@ -47,11 +47,10 @@ end
 function get_blocks_from_sequence(sequence)
     local nbr = math.random(1, table_length(block_sequences))
     sequence = sequence or block_sequences[nbr] -- default pattern
---     
     scene.segments = sequence.segments
     
     local blocks = {}
-    for k, b in pairs(sequence.blocks) do
+    for i, b in pairs(sequence.blocks) do
         local block = Block:new()
         block.position = b['position']
         block.offset = b['offset']
@@ -73,7 +72,13 @@ block_sequences = {
             {position = 4, offset = 6},
             {position = 6, offset = 9},
             {position = 7, offset = 9},
-            {position = 3, offset = 9}
+            {position = 3, offset = 9},
+            
+            {position = 5, offset = 11},
+            {position = 4, offset = 13},
+            {position = 6, offset = 13},
+            {position = 7, offset = 15},
+            {position = 3, offset = 17}
         }
     },
 
@@ -104,3 +109,21 @@ block_sequences = {
     }
 }
 ]]
+
+block_sequences = {
+    
+    {
+        segments = 5,
+        blocks = {
+            {position = 1, offset = 0},
+            {position = 2, offset = 0},
+            {position = 3, offset = 0},
+            {position = 5, offset = 6},
+            {position = 4, offset = 6},
+            {position = 6, offset = 9},
+            {position = 7, offset = 9},
+            {position = 3, offset = 9},
+
+        }
+    }
+}
