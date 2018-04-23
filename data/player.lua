@@ -1,10 +1,12 @@
 Player = {
+    name = 'Player',
     angle = 0,
     speed = 5,
     size = 5,
     center = 70,
     color = {1, 1, 1},
-    points = nil
+    points = nil,
+    failure = 0
 }
 
 function Player:new()
@@ -29,7 +31,8 @@ end
 
 function Player:update_points()
     local angle = self.angle * math.pi / 180 -- convert to radians
-    local points = {-self.size, -self.size, self.size, 0, -self.size, self.size}
+    local s = self.size
+    local points = {-s, -s, s, 0, -s, s}
     local offset_points = points_from_angle(self.center, self.angle)
     
     for k, v in ipairs(points) do

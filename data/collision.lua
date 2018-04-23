@@ -25,7 +25,7 @@ function segment_vs_segment(x1, y1, x2, y2, x3, y3, x4, y4)
 end
 
 function check_collision()
-    for k, player in pairs(players) do
+    for player_num, player in pairs(players) do
         if player.points then
             for i=1,2 do
                 -- front player shape /\
@@ -36,6 +36,7 @@ function check_collision()
                 
                 for l, block in pairs(blocks) do
                     if block.points then
+                        
                         -- bottom of the block \->_____<-/
                         local bx1 = block.points[i]
                         local bx2 = block.points[i+1]
@@ -44,8 +45,10 @@ function check_collision()
                         
                         local collide = segment_vs_segment(
                             px1, px2, py1, py2, bx1, bx2, by1, by2)
+                        
                         if collide then
-                            player.color = {1,0,0}
+                            table.insert(block.collided_players, player_num)
+                            player.failure = player.failure + 1
                         end
                     end
                 end

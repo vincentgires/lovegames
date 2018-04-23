@@ -27,7 +27,8 @@ function love.load()
     scene = {
         segments = 5,
         base_time = 0,
-        seconds = 0
+        seconds = 0,
+        speed = 5
     }
     
     blocks = get_blocks_from_sequence()
@@ -45,9 +46,10 @@ function love.update(dt)
     end
     
     -- camera
---     camera.angle = camera.angle + dt * camera.speed
+    camera.angle = camera.angle + dt * camera.speed
 
     -- blocks
+    print(table_length(blocks))
     if table_length(blocks) ~= 0 then
         for k, v in pairs(blocks) do
             if v.finished == true then
@@ -102,7 +104,12 @@ function love.draw()
     -- text overlay
     love.graphics.reset()
     love.graphics.setColor(1, 1, 1)
-    love.graphics.print(scene.seconds, 0, 0)
+    love.graphics.print("Timer: " .. scene.seconds, 0, 0)
+    for i, p in pairs(players) do
+        local y = 20
+        love.graphics.print(
+            'Player' .. i .. ' - Failure ' .. p.failure, 0, y+(i*50))
+    end
     
 end
 

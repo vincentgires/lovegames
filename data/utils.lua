@@ -20,7 +20,8 @@ function circle_points(radius)
     
     for i = 1, 360, 360/scene.segments do
         local angle = i * math.pi / 180
-        local ptx, pty = x + r * math.cos(angle), y + r * math.sin(angle)
+        local ptx = x + r * math.cos(angle)
+        local pty = y + r * math.sin(angle)
         table.insert(points, {ptx, pty})
     end
     

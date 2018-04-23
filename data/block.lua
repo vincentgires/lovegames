@@ -3,8 +3,9 @@ Block = {
     offset = 0,
     size = 30,
     radius = 600,
-    finished = false,
-    points = nil
+    collided_players = {},
+    points = nil,
+    finished = false
 }
 
 function Block:new()
@@ -28,7 +29,7 @@ function Block:update_points(position)
 end
 
 function Block:update(dt)
-    self.radius = self.radius - 5
+    self.radius = self.radius - scene.speed
     if self.radius+(self.offset*self.size) <= 0 then
         self.finished = true
     end
@@ -91,7 +92,7 @@ block_sequences = {
 
 }
 
---[[]]
+--[[
 block_sequences = {
     
     {
@@ -102,3 +103,4 @@ block_sequences = {
         }
     }
 }
+]]
