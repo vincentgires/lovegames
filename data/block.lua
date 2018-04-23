@@ -90,3 +90,15 @@ block_sequences = {
     }
 
 }
+
+--[[]]
+block_sequences = {
+    
+    {
+        segments = 5,
+        blocks = {
+            {position = 1, offset = 0},
+            {position = 6, offset = 9},
+        }
+    }
+}

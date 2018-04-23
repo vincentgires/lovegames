@@ -46,7 +46,7 @@ function love.update(dt)
     
     -- camera
 --     camera.angle = camera.angle + dt * camera.speed
-    
+
     -- blocks
     if table_length(blocks) ~= 0 then
         for k, v in pairs(blocks) do

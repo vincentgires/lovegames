@@ -26,31 +26,26 @@ end
 
 function check_collision()
     for k, player in pairs(players) do
-        for i=1,2 do
-            local px1 = player.points[i]
-            local px2 = player.points[i+1]
-            local py1 = player.points[i+2]
-            local py2 = player.points[i+3]
-            
-            local bx1 = nil
-            local bx2 = nil
-            local by1 = nil
-            local by2 = nil
-            
-            for l, block in pairs(blocks) do
+        if player.points then
+            for i=1,2 do
+                local px1 = player.points[i]
+                local px2 = player.points[i+1]
+                local py1 = player.points[i+2]
+                local py2 = player.points[i+3]
                 
-                if block.points then
-                    -- check only blocks that are not already below player
-                    if block.radius > 10 then -- WIP TEST
-                        bx1 = block.points[i]
-                        bx2 = block.points[i+1]
-                        by1 = block.points[i+2]
-                        by2 = block.points[i+3]
-                    
---                         print(bx1, bx2, by1, by2)
-                        print(segment_vs_segment(px1, px2, py1, py2, bx1, bx2, by1, by2))
+                for l, block in pairs(blocks) do
+                    if block.points then
+                        local bx1 = block.points[i]
+                        local bx2 = block.points[i+1]
+                        local by1 = block.points[i+2]
+                        local by2 = block.points[i+3]
+                        
+                        local collide = segment_vs_segment(
+                            px1, px2, py1, py2, bx1, bx2, by1, by2)
+                        if collide then
+                            player.color = {1,0,0}
+                        end
                     end
-                    
                 end
             end
         end
