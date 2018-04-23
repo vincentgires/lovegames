@@ -28,6 +28,7 @@ function check_collision()
     for k, player in pairs(players) do
         if player.points then
             for i=1,2 do
+                -- front player shape /\
                 local px1 = player.points[i]
                 local px2 = player.points[i+1]
                 local py1 = player.points[i+2]
@@ -35,6 +36,7 @@ function check_collision()
                 
                 for l, block in pairs(blocks) do
                     if block.points then
+                        -- bottom of the block \->_____<-/
                         local bx1 = block.points[i]
                         local bx2 = block.points[i+1]
                         local by1 = block.points[i+2]
