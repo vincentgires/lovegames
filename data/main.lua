@@ -54,11 +54,12 @@ function love.update(dt)
             if block.finished == true then
                 blocks[i] = nil
             else
-                for i, player in pairs(players) do
-                    if player.failure == 0 then
-                        block:update()
-                    end
-                end
+                block:update()
+                --for i, player in pairs(players) do
+                --    if player.failure == 0 then
+                --        block:update()
+                --    end
+                --end
             end
         end
     elseif table_length(blocks) <= 5 then
@@ -84,7 +85,7 @@ function love.draw()
     
     love.graphics.translate(width/2, height/2)
     -- camera
-    love.graphics.rotate(camera.angle)
+--     love.graphics.rotate(camera.angle)
     
     -- blocks
     for i, block in pairs(blocks) do
@@ -104,10 +105,17 @@ function love.draw()
         player:draw()
     end
     
+    -- ||test|| draw impact to debug wrong collision
+    local check, x, y = check_collision()
+    if check then
+        love.graphics.circle('fill', x, y, 10)
+    end
+    
+    
     -- text overlay
     love.graphics.reset()
     love.graphics.setColor(1, 1, 1)
-    love.graphics.print("Timer: " .. scene.seconds, 0, 0)
+    love.graphics.print('Timer: ' .. scene.seconds, 0, 0)
     for i, p in pairs(players) do
         local y = 20
         love.graphics.print(
