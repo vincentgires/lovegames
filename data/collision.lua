@@ -47,7 +47,6 @@ function check_collision()
                             px1, px2, py1, py2, bx1, bx2, by1, by2)
                         
                         if collide then
-                            print(px1, px2, py1, py2)
                             table.insert(block.collided_players, player_num)
                             player.failure = player.failure + 1
                             return true, x, y

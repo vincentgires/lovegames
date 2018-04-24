@@ -16,12 +16,13 @@ function love.load()
     player2.key_right = 'd'
     player2.color = {0, 1, 1}
     
---     players = {player1, player2}
-    players = {player1}
+    players = {player1, player2}
+--     players = {player1}
     
     camera = {
+        speed = 2,
         angle = 0,
-        speed = 2    
+        angle_timer = math.random(1,10),
     }
     
     scene = {
@@ -43,9 +44,17 @@ function love.update(dt)
     if scene.base_time > 1 then
         scene.base_time = scene.base_time - 1
         scene.seconds = scene.seconds + 1
+        camera.angle_timer = camera.angle_timer - 1
     end
     
     -- camera
+    
+    -- change direction and reset timer
+    if camera.angle_timer <= 0 then
+        camera.angle_timer = math.random(1,10)
+        camera.speed = camera.speed * -1
+    end
+    
     camera.angle = camera.angle + dt * camera.speed
 
     -- blocks
@@ -55,11 +64,6 @@ function love.update(dt)
                 blocks[i] = nil
             else
                 block:update()
-                --for i, player in pairs(players) do
-                --    if player.failure == 0 then
-                --        block:update()
-                --    end
-                --end
             end
         end
     elseif table_length(blocks) <= 5 then
@@ -84,8 +88,9 @@ function love.draw()
     local height = love.graphics.getHeight()
     
     love.graphics.translate(width/2, height/2)
+    
     -- camera
---     love.graphics.rotate(camera.angle)
+    love.graphics.rotate(camera.angle)
     
     -- blocks
     for i, block in pairs(blocks) do
