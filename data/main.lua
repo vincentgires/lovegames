@@ -23,6 +23,8 @@ function love.load()
         speed = 2,
         angle = 0,
         angle_timer = math.random(1,10),
+        shake_timer = 1/5,
+        shake_base_time = 0
     }
     
     scene = {
@@ -39,12 +41,19 @@ end
 function love.update(dt)
     -- scene
     
-    -- seconds
+    -- seconds timer
     scene.base_time = scene.base_time + dt
     if scene.base_time > 1 then
         scene.base_time = scene.base_time - 1
         scene.seconds = scene.seconds + 1
         camera.angle_timer = camera.angle_timer - 1
+    end
+    
+    -- camera shake timer
+    camera.shake_base_time = camera.shake_base_time + dt
+    if camera.shake_base_time > camera.shake_timer then
+        camera.shake_base_time = camera.shake_base_time - camera.shake_timer
+        print('scale frequence')
     end
     
     -- camera
@@ -90,7 +99,10 @@ function love.draw()
     love.graphics.translate(width/2, height/2)
     
     -- camera
-    love.graphics.rotate(camera.angle)
+--     love.graphics.rotate(camera.angle)
+--     if scene.base_time > 0.7 then
+--         love.graphics.scale(math.random(1, 2))
+--     end
     
     -- blocks
     for i, block in pairs(blocks) do
