@@ -14,7 +14,7 @@ function table_length(t)
 end
 
 function random_float(lower, greater)
-    return lower + math.random()  * (greater - lower)
+    return lower + math.random() * (greater - lower)
 end
 
 function circle_points(radius)

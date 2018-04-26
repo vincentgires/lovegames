@@ -1,3 +1,21 @@
+function get_random_blocks(sequence)
+    local nbr = math.random(1, table_length(block_groups))
+    sequence = sequence or block_groups[nbr] -- default pattern
+    scene.segments = sequence.segments
+    
+    local blocks = {}
+    for i, b in pairs(sequence.blocks) do
+        local block = Block:new()
+        block.position = b['position']
+        block.offset = b['offset']
+        table.insert(blocks, block)
+    end
+    
+    return blocks
+end
+
+-------------------------------------------------------------------------------
+
 Block = {
     position = 1,
     offset = 0,
@@ -44,23 +62,41 @@ function Block:draw()
     end
 end
 
-function get_blocks_from_sequence(sequence)
-    local nbr = math.random(1, table_length(block_sequences))
-    sequence = sequence or block_sequences[nbr] -- default pattern
-    scene.segments = sequence.segments
+
+-------------------------------------------------------------------------------
+
+block_sequence = {
+    blocks = {} -- {position, offset, segments}
+}
+
+function block_sequence:add_group(block_group)
+    local segments = block_group.segments
     
-    local blocks = {}
-    for i, b in pairs(sequence.blocks) do
-        local block = Block:new()
-        block.position = b['position']
-        block.offset = b['offset']
-        table.insert(blocks, block)
+    for k, b in pairs(block_group.blocks) do
+        local blocks = {
+            position = b.position,
+            offset = b.offset,
+            segments = segments
+        }
+        table.insert(self.blocks, block)
     end
-    
-    return blocks
 end
 
-block_sequences = {
+function block_sequence:update(dt)
+    self:add_group(block_groups[1])
+    print(table_length(self.blocks))
+end
+
+function block_sequence:draw()
+    
+end
+
+
+
+-------------------------------------------------------------------------------
+
+
+block_groups = {
     
     {
         segments = 5,
@@ -110,6 +146,7 @@ block_sequences = {
 }
 ]]
 
+--[[
 block_sequences = {
     
     {
@@ -127,3 +164,4 @@ block_sequences = {
         }
     }
 }
+]]

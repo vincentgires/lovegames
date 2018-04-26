@@ -2,6 +2,8 @@ require 'player'
 require 'utils'
 require 'block'
 require 'collision'
+scene = require 'scene'
+camera = require 'camera'
 
 function love.load()
     love.window.setTitle('Super Polygon')
@@ -19,33 +21,19 @@ function love.load()
     players = {player1, player2}
 --     players = {player1}
     
-    camera = {
-        speed = 2,
-        angle = 0,
-        angle_timer = math.random(1,10),
-        shake_timer = 1/5,
-        shake_base_time = 0
-    }
-    
-    scene = {
-        segments = 5,
-        base_time = 0,
-        seconds = 0,
-        speed = 5
-    }
-    
-    blocks = get_blocks_from_sequence()
+    blocks = get_random_blocks()
     
 end
 
 function love.update(dt)
-    -- scene
+    scene:update(dt)
+    camera:update(dt)
+    block_sequence:update(dt)
+    
+    -- camera
     
     -- seconds timer
-    scene.base_time = scene.base_time + dt
     if scene.base_time > 1 then
-        scene.base_time = scene.base_time - 1
-        scene.seconds = scene.seconds + 1
         camera.angle_timer = camera.angle_timer - 1
     end
     
@@ -55,8 +43,6 @@ function love.update(dt)
         camera.shake_base_time = camera.shake_base_time - camera.shake_timer
         print('scale frequence')
     end
-    
-    -- camera
     
     -- change direction and reset timer
     if camera.angle_timer <= 0 then
@@ -77,7 +63,7 @@ function love.update(dt)
         end
     elseif table_length(blocks) <= 5 then
         -- add next pattern
-        blocks = merge_tables(blocks, get_blocks_from_sequence())
+        blocks = merge_tables(blocks, get_random_blocks())
     end
     
     -- player
@@ -99,7 +85,7 @@ function love.draw()
     love.graphics.translate(width/2, height/2)
     
     -- camera
---     love.graphics.rotate(camera.angle)
+    love.graphics.rotate(camera.angle)
 --     if scene.base_time > 0.7 then
 --         love.graphics.scale(math.random(1, 2))
 --     end
