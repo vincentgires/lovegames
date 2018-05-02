@@ -6,7 +6,9 @@ Player = {
     center = 70,
     color = {1, 1, 1},
     points = nil,
-    failure = 0
+    failure = 0,
+    key_right = nil,
+    key_left = nil
 }
 
 function Player:new()

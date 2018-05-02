@@ -34,7 +34,7 @@ function check_collision()
                 local py1 = player.points[i+2]
                 local py2 = player.points[i+3]
                 
-                for l, block in pairs(blocks) do
+                for l, block in pairs(block_sequence.blocks) do
                     if block.points then
                         
                         -- bottom of the block \->_____<-/

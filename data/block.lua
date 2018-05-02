@@ -1,17 +1,17 @@
-function get_random_blocks(sequence)
+function get_random_group(group)
     local nbr = math.random(1, table_length(block_groups))
-    sequence = sequence or block_groups[nbr] -- default pattern
-    scene.segments = sequence.segments
+    local group = group or block_groups[nbr] -- default pattern
+    local segments = group.segments
     
     local blocks = {}
-    for i, b in pairs(sequence.blocks) do
+    for i, b in pairs(group.blocks) do
         local block = Block:new()
         block.position = b['position']
         block.offset = b['offset']
         table.insert(blocks, block)
     end
     
-    return blocks
+    return blocks, segments
 end
 
 -------------------------------------------------------------------------------
@@ -23,7 +23,8 @@ Block = {
     radius = 600,
     collided_players = {},
     points = nil,
-    finished = false
+    finished = false,
+    segments = nil -- WIP ??
 }
 
 function Block:new()
@@ -69,22 +70,22 @@ block_sequence = {
     blocks = {} -- {position, offset, segments}
 }
 
-function block_sequence:add_group(block_group)
-    local segments = block_group.segments
-    
-    for k, b in pairs(block_group.blocks) do
-        local blocks = {
-            position = b.position,
-            offset = b.offset,
-            segments = segments
-        }
+function block_sequence:add_group(group, segments)
+    for k, b in pairs(group) do
+        local block = Block:new()
+        block.position = b.position
+        block.offset = b.offset
+        block.segments = segments
         table.insert(self.blocks, block)
     end
 end
 
 function block_sequence:update(dt)
-    self:add_group(block_groups[1])
-    print(table_length(self.blocks))
+--     self:add_group(block_groups[1])
+--     print(table_length(self.blocks))
+
+    --scene.segments = sequence.segments
+
 end
 
 function block_sequence:draw()
@@ -97,7 +98,6 @@ end
 
 
 block_groups = {
-    
     {
         segments = 5,
         blocks = {
@@ -117,7 +117,6 @@ block_groups = {
             {position = 3, offset = 17}
         }
     },
-
     {
         segments = 4,
         blocks = {
@@ -130,12 +129,10 @@ block_groups = {
             {position = 3, offset = 9}
         }
     }
-
 }
 
 --[[
 block_sequences = {
-    
     {
         segments = 5,
         blocks = {
@@ -148,7 +145,6 @@ block_sequences = {
 
 --[[
 block_sequences = {
-    
     {
         segments = 5,
         blocks = {
