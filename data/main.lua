@@ -18,10 +18,12 @@ function love.load()
     player2.key_right = 'd'
     player2.color = {0, 1, 1}
     
-    players = {player1, player2}
---     players = {player1}
+--     players = {player1, player2}
+    players = {player1}
     
-    blocks = get_random_blocks()
+    blocks = {} -- WIP REMOVE
+    local group, segments = get_random_group()
+    block_sequence:add_group(group, segments)
     
 end
 
@@ -38,11 +40,11 @@ function love.update(dt)
     end
     
     -- camera shake timer
-    camera.shake_base_time = camera.shake_base_time + dt
+    --[[camera.shake_base_time = camera.shake_base_time + dt
     if camera.shake_base_time > camera.shake_timer then
         camera.shake_base_time = camera.shake_base_time - camera.shake_timer
         print('scale frequence')
-    end
+    end]]
     
     -- change direction and reset timer
     if camera.angle_timer <= 0 then
@@ -53,17 +55,19 @@ function love.update(dt)
     camera.angle = camera.angle + dt * camera.speed
 
     -- blocks
-    if table_length(blocks) ~= 0 then
-        for i, block in pairs(blocks) do
+    --print('seq length', table_length(block_sequence.blocks))
+    for i, block in pairs(block_sequence.blocks) do
+        if table_length(block_sequence.blocks) ~= 0 then
             if block.finished == true then
-                blocks[i] = nil
+                block_sequence.blocks[i] = nil
             else
-                block:update()
+                block:update(dt)
             end
         end
-    elseif table_length(blocks) <= 5 then
-        -- add next pattern
-        blocks = merge_tables(blocks, get_random_blocks())
+        if table_length(block_sequence.blocks) <= 5 then
+            local group, segments = get_random_group()
+            block_sequence:add_group(group, segments)
+        end
     end
     
     -- player
@@ -91,7 +95,7 @@ function love.draw()
 --     end
     
     -- blocks
-    for i, block in pairs(blocks) do
+    for i, block in pairs(block_sequence.blocks) do
         block:draw()
     end
     
