@@ -8,14 +8,13 @@ local scene = {
 
 function scene:update(dt)
     self.frame = self.frame + 1
-    
+
     self.base_time = self.base_time + dt
     if scene.base_time > 1 then
         self.base_time = self.base_time - 1
         self.seconds = self.seconds + 1
         camera.angle_timer = camera.angle_timer - 1
     end
-    
 end
 
 return scene

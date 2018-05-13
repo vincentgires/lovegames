@@ -2,7 +2,7 @@ function get_random_group(group)
     local nbr = math.random(1, table_length(block_groups))
     local group = group or block_groups[nbr] -- default pattern
     local segments = group.segments
-    
+
     local blocks = {}
     for i, b in pairs(group.blocks) do
         local block = Block:new()
@@ -10,7 +10,7 @@ function get_random_group(group)
         block.offset = b['offset']
         table.insert(blocks, block)
     end
-    
+
     return blocks, segments
 end
 
@@ -24,7 +24,7 @@ Block = {
     collided_players = {},
     points = nil,
     finished = false,
-    segments = nil -- WIP ??
+    segments = nil
 }
 
 function Block:new()
@@ -38,12 +38,20 @@ function Block:update_points(position)
     local points = {}
     local slice = 360/scene.segments
     local angle = slice + slice * position
-    
-    points = merge_tables(points, points_from_angle(self.radius+(self.offset*self.size), angle))
-    points = merge_tables(points, points_from_angle(self.radius+(self.offset*self.size), angle+slice))
-    points = merge_tables(points, points_from_angle(self.radius+self.size+(self.offset*self.size), angle+slice))
-    points = merge_tables(points, points_from_angle(self.radius+self.size+(self.offset*self.size), angle))
-    
+
+    points = merge_tables(
+        points, points_from_angle(
+            self.radius+(self.offset*self.size), angle))
+    points = merge_tables(
+        points, points_from_angle(
+            self.radius+(self.offset*self.size), angle+slice))
+    points = merge_tables(
+        points, points_from_angle(
+            self.radius+self.size+(self.offset*self.size), angle+slice))
+    points = merge_tables(
+        points, points_from_angle(
+            self.radius+self.size+(self.offset*self.size), angle))
+
     self.points = points
 end
 
@@ -52,7 +60,7 @@ function Block:update(dt)
     if self.radius+(self.offset*self.size) <= 0 then
         self.finished = true
     end
-    
+
     self:update_points(self.position)
 end
 
@@ -81,21 +89,35 @@ function block_sequence:add_group(group, segments)
 end
 
 function block_sequence:update(dt)
---     self:add_group(block_groups[1])
---     print(table_length(self.blocks))
+    for i, block in pairs(self.blocks) do
+        block:update(dt)
 
-    --scene.segments = sequence.segments
+        -- set scene segments with next block
+        scene.segments = self.blocks[1].segments
+
+        -- add next pattern
+        if table_length(self.blocks) <= 3 then
+            print('next pattern')
+            local group, segments = get_random_group()
+            self:add_group(group, segments)
+        end
+    end
+
+    -- remove finished blocks
+    for i, block in pairs(self.blocks) do
+        if block.finished == true then
+            self.blocks[i] = nil -- make sure it's removed
+            table.remove(self.blocks, i)
+        end
+    end
 
 end
 
 function block_sequence:draw()
-    
+
 end
 
-
-
 -------------------------------------------------------------------------------
-
 
 block_groups = {
     {
@@ -109,12 +131,6 @@ block_groups = {
             {position = 6, offset = 9},
             {position = 7, offset = 9},
             {position = 3, offset = 9},
-            
-            {position = 5, offset = 11},
-            {position = 4, offset = 13},
-            {position = 6, offset = 13},
-            {position = 7, offset = 15},
-            {position = 3, offset = 17}
         }
     },
     {
@@ -130,34 +146,3 @@ block_groups = {
         }
     }
 }
-
---[[
-block_sequences = {
-    {
-        segments = 5,
-        blocks = {
-            {position = 1, offset = 0},
-            {position = 6, offset = 9},
-        }
-    }
-}
-]]
-
---[[
-block_sequences = {
-    {
-        segments = 5,
-        blocks = {
-            {position = 1, offset = 0},
-            {position = 2, offset = 0},
-            {position = 3, offset = 0},
-            {position = 5, offset = 6},
-            {position = 4, offset = 6},
-            {position = 6, offset = 9},
-            {position = 7, offset = 9},
-            {position = 3, offset = 9},
-
-        }
-    }
-}
-]]
