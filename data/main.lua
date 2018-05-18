@@ -67,19 +67,21 @@ function love.draw()
     love.graphics.scale(camera.scale)
 
     -- background
-    love.graphics.setColor(0.1, 0.2, 0.3)
-    local points = {}
-    local angle = 0
-    local slice = 360/scene.segments
-    points = merge_tables(
-        points, points_from_angle(40, angle))
-    points = merge_tables(
-        points, points_from_angle(40, angle+slice))
-    points = merge_tables(
-        points, points_from_angle(900, angle+slice))
-    points = merge_tables(
-        points, points_from_angle(900, angle))
-    love.graphics.polygon('fill', points)
+    for segment=1,scene.segments do
+        love.graphics.setColor(0.1*segment, 0.2, 0.3)
+        local points = {}
+        local angle = (360/scene.segments)*segment
+        local slice = 360/scene.segments
+        points = merge_tables(
+            points, points_from_angle(40, angle))
+        points = merge_tables(
+            points, points_from_angle(40, angle+slice))
+        points = merge_tables(
+            points, points_from_angle(900, angle+slice))
+        points = merge_tables(
+            points, points_from_angle(900, angle))
+        love.graphics.polygon('fill', points)
+    end
     
     -- blocks
     love.graphics.setColor(1, 1, 1)

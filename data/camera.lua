@@ -13,8 +13,8 @@ function camera:update(dt)
     if self.shake_base_time > self.shake_timer then
         self.shake_base_time = self.shake_base_time - self.shake_timer
         -- self.scale = random_float(0.9, 1.1)
-        if self.scale <= 1.2 then
-            self.scale = self.scale + 0.1
+        if self.scale <= 1.1 then
+            self.scale = self.scale + 0.05
         else
             self.scale = 1
         end
