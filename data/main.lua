@@ -44,21 +44,6 @@ function love.update(dt)
         camera.angle_timer = camera.angle_timer - 1
     end
 
-    -- camera shake timer
-    --[[camera.shake_base_time = camera.shake_base_time + dt
-    if camera.shake_base_time > camera.shake_timer then
-        camera.shake_base_time = camera.shake_base_time - camera.shake_timer
-        print('scale frequence')
-    end]]
-
-    -- change direction and reset timer
-    if camera.angle_timer <= 0 then
-        camera.angle_timer = math.random(1,10)
-        camera.speed = camera.speed * -1
-    end
-
-    camera.angle = camera.angle + dt * camera.speed
-
     -- player
     for i, player in pairs(players) do
         player:update(dt)
@@ -79,9 +64,7 @@ function love.draw()
 
     -- camera
     love.graphics.rotate(camera.angle)
---     if scene.base_time > 0.7 then
---         love.graphics.scale(math.random(1, 2))
---     end
+    love.graphics.scale(camera.scale)
 
     -- blocks
     for i, block in pairs(block_sequence.blocks) do

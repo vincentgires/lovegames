@@ -20,7 +20,6 @@ function segment_vs_segment(x1, y1, x2, y2, x3, y3, x4, y4)
         return false
     end
 
-    -- point of intersection
     return true, x1 + t1*dx1, y1 + t1*dy1
 end
 
