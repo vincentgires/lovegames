@@ -3,7 +3,18 @@ local scene = {
     base_time = 0,
     seconds = 0,
     speed = 5,
-    frame = 0
+    frame = 0,
+    -- bg_colors = {
+    --     r = 0.5,
+    --     g = 0.5,
+    --     b = 0.5
+    -- }
+    bg_colors = {
+        r = random_float(0, 0.5),
+        g = random_float(0, 0.5),
+        b = random_float(0, 0.5)
+    },
+    bg_colors_switch = false
 }
 
 function scene:update(dt)
@@ -15,6 +26,8 @@ function scene:update(dt)
         self.seconds = self.seconds + 1
         camera.angle_timer = camera.angle_timer - 1
     end
+    
+    print(2 % 2)
 end
 
 return scene

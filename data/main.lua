@@ -37,8 +37,6 @@ function love.update(dt)
     camera:update(dt)
     block_sequence:update(dt)
 
-    -- camera
-
     -- seconds timer
     if scene.base_time > 1 then
         camera.angle_timer = camera.angle_timer - 1
@@ -68,7 +66,22 @@ function love.draw()
 
     -- background
     for segment=1,scene.segments do
-        love.graphics.setColor(0.1*segment, 0.2, 0.3)
+        local colors = {}
+        local r = scene.bg_colors.r
+        local g = scene.bg_colors.g
+        local b = scene.bg_colors.b
+        
+        if scene.segments % 2 == 0 then
+            if segment % 2 == 0 then
+                colors = {r, g, b}
+            else
+                colors = {r/2, g/2, b/2}
+            end
+        else
+            local range = scene.segments/segment
+            colors = {r/range, g/range, b/range}
+        end
+        love.graphics.setColor(colors)
         local points = {}
         local angle = (360/scene.segments)*segment
         local slice = 360/scene.segments
