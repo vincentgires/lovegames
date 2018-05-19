@@ -2,7 +2,6 @@ local scene = {
     segments = 5,
     base_time = 0,
     seconds = 0,
-    speed = 5,
     frame = 0,
     -- bg_colors = {
     --     r = 0.5,
@@ -25,9 +24,10 @@ function scene:update(dt)
         self.base_time = self.base_time - 1
         self.seconds = self.seconds + 1
         camera.angle_timer = camera.angle_timer - 1
+        self.bg_colors_switch = not self.bg_colors_switch
+        print(self.bg_colors_switch)
     end
-    
-    print(2 % 2)
+
 end
 
 return scene

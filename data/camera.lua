@@ -2,7 +2,7 @@ local camera = {
     speed = 2,
     angle = 0,
     angle_timer = math.random(1,10),
-    shake_timer = 1/3,
+    shake_timer = 1/4,
     shake_base_time = 0,
     scale = 1
 }

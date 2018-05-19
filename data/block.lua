@@ -17,6 +17,7 @@ end
 -------------------------------------------------------------------------------
 
 Block = {
+    speed = 5,
     position = 1,
     offset = 0,
     size = 30,
@@ -56,7 +57,7 @@ function Block:update_points(position)
 end
 
 function Block:update(dt)
-    self.radius = self.radius - scene.speed
+    self.radius = self.radius - self.speed
     if self.radius+(self.offset*self.size) <= 0 then
         self.finished = true
     end

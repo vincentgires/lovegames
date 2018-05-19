@@ -23,8 +23,8 @@ function love.load()
     player2.key_right = 'd'
     player2.color = {0, 1, 1}
 
-    --players = {player1, player2}
-    players = {player1}
+    players = {player1, player2}
+--     players = {player1}
 
     -- first pattern
     local group, segments = get_random_group()
@@ -73,12 +73,30 @@ function love.draw()
         
         if scene.segments % 2 == 0 then
             if segment % 2 == 0 then
-                colors = {r, g, b}
+                if scene.bg_colors_switch then
+                    colors = {r, g, b}
+                else
+                    colors = {r*0.85, g*0.85, b*0.85}
+                end
             else
-                colors = {r/2, g/2, b/2}
+                if scene.bg_colors_switch then
+                    colors = {r*0.85, g*0.85, b*0.85}
+                else
+                    colors = {r, g, b}
+                end
             end
         else
-            local range = scene.segments/segment
+            local shift = nil
+            if scene.bg_colors_switch then
+                if segment == scene.segments then
+                    shift = 1
+                else
+                    shift = segment + 1
+                end
+            else
+                shift = segment
+            end
+            local range = scene.segments/shift
             colors = {r/range, g/range, b/range}
         end
         love.graphics.setColor(colors)
