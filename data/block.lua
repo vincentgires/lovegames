@@ -14,7 +14,9 @@ function get_random_group(group)
     return blocks, segments
 end
 
+
 -------------------------------------------------------------------------------
+
 
 Block = {
     speed = 5,
@@ -28,12 +30,14 @@ Block = {
     segments = nil
 }
 
+
 function Block:new()
     local instance = {}
     setmetatable(instance, self)
     self.__index = self
     return instance
 end
+
 
 function Block:update_points(position)
     local points = {}
@@ -56,6 +60,7 @@ function Block:update_points(position)
     self.points = points
 end
 
+
 function Block:update(dt)
     self.radius = self.radius - self.speed
     if self.radius+(self.offset*self.size) <= 0 then
@@ -64,6 +69,7 @@ function Block:update(dt)
 
     self:update_points(self.position)
 end
+
 
 function Block:draw()
     love.graphics.setPointSize(4)
@@ -98,7 +104,6 @@ function block_sequence:update(dt)
 
         -- add next pattern
         if table_length(self.blocks) <= 3 then
-            print('next pattern')
             local group, segments = get_random_group()
             self:add_group(group, segments)
         end
@@ -114,11 +119,14 @@ function block_sequence:update(dt)
 
 end
 
+
 function block_sequence:draw()
 
 end
 
+
 -------------------------------------------------------------------------------
+
 
 block_groups = {
     {

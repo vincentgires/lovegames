@@ -7,9 +7,13 @@ Player = {
     color = {1, 1, 1},
     points = nil,
     failure = 0,
-    key_right = nil,
-    key_left = nil
+    key_left = 'left',
+    key_right = 'right',
+    move_left = true,
+    move_right = true,
+    hitbox_size = 10
 }
+
 
 function Player:new()
     local instance = {}
@@ -18,17 +22,45 @@ function Player:new()
     return instance
 end
 
+
 function Player:update(dt)
-    if love.keyboard.isDown(self.key_left) then
-        self.angle = self.angle - self.speed
+    self.move_left = true
+    self.move_right = true
+
+    -- check position of other players
+    for i, player in pairs(players) do
+        if self ~= player then
+            local player_x = points_from_angle(player.center, player.angle)[1]
+            local player_y = points_from_angle(player.center, player.angle)[2]
+
+            if love.keyboard.isDown(self.key_left) then
+                local x = points_from_angle(self.center, self.angle-self.speed)[1]
+                local y = points_from_angle(self.center, self.angle-self.speed)[2]
+                local collide = point_in_circle(x, y, player_x, player_y, self.hitbox_size)
+                if collide then
+                    self.move_left = false
+                end
+            elseif love.keyboard.isDown(self.key_right) then
+                local x = points_from_angle(self.center, self.angle+self.speed)[1]
+                local y = points_from_angle(self.center, self.angle+self.speed)[2]
+                local collide = point_in_circle(x, y, player_x, player_y, self.hitbox_size)
+                if collide then
+                    self.move_right = false
+                end
+            end
+        end
     end
 
-    if love.keyboard.isDown(self.key_right) then
+    if love.keyboard.isDown(self.key_left) and self.move_left then
+        self.angle = self.angle - self.speed
+    end
+    if love.keyboard.isDown(self.key_right) and self.move_right then
         self.angle = self.angle + self.speed
     end
 
     self:update_points()
 end
+
 
 function Player:update_points()
     local angle = self.angle * math.pi / 180 -- convert to radians
@@ -54,9 +86,25 @@ function Player:update_points()
     end
 end
 
+
 function Player:draw()
     love.graphics.setColor(self.color)
     if self.points then
         love.graphics.polygon('fill', self.points)
     end
+
+    -- draw sides for debug
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.line({self.points[1], self.points[2],
+                        self.points[3], self.points[4]})
+    love.graphics.setColor(0, 1, 0)
+    love.graphics.line({self.points[5], self.points[6],
+                        self.points[3], self.points[4]})
+
+    -- draw player collision hitbox for debug
+    love.graphics.setColor(0, 0, 1)
+    local x = points_from_angle(self.center, self.angle)[1]
+    local y = points_from_angle(self.center, self.angle)[2]
+    love.graphics.setColor(0, 1, 0)
+    love.graphics.circle('line', x, y, self.hitbox_size)
 end

@@ -1,9 +1,10 @@
 function merge_tables(t1, t2)
    for k, v in pairs(t2) do
       table.insert(t1, v)
-   end 
+   end
    return t1
 end
+
 
 function table_length(t)
     local cpt = 0
@@ -13,9 +14,11 @@ function table_length(t)
     return cpt
 end
 
+
 function random_float(lower, greater)
     return lower + math.random() * (greater - lower)
 end
+
 
 function circle_points(radius)
     local points = {}
@@ -30,6 +33,7 @@ function circle_points(radius)
 
     return points
 end
+
 
 function points_from_angle(radius, angle)
     local points = {}

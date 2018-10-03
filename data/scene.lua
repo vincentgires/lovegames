@@ -16,6 +16,7 @@ local scene = {
     bg_colors_switch = false
 }
 
+
 function scene:update(dt)
     self.frame = self.frame + 1
 
@@ -25,9 +26,9 @@ function scene:update(dt)
         self.seconds = self.seconds + 1
         camera.angle_timer = camera.angle_timer - 1
         self.bg_colors_switch = not self.bg_colors_switch
-        print(self.bg_colors_switch)
     end
 
 end
+
 
 return scene

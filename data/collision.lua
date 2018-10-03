@@ -23,7 +23,14 @@ function segment_vs_segment(x1, y1, x2, y2, x3, y3, x4, y4)
     return true, x1 + t1*dx1, y1 + t1*dy1
 end
 
-function check_collision()
+
+function point_in_circle(px, py, cx, cy, r)
+  local dx, dy = px - cx, py - cy
+  return dx*dx + dy*dy <= r*r
+end
+
+
+function check_block_collision()
     for player_num, player in pairs(players) do
         if player.points then
             for i=1,3,2 do

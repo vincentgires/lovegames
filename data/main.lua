@@ -1,14 +1,10 @@
---[[
-TODO
-
-]]
-
 require 'player'
 require 'utils'
 require 'block'
 require 'collision'
 scene = require 'scene'
 camera = require 'camera'
+
 
 function love.load()
     love.window.setTitle('Super Polygon')
@@ -23,14 +19,27 @@ function love.load()
     player2.key_right = 'd'
     player2.color = {0, 1, 1}
 
-    players = {player1, player2}
---     players = {player1}
+    local player3 = Player:new()
+    player3.key_left = 'j'
+    player3.key_right = 'l'
+    player3.color = {0, 0, 1}
+
+    -- players = {player1, player2}
+    players = {player1, player2, player3}
+    -- players = {player1}
+
+    -- set position
+    for i, player in pairs(players) do
+        local num = table_length(players)
+        player.angle = 360/(num/i)
+    end
 
     -- first pattern
     local group, segments = get_random_group()
     block_sequence:add_group(group, segments)
 
 end
+
 
 function love.update(dt)
     scene:update(dt)
@@ -48,11 +57,12 @@ function love.update(dt)
     end
 
     -- check collisions
-    check_collision()
+    check_block_collision()
 
     -- force console output
     io.flush()
 end
+
 
 function love.draw()
     local width = love.graphics.getWidth()
@@ -70,7 +80,7 @@ function love.draw()
         local r = scene.bg_colors.r
         local g = scene.bg_colors.g
         local b = scene.bg_colors.b
-        
+
         if scene.segments % 2 == 0 then
             if segment % 2 == 0 then
                 if scene.bg_colors_switch then
@@ -113,7 +123,7 @@ function love.draw()
             points, points_from_angle(900, angle))
         love.graphics.polygon('fill', points)
     end
-    
+
     -- blocks
     love.graphics.setColor(1, 1, 1)
     for i, block in pairs(block_sequence.blocks) do
@@ -122,7 +132,7 @@ function love.draw()
 
     -- circle
     love.graphics.setColor(1, 1, 1)
-    love.graphics.circle("line", 0, 0, 40, scene.segments)
+    love.graphics.circle('line', 0, 0, 40, scene.segments)
 
     -- center
     love.graphics.setColor(0, 1, 0)
@@ -134,7 +144,7 @@ function love.draw()
     end
 
     -- ||test|| draw impact to debug wrong collision
-    local check, x, y = check_collision()
+    local check, x, y = check_block_collision()
     if check then
         love.graphics.circle('fill', x, y, 10)
     end
@@ -150,11 +160,12 @@ function love.draw()
     end
 end
 
+
 function love.keypressed(key)
 --     if key == 'left' then
 --         print('left')
 --     end
--- 
+--
 --     if key == 'right' then
 --         print('right')
 --     end

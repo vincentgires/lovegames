@@ -7,6 +7,7 @@ local camera = {
     scale = 1
 }
 
+
 function camera:update(dt)
     -- camera scale
     self.shake_base_time = self.shake_base_time + dt
