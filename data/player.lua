@@ -9,8 +9,7 @@ Player = {
     failure = 0,
     key_left = 'left',
     key_right = 'right',
-    move_left = true,
-    move_right = true,
+    freeze = false,
     hitbox_size = 10
 }
 
@@ -24,38 +23,34 @@ end
 
 
 function Player:update(dt)
-    self.move_left = true
-    self.move_right = true
+    self.freeze = false
+    local direction = nil
 
-    -- check position of other players
-    for i, player in pairs(players) do
-        if self ~= player then
-            local player_x = points_from_angle(player.center, player.angle)[1]
-            local player_y = points_from_angle(player.center, player.angle)[2]
+    if love.keyboard.isDown(self.key_left) then
+        direction = -1
+    end
+    if love.keyboard.isDown(self.key_right) then
+        direction = 1
+    end
 
-            if love.keyboard.isDown(self.key_left) then
-                local x = points_from_angle(self.center, self.angle-self.speed)[1]
-                local y = points_from_angle(self.center, self.angle-self.speed)[2]
+    if direction then
+        -- check position of other players
+        for i, player in pairs(players) do
+            if self ~= player then
+                local player_x = points_from_angle(player.center, player.angle)[1]
+                local player_y = points_from_angle(player.center, player.angle)[2]
+                local x = points_from_angle(self.center, self.angle + (self.speed * direction))[1]
+                local y = points_from_angle(self.center, self.angle + (self.speed * direction))[2]
                 local collide = point_in_circle(x, y, player_x, player_y, self.hitbox_size)
                 if collide then
-                    self.move_left = false
-                end
-            elseif love.keyboard.isDown(self.key_right) then
-                local x = points_from_angle(self.center, self.angle+self.speed)[1]
-                local y = points_from_angle(self.center, self.angle+self.speed)[2]
-                local collide = point_in_circle(x, y, player_x, player_y, self.hitbox_size)
-                if collide then
-                    self.move_right = false
+                    self.freeze = true
                 end
             end
         end
-    end
 
-    if love.keyboard.isDown(self.key_left) and self.move_left then
-        self.angle = self.angle - self.speed
-    end
-    if love.keyboard.isDown(self.key_right) and self.move_right then
-        self.angle = self.angle + self.speed
+        if not self.freeze then
+            self.angle = self.angle + (self.speed * direction)
+        end
     end
 
     self:update_points()
