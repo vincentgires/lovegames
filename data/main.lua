@@ -2,11 +2,13 @@ require 'player'
 require 'utils'
 require 'block'
 require 'collision'
+require 'game'
 scene = require 'scene'
 camera = require 'camera'
 
 
 function love.load()
+    print(game)
     love.window.setTitle('Super Polygon')
 
     local player1 = Player:new()
