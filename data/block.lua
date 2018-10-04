@@ -1,5 +1,5 @@
 function get_random_group(group)
-    local nbr = math.random(1, table_length(block_groups))
+    local nbr = math.random(1, #block_groups)
     local group = group or block_groups[nbr] -- default pattern
     local segments = group.segments
 
@@ -103,7 +103,7 @@ function block_sequence:update(dt)
         scene.segments = self.blocks[1].segments
 
         -- add next pattern
-        if table_length(self.blocks) <= 3 then
+        if #self.blocks <= 3 then
             local group, segments = get_random_group()
             self:add_group(group, segments)
         end

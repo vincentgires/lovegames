@@ -6,15 +6,6 @@ function merge_tables(t1, t2)
 end
 
 
-function table_length(t)
-    local cpt = 0
-    for k, v in pairs(t) do
-        cpt = cpt + 1
-    end
-    return cpt
-end
-
-
 function random_float(lower, greater)
     return lower + math.random() * (greater - lower)
 end

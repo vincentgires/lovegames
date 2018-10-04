@@ -32,7 +32,7 @@ function love.load()
 
     -- set position
     for i, player in pairs(players) do
-        local num = table_length(players)
+        local num = #players
         player.angle = 360/(num/i)
     end
 
