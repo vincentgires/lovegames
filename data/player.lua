@@ -35,7 +35,7 @@ function Player:update(dt)
 
     if direction then
         -- check position of other players
-        if Game.multiplayer.collision then
+        if game.multiplayer.collision then
             for i, player in pairs(players) do
                 if self ~= player then
                     local player_x = points_from_angle(player.center, player.angle)[1]
@@ -99,7 +99,7 @@ function Player:draw()
                         self.points[3], self.points[4]})]]
 
     -- draw player collision hitbox for debug
-    if Game.debug.hitbox then
+    if game.debug.hitbox then
         love.graphics.setColor(0, 0, 1)
         local x = points_from_angle(self.center, self.angle)[1]
         local y = points_from_angle(self.center, self.angle)[2]

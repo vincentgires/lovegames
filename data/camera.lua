@@ -10,7 +10,7 @@ local camera = {
 
 function camera:update(dt)
     -- camera scale
-    if Game.camera.shake then
+    if game.camera.shake then
         self.shake_base_time = self.shake_base_time + dt
         if self.shake_base_time > self.shake_timer then
             self.shake_base_time = self.shake_base_time - self.shake_timer
@@ -29,7 +29,7 @@ function camera:update(dt)
         self.speed = self.speed * -1
     end
 
-    if Game.camera.rotation then
+    if game.camera.rotation then
         self.angle = self.angle + dt * self.speed
     end
 end

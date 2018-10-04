@@ -25,7 +25,7 @@ function scene:update(dt)
         self.base_time = self.base_time - 1
         self.seconds = self.seconds + 1
         camera.angle_timer = camera.angle_timer - 1
-        if Game.scene.swap_bg_colors then
+        if game.scene.swap_bg_colors then
             self.bg_colors_switch = not self.bg_colors_switch
         end
     end
