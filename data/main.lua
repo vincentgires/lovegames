@@ -160,11 +160,13 @@ function love.draw()
         -- text overlay
         love.graphics.reset()
         love.graphics.setColor(1, 1, 1)
+        local font = love.graphics.getFont()
         love.graphics.print('Timer: ' .. scene.seconds, 0, 0)
+        local y = 20
         for i, p in pairs(players) do
-            local y = 20
-            love.graphics.print(
-                'Player' .. i .. ' - Failure ' .. p.failure, 0, y+(i*50))
+            local text = 'Player' .. i .. ' - Failure ' .. p.failure
+            love.graphics.print(text, 0, y)
+            y = y + font:getHeight(text)
         end
     end
 end
