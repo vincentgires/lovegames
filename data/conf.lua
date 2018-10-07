@@ -9,6 +9,12 @@ font = {
     game = nil
 }
 
+function font:create_or_update()
+    self.title = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 35*window.scale)
+    self.menu = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 25*window.scale)
+    self.game = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 16*window.scale)
+end
+
 
 function love.conf(t)
     t.window.width = window.default_width

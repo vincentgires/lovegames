@@ -1,5 +1,5 @@
 function get_random_group(group)
-    local nbr = math.random(1, #block_groups)
+    local nbr = love.math.random(1, #block_groups)
     local group = group or block_groups[nbr] -- default pattern
     local segments = group.segments
 
@@ -130,7 +130,7 @@ end
 
 block_groups = {
     {
-        segments = 3,
+        segments = 5,
         blocks = {
             {position = 1, offset = 0},
             {position = 2, offset = 0},

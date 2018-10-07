@@ -1,7 +1,7 @@
 local camera = {
     speed = 2,
     angle = 0,
-    angle_timer = math.random(1,10),
+    angle_timer = love.math.random(1,10),
     shake_timer = 1/4,
     shake_base_time = 0,
     scale = 1
@@ -25,7 +25,7 @@ function camera:update(dt)
 
     -- change direction and reset timer
     if self.angle_timer <= 0 then
-        self.angle_timer = math.random(1,10)
+        self.angle_timer = love.math.random(1,10)
         self.speed = self.speed * -1
     end
 

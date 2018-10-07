@@ -8,14 +8,8 @@ scene = require 'scene'
 camera = require 'camera'
 
 
-function font:create_or_update()
-    self.menu = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 30*window.scale)
-    self.game = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 16*window.scale)
-end
-
-
 function love.load()
-    love.window.setTitle('Super Polygon')
+    love.window.setTitle('SUPER POLYGON')
     love.graphics.setDefaultFilter('nearest', 'nearest')
     font:create_or_update()
 
@@ -188,7 +182,6 @@ function love.keypressed(key)
         if love.window.getFullscreen() then
             love.window.setFullscreen(false, 'desktop')
         else
-            -- love.window.setFullscreen(true, 'exclusive')
             love.window.setFullscreen(true, 'desktop')
         end
     end

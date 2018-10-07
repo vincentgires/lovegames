@@ -1,3 +1,5 @@
+local TITLE = 'SUPER POLYGON'
+
 local ROOT_ITEMS = {
     'START GAME',
     'OPTIONS'
@@ -8,15 +10,19 @@ local OPTIONS_ITEMS = {
     'ROTATIONS',
     'SWAP COLORS',
     'MULTIPLAYER COLLISION'
-
 }
-
-local ITEM_SPACE = 10
-
 
 menu = {
     active = true
 }
+
+
+function menu:create(items)
+    for i, v in ipairs(items) do
+        print(i, v)
+    end
+   -- return ???
+end
 
 
 function draw_color_text()
@@ -25,32 +31,28 @@ end
 
 
 function menu:update(dt)
-
-    -- if love.keyboard.isDown('space') then
-    --     print('space')
-    -- end
-
 end
 
 
 function menu:draw()
     local width = love.graphics.getWidth()
     local height = love.graphics.getHeight()
+    love.graphics.setColor(1, .7, .3)
+
+    love.graphics.setFont(font.title)
+    love.graphics.print(
+        'SUPER POLYGON',
+        width/2 - font.title:getWidth(TITLE)/2,
+        height/100*10)
+
     love.graphics.setFont(font.menu)
-    local font = love.graphics.getFont()
-
---     local text = 'Press enter to start'
---     love.graphics.setColor(1, 1, 1)
---     love.graphics.print(
---         text,
---         width/2 - font:getWidth(text)/2,
---         height/2 - font:getHeight(text)/2)
-
-    for i=1, #ROOT_ITEMS do
+    for i=1, #OPTIONS_ITEMS do
+        local items_area = height/2
+        local items_y_step = items_area/#OPTIONS_ITEMS
         love.graphics.print(
-            ROOT_ITEMS[i],
-            width/2 - font:getWidth(ROOT_ITEMS[i])/2,
-            height/2 - font:getHeight(ROOT_ITEMS[i])/2 + ITEM_SPACE -- ????
+            OPTIONS_ITEMS[i],
+            width/2 - font.menu:getWidth(OPTIONS_ITEMS[i])/2,
+            (items_y_step * i) - items_y_step/#OPTIONS_ITEMS - font.menu:getHeight(OPTIONS_ITEMS[i]) + items_area/2
         )
     end
 end
