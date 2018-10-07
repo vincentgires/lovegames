@@ -8,16 +8,6 @@ scene = require 'scene'
 camera = require 'camera'
 
 
-window = {
-    scale = 1
-}
-
-
-font = {
-    menu = nil,
-    game = nil
-}
-
 function font:create_or_update()
     self.menu = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 30*window.scale)
     self.game = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 16*window.scale)
@@ -227,8 +217,6 @@ end
 
 
 function love.resize(w, h)
-    local default_x = 800
-    local default_y = 600
-    window.scale = w/default_x
+    window.scale = w/window.default_width
     font:create_or_update()
 end

@@ -1,6 +1,6 @@
-function segment_vs_segment(x1, y1, x2, y2, x3, y3, x4, y4)
-    -- https://2dengine.com/?p=intersections
+-- Usefull collision detection algorithms : https://2dengine.com/?p=intersections
 
+function segment_vs_segment(x1, y1, x2, y2, x3, y3, x4, y4)
     local dx1, dy1 = x2 - x1, y2 - y1
     local dx2, dy2 = x4 - x3, y4 - y3
     local dx3, dy3 = x1 - x3, y1 - y3

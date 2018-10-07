@@ -130,7 +130,7 @@ end
 
 block_groups = {
     {
-        segments = 5,
+        segments = 3,
         blocks = {
             {position = 1, offset = 0},
             {position = 2, offset = 0},
