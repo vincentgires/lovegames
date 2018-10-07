@@ -24,3 +24,8 @@ function game:start()
         b = random_float(0, 0.5)
     }
 end
+
+
+function game:reset()
+
+end

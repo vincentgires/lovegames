@@ -8,8 +8,26 @@ scene = require 'scene'
 camera = require 'camera'
 
 
+window = {
+    scale = 1
+}
+
+
+font = {
+    menu = nil,
+    game = nil
+}
+
+function font:create_or_update()
+    self.menu = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 30*window.scale)
+    self.game = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 16*window.scale)
+end
+
+
 function love.load()
     love.window.setTitle('Super Polygon')
+    love.graphics.setDefaultFilter('nearest', 'nearest')
+    font:create_or_update()
 
     local player1 = Player:new()
     player1.key_left = 'left'
@@ -73,16 +91,17 @@ end
 
 
 function love.draw()
+    local width = love.graphics.getWidth()
+    local height = love.graphics.getHeight()
+
     if menu.active then
         menu:draw()
 
     else
-        local width = love.graphics.getWidth()
-        local height = love.graphics.getHeight()
-
         love.graphics.translate(width/2, height/2)
 
         -- camera
+        love.graphics.scale(window.scale)
         love.graphics.rotate(camera.angle)
         love.graphics.scale(camera.scale)
 
@@ -160,14 +179,16 @@ function love.draw()
         -- text overlay
         love.graphics.reset()
         love.graphics.setColor(1, 1, 1)
-        local font = love.graphics.getFont()
-        love.graphics.print('Timer: ' .. scene.seconds, 0, 0)
+        love.graphics.setFont(font.game)
+        love.graphics.print('TIMER: ' .. scene.seconds, 0, 0)
         local y = 20
         for i, p in pairs(players) do
-            local text = 'Player' .. i .. ' - Failure ' .. p.failure
+            local text = 'PLAYER' .. i .. ' - FAILURE ' .. p.failure
             love.graphics.print(text, 0, y)
-            y = y + font:getHeight(text)
+            y = y + font.game:getHeight(text)
         end
+
+        love.graphics.reset()
     end
 end
 
@@ -175,9 +196,10 @@ end
 function love.keypressed(key)
     if key == 'f' then
         if love.window.getFullscreen() then
-            love.window.setFullscreen(false, "desktop")
+            love.window.setFullscreen(false, 'desktop')
         else
-            love.window.setFullscreen(true, "desktop")
+            -- love.window.setFullscreen(true, 'exclusive')
+            love.window.setFullscreen(true, 'desktop')
         end
     end
 
@@ -193,4 +215,20 @@ function love.keypressed(key)
             menu.active = true
         end
     end
+
+    if menu.active then
+        if key == 'up' then
+            print('up')
+        elseif key == 'down' then
+            print('down')
+        end
+    end
+end
+
+
+function love.resize(w, h)
+    local default_x = 800
+    local default_y = 600
+    window.scale = w/default_x
+    font:create_or_update()
 end
