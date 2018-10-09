@@ -31,30 +31,31 @@ end
 
 
 function check_block_collision()
-    for player_num, player in pairs(players) do
+    for player_num, player in ipairs(players) do
         if player.points then
             for i=1,3,2 do
-                -- front player shape /\
+                --[[ front player shape /\ ]]
                 local px1 = player.points[i]
                 local px2 = player.points[i+1]
                 local py1 = player.points[i+2]
                 local py2 = player.points[i+3]
 
-                for l, block in pairs(block_sequence.blocks) do
-                    if block.points then
-
-                        -- bottom of the block \->_____<-/
+                for _, block in pairs(block_sequence.blocks) do
+                    -- if block.points then
+                    -- if block.points and not has_value(block.collided_players, player_num) then
+                    if block.points and not block.collided_players[player_num] then
+                        --[[ bottom of the block \->_____<-/ ]]
                         local bx1 = block.points[1]
                         local bx2 = block.points[2]
                         local by1 = block.points[3]
                         local by2 = block.points[4]
-
                         local collide, x, y = segment_vs_segment(
                             px1, px2, py1, py2, bx1, bx2, by1, by2)
-
                         if collide then
                             table.insert(block.collided_players, player_num)
                             player.failure = player.failure + 1
+                            -- TODO: ne peut pas retuner true ! sinon pas de collision sur le prochain player
+                            -- faire que la fonction prenne plutot un player en parametre: check_block_collision(player)
                             return true, x, y
                         end
                     end

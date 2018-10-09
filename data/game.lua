@@ -3,6 +3,7 @@ game = {
     multiplayer = {
         collision = true
     },
+    speed = 5,
     camera = {
         rotation = true,
         shake = true

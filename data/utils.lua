@@ -6,6 +6,17 @@ function merge_tables(t1, t2)
 end
 
 
+-- really useful ? my_table[i] return nil if doesn't exist
+function has_value(t, value)
+    for i, value in ipairs(t) do
+        if value == val then
+            return true
+        end
+    end
+    return false
+end
+
+
 function random_float(lower, greater)
     return lower + love.math.random() * (greater - lower)
 end

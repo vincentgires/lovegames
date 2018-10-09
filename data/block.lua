@@ -19,7 +19,6 @@ end
 
 
 Block = {
-    speed = 5,
     position = 1,
     offset = 0,
     size = 30,
@@ -62,7 +61,7 @@ end
 
 
 function Block:update(dt)
-    self.radius = self.radius - self.speed
+    self.radius = self.radius - game.speed
     if self.radius+(self.offset*self.size) <= 0 then
         self.finished = true
     end

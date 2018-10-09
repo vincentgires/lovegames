@@ -6,6 +6,7 @@ local ROOT_ITEMS = {
 }
 
 local OPTIONS_ITEMS = {
+    'SPEED',
     'SHAKE',
     'ROTATIONS',
     'SWAP COLORS',
@@ -13,7 +14,8 @@ local OPTIONS_ITEMS = {
 }
 
 menu = {
-    active = true
+    active = true,
+    items = {}
 }
 
 
