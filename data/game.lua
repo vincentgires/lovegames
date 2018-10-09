@@ -12,7 +12,7 @@ game = {
         swap_bg_colors = true
     },
     debug = {
-        hithox = false
+        hithox = true
     }
 }
 

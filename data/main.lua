@@ -64,9 +64,6 @@ function love.update(dt)
         for i, player in pairs(players) do
             player:update(dt)
         end
-
-        -- check collisions
-        check_block_collision()
     end
 
     -- force console output
@@ -152,12 +149,6 @@ function love.draw()
         -- player
         for i, player in pairs(players) do
             player:draw()
-        end
-
-        -- ||test|| draw impact to debug wrong collision
-        local check, x, y = check_block_collision()
-        if check then
-            love.graphics.circle('fill', x, y, 10)
         end
 
         -- text overlay
