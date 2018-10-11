@@ -31,9 +31,9 @@ Block = {
 
 function Block:new()
     local instance = {}
+    instance.collided_players = {}
     setmetatable(instance, self)
     self.__index = self
-    self.collided_players = {}
     return instance
 end
 

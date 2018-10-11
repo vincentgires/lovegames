@@ -1,5 +1,6 @@
 Player = {
     name = 'Player',
+    number = 1,
     angle = 0,
     speed = 5,
     size = 5,
@@ -19,6 +20,8 @@ function Player:new()
     local instance = {}
     setmetatable(instance, self)
     self.__index = self
+    self.number = #players + 1
+    table.insert(players, instance)
     return instance
 end
 
@@ -92,14 +95,6 @@ function Player:draw()
         love.graphics.polygon('fill', self.points)
     end
 
-    -- draw sides for debug
-    --[[love.graphics.setColor(1, 0, 0)
-    love.graphics.line({self.points[1], self.points[2],
-                        self.points[3], self.points[4]})
-    love.graphics.setColor(0, 1, 0)
-    love.graphics.line({self.points[5], self.points[6],
-                        self.points[3], self.points[4]})]]
-
     -- draw player collision hitbox for debug
     if game.debug.hitbox then
         love.graphics.setColor(0, 0, 1)
@@ -107,13 +102,6 @@ function Player:draw()
         local y = points_from_angle(self.center, self.angle)[2]
         love.graphics.setColor(0, 1, 0)
         love.graphics.circle('line', x, y, self.hitbox_size)
-
-    end
-
-    -- draw impact to debug wrong collision
-    local check, x, y = self:check_block_collision()
-    if check then
-        love.graphics.circle('fill', x, y, 10)
     end
 end
 
@@ -130,8 +118,8 @@ function Player:check_block_collision()
             for _, block in pairs(block_sequence.blocks) do
 
                 -- check if the player has already hit the block
-                for player=1, #block.collided_players do
-                    if block.collided_players[player] == self then
+                for i, player in ipairs(block.collided_players) do
+                    if player.number == self.number then
                         goto continue
                     end
                 end

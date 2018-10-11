@@ -7,6 +7,8 @@ require 'menu'
 scene = require 'scene'
 camera = require 'camera'
 
+players = {}
+
 
 function love.load()
     love.window.setTitle('SUPER POLYGON')
@@ -23,14 +25,6 @@ function love.load()
     player2.key_right = 'd'
     player2.color = {0, 1, 1}
 
-    local player3 = Player:new()
-    player3.key_left = 'j'
-    player3.key_right = 'l'
-    player3.color = {0, 0, 1}
-
-    -- players = {player1, player2}
-    -- players = {player1, player2, player3}
-    players = {player1}
 
     -- set position
     for i, player in pairs(players) do
