@@ -15,12 +15,12 @@ function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     font:create_or_update()
 
-    local player1 = Player:new()
+    local player1 = Player:new('Player 1')
     player1.key_left = 'left'
     player1.key_right = 'right'
     player1.color = {1, 0, 1}
 
-    local player2 = Player:new()
+    local player2 = Player:new('Player 2')
     player2.key_left = 'q'
     player2.key_right = 'd'
     player2.color = {0, 1, 1}
@@ -157,7 +157,6 @@ function love.draw()
             y = y + font.game:getHeight(text)
         end
 
-        love.graphics.reset()
     end
 end
 

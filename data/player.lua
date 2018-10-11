@@ -16,8 +16,9 @@ Player = {
 }
 
 
-function Player:new()
+function Player:new(name)
     local instance = {}
+    instance.name = name
     setmetatable(instance, self)
     self.__index = self
     self.number = #players + 1
@@ -90,16 +91,21 @@ end
 
 
 function Player:draw()
+    local x = points_from_angle(self.center, self.angle)[1]
+    local y = points_from_angle(self.center, self.angle)[2]
+
+    -- shape
     love.graphics.setColor(self.color)
     if self.points then
         love.graphics.polygon('fill', self.points)
     end
 
-    -- draw player collision hitbox for debug
+    -- name
+    love.graphics.print(self.name, x, y)
+
+    -- collision hitbox for debug
     if game.debug.hitbox then
         love.graphics.setColor(0, 0, 1)
-        local x = points_from_angle(self.center, self.angle)[1]
-        local y = points_from_angle(self.center, self.angle)[2]
         love.graphics.setColor(0, 1, 0)
         love.graphics.circle('line', x, y, self.hitbox_size)
     end

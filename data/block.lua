@@ -10,7 +10,7 @@ function get_random_group(group)
         block.offset = b['offset']
         table.insert(blocks, block)
     end
-    print(#blocks)
+
     return blocks, segments
 end
 
