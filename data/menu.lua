@@ -13,6 +13,29 @@ local OPTIONS_ITEMS = {
     'MULTIPLAYER COLLISION'
 }
 
+local ITEM_TYPE = {
+    'ACTION',
+    'TEXTINPUT',
+    'COLORHUE'
+}
+
+-------------------------------------------------------------------------------
+
+MenuItem = {
+    active = false,
+    text = '',
+    subtype = nil
+}
+
+function MenuItem:new()
+    local instance = {}
+    setmetatable(instance, self)
+    self.__index = self
+    return instance
+end
+
+-------------------------------------------------------------------------------
+
 menu = {
     active = true,
     items = {}
@@ -20,10 +43,13 @@ menu = {
 
 
 function menu:create(items)
+    local itemstable = {}
     for i, v in ipairs(items) do
-        print(i, v)
+        local item = MenuItem:new()
+        item.text = v
+        table.insert(itemstable, item)
     end
-   -- return ???
+   return itemstable
 end
 
 
@@ -54,7 +80,12 @@ function menu:draw()
         love.graphics.print(
             OPTIONS_ITEMS[i],
             width/2 - font.menu:getWidth(OPTIONS_ITEMS[i])/2,
-            (items_y_step * i) - items_y_step/#OPTIONS_ITEMS - font.menu:getHeight(OPTIONS_ITEMS[i]) + items_area/2
+            ((items_y_step * i) - items_y_step/#OPTIONS_ITEMS
+             - font.menu:getHeight(OPTIONS_ITEMS[i]) + items_area/2)
         )
     end
 end
+
+
+local m = menu:create(OPTIONS_ITEMS)
+print(#m)
