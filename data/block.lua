@@ -10,7 +10,7 @@ function get_random_group(group)
         block.offset = b['offset']
         table.insert(blocks, block)
     end
-
+    print(#blocks)
     return blocks, segments
 end
 
@@ -23,7 +23,6 @@ Block = {
     offset = 0,
     size = 30,
     radius = 600,
-    collided_players = {},
     points = nil,
     finished = false,
     segments = nil
@@ -34,6 +33,7 @@ function Block:new()
     local instance = {}
     setmetatable(instance, self)
     self.__index = self
+    self.collided_players = {}
     return instance
 end
 
@@ -71,7 +71,7 @@ end
 
 
 function Block:draw()
-    love.graphics.setPointSize(4)
+    -- love.graphics.setPointSize(4)
     if self.points then
         love.graphics.polygon('fill', self.points)
     end
@@ -102,7 +102,8 @@ function block_sequence:update(dt)
         scene.segments = self.blocks[1].segments
 
         -- add next pattern
-        if #self.blocks <= 3 then
+        -- if #self.blocks <= 3 then
+        if #self.blocks <= 1 then
             local group, segments = get_random_group()
             self:add_group(group, segments)
         end
@@ -138,7 +139,7 @@ block_groups = {
             {position = 4, offset = 6},
             {position = 6, offset = 9},
             {position = 7, offset = 9},
-            {position = 3, offset = 9},
+            {position = 3, offset = 9}
         }
     },
     {

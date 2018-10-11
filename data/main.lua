@@ -29,8 +29,8 @@ function love.load()
     player3.color = {0, 0, 1}
 
     -- players = {player1, player2}
-    players = {player1, player2, player3}
-    -- players = {player1}
+    -- players = {player1, player2, player3}
+    players = {player1}
 
     -- set position
     for i, player in pairs(players) do

@@ -10,7 +10,8 @@ Player = {
     key_left = 'left',
     key_right = 'right',
     freeze = false,
-    hitbox_size = 10
+    hitbox_size = 10,
+    collide = nil
 }
 
 
@@ -127,6 +128,15 @@ function Player:check_block_collision()
             local py2 = self.points[i+3]
 
             for _, block in pairs(block_sequence.blocks) do
+
+                -- check if the player has already hit the block
+                for player=1, #block.collided_players do
+                    if block.collided_players[player] == self then
+                        goto continue
+                    end
+                end
+
+                -- if block.points and not self.collide then
                 if block.points then
                     -- bottom of the block \->_____<-/
                     local bx1 = block.points[1]
@@ -136,11 +146,13 @@ function Player:check_block_collision()
                     local collide, x, y = segment_vs_segment(
                         px1, px2, py1, py2, bx1, bx2, by1, by2)
                     if collide then
-                        -- table.insert(block.collided_players, player_num)
+                        table.insert(block.collided_players, self)
+                        -- self.collide = true
                         self.failure = self.failure + 1
                         return true, x, y
                     end
                 end
+                ::continue::
             end
         end
     end
