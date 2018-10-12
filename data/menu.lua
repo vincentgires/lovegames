@@ -1,38 +1,45 @@
-local TITLE = 'SUPER POLYGON'
-
-local ROOT_ITEMS = {
-    'START GAME',
-    'OPTIONS'
-}
-
-local OPTIONS_ITEMS = {
-    'SPEED',
-    'SHAKE',
-    'ROTATIONS',
-    'SWAP COLORS',
-    'MULTIPLAYER COLLISION'
-}
-
-local ITEM_TYPE = {
-    'ACTION',
-    'TEXTINPUT',
-    'COLORHUE'
-}
+local GAME_TITLE = 'SUPER POLYGON'
 
 -------------------------------------------------------------------------------
 
 MenuItem = {
     active = false,
-    text = '',
     subtype = nil
 }
 
-function MenuItem:new()
+function MenuItem:new(text, subtype)
     local instance = {}
+    instance.text = text or '---'
+    instance.subtype = subtype
     setmetatable(instance, self)
     self.__index = self
     return instance
 end
+
+-------------------------------------------------------------------------------
+
+local ROOT_ITEMS = {
+    MenuItem:new('START GAME', 'ACTION'),
+    MenuItem:new('OPTIONS', 'MENU'),
+}
+
+local OPTIONS_ITEMS = {
+    MenuItem:new('SPEED', 'NUMBER'),
+    MenuItem:new('SHAKE', 'BOOLEAN'),
+    MenuItem:new('ROTATIONS', 'DEGREE'),
+    MenuItem:new('SWAP COLORS', 'BOOLEAN'),
+    MenuItem:new('MULTIPLAYER COLLISION', 'BOOLEAN')
+}
+
+local ITEM_TYPE = {
+    'ACTION',
+    'MENU',
+    'TEXTINPUT',
+    'COLORHUE',
+    'NUMBER',
+    'DEGREE',
+    'BOOLEAN'
+}
 
 -------------------------------------------------------------------------------
 
@@ -41,16 +48,7 @@ menu = {
     items = {}
 }
 
-
-function menu:create(items)
-    local itemstable = {}
-    for i, v in ipairs(items) do
-        local item = MenuItem:new()
-        item.text = v
-        table.insert(itemstable, item)
-    end
-   return itemstable
-end
+menu.items = OPTIONS_ITEMS
 
 
 function draw_color_text()
@@ -70,22 +68,18 @@ function menu:draw()
     love.graphics.setFont(font.title)
     love.graphics.print(
         'SUPER POLYGON',
-        width/2 - font.title:getWidth(TITLE)/2,
+        width/2 - font.title:getWidth(GAME_TITLE)/2,
         height/100*10)
 
     love.graphics.setFont(font.menu)
-    for i=1, #OPTIONS_ITEMS do
+    for i=1, #menu.items do
         local items_area = height/2
-        local items_y_step = items_area/#OPTIONS_ITEMS
+        local items_y_step = items_area/#menu.items
         love.graphics.print(
-            OPTIONS_ITEMS[i],
-            width/2 - font.menu:getWidth(OPTIONS_ITEMS[i])/2,
-            ((items_y_step * i) - items_y_step/#OPTIONS_ITEMS
-             - font.menu:getHeight(OPTIONS_ITEMS[i]) + items_area/2)
+            menu.items[i].text,
+            width/2 - font.menu:getWidth(menu.items[i].text)/2,
+            ((items_y_step * i) - items_y_step/#menu.items
+             - font.menu:getHeight(menu.items[i].text) + items_area/2)
         )
     end
 end
-
-
-local m = menu:create(OPTIONS_ITEMS)
-print(#m)
