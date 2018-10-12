@@ -40,24 +40,18 @@ end
 
 
 function love.update(dt)
+    scene:update(dt)
+    camera:update(dt)
+    block_sequence:update(dt)
 
-    if menu.active then
-        menu:update(dt)
+    -- seconds timer
+    if scene.base_time > 1 then
+        camera.angle_timer = camera.angle_timer - 1
+    end
 
-    else
-        scene:update(dt)
-        camera:update(dt)
-        block_sequence:update(dt)
-
-        -- seconds timer
-        if scene.base_time > 1 then
-            camera.angle_timer = camera.angle_timer - 1
-        end
-
-        -- player
-        for i, player in pairs(players) do
-            player:update(dt)
-        end
+    -- player
+    for i, player in pairs(players) do
+        player:update(dt)
     end
 
     -- force console output
@@ -185,9 +179,9 @@ function love.keypressed(key)
 
     if menu.active then
         if key == 'up' then
-            print('up')
+            menu:next_item(-1)
         elseif key == 'down' then
-            print('down')
+            menu:next_item(1)
         end
     end
 end
