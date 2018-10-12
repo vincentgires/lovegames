@@ -152,7 +152,7 @@ function love.draw()
         love.graphics.print('TIMER: ' .. scene.seconds, 0, 0)
         local y = 20
         for i, p in pairs(players) do
-            local text = 'PLAYER' .. i .. ' - FAILURE ' .. p.failure
+            local text = p.name .. ' - FAILURE ' .. p.failure
             love.graphics.print(text, 0, y)
             y = y + font.game:getHeight(text)
         end
