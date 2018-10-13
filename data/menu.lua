@@ -8,8 +8,7 @@ local GAME_TITLE = {
 MenuItem = {
     subtype = nil,
     color = {1.0, 0.7, 0.3},
-    active_color = {1.0, 1.0, 1.0},
-    value = nil
+    active_color = {1.0, 1.0, 1.0}
 }
 
 function MenuItem:new(text, subtype, datapath)
@@ -18,23 +17,32 @@ function MenuItem:new(text, subtype, datapath)
     setmetatable(instance, self)
     instance.text = text or '---'
     instance.subtype = subtype
-    if datapath then instance:get_value(datapath) end
-    print(instance.value)
+    instance.datapath = datapath
     return instance
 end
 
-function MenuItem:get_value(datapath)
+function MenuItem:get_value()
     -- the result should be something like _G['game']['camera']['rotation']
     local value = _G
-    for i, v in pairs(datapath) do
+    for i, v in pairs(self.datapath) do
         value = value[v]
     end
-    self.value = value
     return value
 end
 
-function MenuItem:set_value()
-
+function MenuItem:set_value(val)
+    --[[]]
+    local value = _G
+    for i, v in pairs(self.datapath) do
+        -- stop before the last value to make it value settable
+        if i == #self.datapath then
+            goto continue
+        end
+        value = value[v]
+    end
+    ::continue::
+    local attr = self.datapath[#self.datapath]
+    value[attr] = val
 end
 
 -------------------------------------------------------------------------------
@@ -70,13 +78,7 @@ menu = {
     active_index = 1,
     items = {},
 }
-
 menu.items = OPTIONS_ITEMS
-
-
-function draw_color_text()
-
-end
 
 
 function menu:next_item(direction)
@@ -109,10 +111,11 @@ function menu:draw()
         if self.active_index == i then
             love.graphics.setColor(item.active_color)
             text = '> ' .. text
+            local value = item:get_value()
             if item.subtype == 'BOOLEAN' then
-                if item.value then text = text .. ' [*]' else text = text .. ' [_]' end
+                if value then text = text .. ' [*]' else text = text .. ' [_]' end
             elseif item.subtype == 'NUMBER' then
-                text = text .. ' ['..item.value..']'
+                text = text .. ' ['.. value ..']'
             end
         else
             love.graphics.setColor(item.color)
