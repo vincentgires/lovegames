@@ -178,13 +178,7 @@ function love.keypressed(key)
     end
 
     if menu.active then
-        if key == 'up' then
-            menu:next_item(-1)
-        elseif key == 'down' then
-            menu:next_item(1)
-        elseif key == 'space' then
-            menu.items[menu.active_index]:set_value(true)
-        end
+        menu:keypressed(key)
     end
 end
 

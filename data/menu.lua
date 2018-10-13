@@ -22,6 +22,10 @@ function MenuItem:new(text, subtype, datapath)
 end
 
 function MenuItem:get_value()
+    if not self.datapath then
+        return nil
+    end
+
     -- the result should be something like _G['game']['camera']['rotation']
     local value = _G
     for i, v in pairs(self.datapath) do
@@ -78,8 +82,33 @@ menu = {
     active_index = 1,
     items = {},
 }
+
+-- inital menu
 menu.items = OPTIONS_ITEMS
 
+function menu:keypressed(key)
+    local item = menu.items[menu.active_index]
+
+    if key == 'up' then
+        menu:next_item(-1)
+    elseif key == 'down' then
+        menu:next_item(1)
+    elseif key == 'space' then
+        if item.subtype == 'BOOLEAN' then
+            local val = not item:get_value()
+            item:set_value(val)
+        end
+    elseif key == 'left' or key == 'right' then
+        local direction = nil
+        if key == 'left' then direction = -1
+        elseif key == 'right' then direction = 1 end
+
+        if item.subtype == 'NUMBER' then
+            local val = item:get_value() + direction
+            item:set_value(val)
+        end
+    end
+end
 
 function menu:next_item(direction)
     local new_index = self.active_index + direction
