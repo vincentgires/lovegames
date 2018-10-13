@@ -8,16 +8,33 @@ local GAME_TITLE = {
 MenuItem = {
     subtype = nil,
     color = {1.0, 0.7, 0.3},
-    active_color = {1.0, 1.0, 1.0}
+    active_color = {1.0, 1.0, 1.0},
+    value = nil
 }
 
-function MenuItem:new(text, subtype)
+function MenuItem:new(text, subtype, datapath)
+    self.__index = self
     local instance = {}
+    setmetatable(instance, self)
     instance.text = text or '---'
     instance.subtype = subtype
-    setmetatable(instance, self)
-    self.__index = self
+    if datapath then instance:get_value(datapath) end
+    print(instance.value)
     return instance
+end
+
+function MenuItem:get_value(datapath)
+    -- the result should be something like _G['game']['camera']['rotation']
+    local value = _G
+    for i, v in pairs(datapath) do
+        value = value[v]
+    end
+    self.value = value
+    return value
+end
+
+function MenuItem:set_value()
+
 end
 
 -------------------------------------------------------------------------------
@@ -28,22 +45,23 @@ local ROOT_ITEMS = {
 }
 
 local OPTIONS_ITEMS = {
-    MenuItem:new('SPEED', 'NUMBER'),
-    MenuItem:new('SHAKE', 'BOOLEAN'),
-    MenuItem:new('ROTATIONS', 'DEGREE'),
-    MenuItem:new('SWAP COLORS', 'BOOLEAN'),
-    MenuItem:new('MULTIPLAYER COLLISION', 'BOOLEAN')
+    MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
+    MenuItem:new('SHAKE', 'BOOLEAN', {'game', 'camera', 'shake'}),
+    MenuItem:new('ROTATIONS', 'BOOLEAN', {'game', 'camera', 'rotation'}),
+    MenuItem:new('SWAP COLORS', 'BOOLEAN', {'game', 'scene', 'swap_bg_colors'}),
+    MenuItem:new('MULTIPLAYER COLLISION', 'BOOLEAN', {'game', 'multiplayer', 'collision'})
 }
 
+--[[
 local ITEM_TYPE = {
     'ACTION',
     'MENU',
     'TEXTINPUT',
     'COLORHUE',
     'NUMBER',
-    'DEGREE',
     'BOOLEAN'
 }
+]]
 
 -------------------------------------------------------------------------------
 
@@ -87,16 +105,23 @@ function menu:draw()
     for i, item in pairs(self.items) do
         local items_area = height/2
         local items_y_step = items_area/#self.items
+        local text = item.text
         if self.active_index == i then
             love.graphics.setColor(item.active_color)
+            text = '> ' .. text
+            if item.subtype == 'BOOLEAN' then
+                if item.value then text = text .. ' [*]' else text = text .. ' [_]' end
+            elseif item.subtype == 'NUMBER' then
+                text = text .. ' ['..item.value..']'
+            end
         else
             love.graphics.setColor(item.color)
         end
         love.graphics.print(
-            item.text,
-            width/2 - font.menu:getWidth(item.text)/2,
+            text,
+            width/2 - font.menu:getWidth(text)/2,
             ((items_y_step * i) - items_y_step/#self.items
-             - font.menu:getHeight(item.text) + items_area/2)
+             - font.menu:getHeight(text) + items_area/2)
         )
     end
 end
