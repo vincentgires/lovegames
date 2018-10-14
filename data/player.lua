@@ -11,12 +11,9 @@ Player = {
 }
 
 
-function Player:new(name, leftkey, rightkey, color)
+function Player:new(name)
     local instance = {}
     instance.name = name
-    instance.key_left = name
-    instance.key_right = name
-    instance.color = name
     setmetatable(instance, self)
     self.__index = self
     return instance
