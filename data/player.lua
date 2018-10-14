@@ -121,7 +121,7 @@ function Player:check_block_collision()
 
                 -- check if the player has already hit the block
                 for i, player in ipairs(block.collided_players) do
-                    if player.number == self.number then
+                    if player == self then
                         goto continue
                     end
                 end
