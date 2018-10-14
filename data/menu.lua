@@ -50,18 +50,24 @@ function MenuItem:set_value(val)
 end
 
 -------------------------------------------------------------------------------
+-- MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
+--                                 datapath: game.speed
 
-local ROOT_ITEMS = {
+local root_items = {
     MenuItem:new('START GAME', 'ACTION'),
     MenuItem:new('OPTIONS', 'MENU'),
 }
 
-local OPTIONS_ITEMS = {
+local options_items = {
     MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
     MenuItem:new('SHAKE', 'BOOLEAN', {'game', 'camera', 'shake'}),
     MenuItem:new('ROTATIONS', 'BOOLEAN', {'game', 'camera', 'rotation'}),
     MenuItem:new('SWAP COLORS', 'BOOLEAN', {'game', 'scene', 'swap_bg_colors'}),
     MenuItem:new('MULTIPLAYER COLLISION', 'BOOLEAN', {'game', 'multiplayer', 'collision'})
+}
+
+local players_items = {
+    MenuItem:new('ADD PLAYER', 'ACTION')
 }
 
 --[[
@@ -84,7 +90,7 @@ menu = {
 }
 
 -- inital menu
-menu.items = OPTIONS_ITEMS
+menu.items = players_items
 
 function menu:keypressed(key)
     local item = menu.items[menu.active_index]
@@ -93,7 +99,7 @@ function menu:keypressed(key)
         menu:next_item(-1)
     elseif key == 'down' then
         menu:next_item(1)
-    elseif key == 'space' then
+    elseif key == 'space' or key == 'return' then
         if item.subtype == 'BOOLEAN' then
             local val = not item:get_value()
             item:set_value(val)

@@ -1,28 +1,24 @@
 Player = {
-    name = 'Player',
-    number = 1,
     angle = 0,
     speed = 5,
     size = 5,
     center = 70,
-    color = {1, 1, 1},
     points = nil,
     failure = 0,
-    key_left = 'left',
-    key_right = 'right',
     freeze = false,
     hitbox_size = 10,
     collide = nil
 }
 
 
-function Player:new(name)
+function Player:new(name, leftkey, rightkey, color)
     local instance = {}
     instance.name = name
+    instance.key_left = name
+    instance.key_right = name
+    instance.color = name
     setmetatable(instance, self)
     self.__index = self
-    self.number = #players + 1
-    table.insert(players, instance)
     return instance
 end
 
@@ -41,7 +37,7 @@ function Player:update(dt)
     if direction then
         -- check position of other players
         if game.multiplayer.collision then
-            for i, player in pairs(players) do
+            for i, player in ipairs(players) do
                 if self ~= player then
                     local player_x = points_from_angle(player.center, player.angle)[1]
                     local player_y = points_from_angle(player.center, player.angle)[2]
@@ -151,3 +147,42 @@ function Player:check_block_collision()
         end
     end
 end
+
+-------------------------------------------------------------------------------
+
+players = {}
+
+
+function players:new(name, leftkey, rightkey, color)
+    name = name or 'Player'
+    leftkey = leftkey or 'left'
+    rightkey = rightkey or 'right'
+    color = color or {1, 1, 1}
+
+    local player = Player:new(name)
+    player.key_left = leftkey
+    player.key_right = rightkey
+    player.color = color
+
+    self.number = #self + 1
+    table.insert(self, player)
+end
+
+function players:remove(number)
+
+end
+
+function players:update(dt)
+    for i, player in ipairs(players) do
+        player:update(dt)
+    end
+end
+
+function players:draw()
+    for i, player in ipairs(players) do
+        player:draw()
+    end
+end
+
+players:new('Player 1', 'left', 'right', {1, 0, 1})
+players:new('Player 2', 'q', 'd', {0, 1, 1})

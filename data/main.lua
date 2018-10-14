@@ -7,35 +7,11 @@ require 'menu'
 scene = require 'scene'
 camera = require 'camera'
 
-players = {}
-
 
 function love.load()
     love.window.setTitle('SUPER POLYGON')
     love.graphics.setDefaultFilter('nearest', 'nearest')
     font:create_or_update()
-
-    local player1 = Player:new('Player 1')
-    player1.key_left = 'left'
-    player1.key_right = 'right'
-    player1.color = {1, 0, 1}
-
-    local player2 = Player:new('Player 2')
-    player2.key_left = 'q'
-    player2.key_right = 'd'
-    player2.color = {0, 1, 1}
-
-
-    -- set position
-    for i, player in pairs(players) do
-        local num = #players
-        player.angle = 360/(num/i)
-    end
-
-    -- first pattern
-    local group, segments = get_random_group()
-    block_sequence:add_group(group, segments)
-
 end
 
 
@@ -43,15 +19,11 @@ function love.update(dt)
     scene:update(dt)
     camera:update(dt)
     block_sequence:update(dt)
+    players:update(dt)
 
     -- seconds timer
     if scene.base_time > 1 then
         camera.angle_timer = camera.angle_timer - 1
-    end
-
-    -- player
-    for i, player in pairs(players) do
-        player:update(dt)
     end
 
     -- force console output
@@ -135,9 +107,7 @@ function love.draw()
         love.graphics.rectangle('line', -5, -5, 10, 10)
 
         -- player
-        for i, player in pairs(players) do
-            player:draw()
-        end
+        players:draw()
 
         -- text overlay
         love.graphics.reset()
@@ -145,7 +115,7 @@ function love.draw()
         love.graphics.setFont(font.game)
         love.graphics.print('TIMER: ' .. scene.seconds, 0, 0)
         local y = 20
-        for i, p in pairs(players) do
+        for i, p in ipairs(players) do
             local text = p.name .. ' - FAILURE ' .. p.failure
             love.graphics.print(text, 0, y)
             y = y + font.game:getHeight(text)

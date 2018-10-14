@@ -24,6 +24,16 @@ function game:start()
         g = random_float(0, 0.5),
         b = random_float(0, 0.5)
     }
+
+    -- set position
+    for i, player in ipairs(players) do
+        local num = #players
+        player.angle = 360/(num/i)
+    end
+
+    -- first pattern
+    local group, segments = get_random_group()
+    block_sequence:add_group(group, segments)
 end
 
 
