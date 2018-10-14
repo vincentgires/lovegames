@@ -183,8 +183,3 @@ end
 
 players:new('Player 1', 'left', 'right', {1, 0, 1})
 players:new('Player 2', 'q', 'd', {0, 1, 1})
-
-
-function add_player(self)
-    players:new()
-end

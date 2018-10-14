@@ -53,6 +53,15 @@ end
 -- MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
 --                                 datapath: game.speed
 
+function set_players_menuitems(self)
+
+end
+
+function add_player(self)
+    players:new()
+    -- set_players_menuitems
+end
+
 local root_items = {
     MenuItem:new('START GAME', 'ACTION'),
     MenuItem:new('OPTIONS', 'MENU'),
