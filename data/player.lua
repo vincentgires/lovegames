@@ -166,7 +166,7 @@ function players:new(name, leftkey, rightkey, color)
 end
 
 function players:remove(number)
-
+    table.remove(self, number)
 end
 
 function players:update(dt)
@@ -183,3 +183,8 @@ end
 
 players:new('Player 1', 'left', 'right', {1, 0, 1})
 players:new('Player 2', 'q', 'd', {0, 1, 1})
+
+
+function add_player(self)
+    players:new()
+end

@@ -67,7 +67,7 @@ local options_items = {
 }
 
 local players_items = {
-    MenuItem:new('ADD PLAYER', 'ACTION')
+    MenuItem:new('ADD PLAYER', 'ACTION', add_player)
 }
 
 --[[
@@ -97,13 +97,20 @@ function menu:keypressed(key)
 
     if key == 'up' then
         menu:next_item(-1)
+
     elseif key == 'down' then
         menu:next_item(1)
+
     elseif key == 'space' or key == 'return' then
         if item.subtype == 'BOOLEAN' then
             local val = not item:get_value()
             item:set_value(val)
         end
+
+        if item.subtype == 'ACTION' then
+            item.datapath()
+        end
+
     elseif key == 'left' or key == 'right' then
         local direction = nil
         if key == 'left' then direction = -1
@@ -146,10 +153,11 @@ function menu:draw()
         if self.active_index == i then
             love.graphics.setColor(item.active_color)
             text = '> ' .. text
-            local value = item:get_value()
             if item.subtype == 'BOOLEAN' then
+                local value = item:get_value()
                 if value then text = text .. ' [*]' else text = text .. ' [_]' end
             elseif item.subtype == 'NUMBER' then
+                local value = item:get_value()
                 text = text .. ' ['.. value ..']'
             end
         else
