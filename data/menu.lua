@@ -51,15 +51,21 @@ end
 
 -------------------------------------------------------------------------------
 -- MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
---                                 datapath: game.speed
+-- ............................... datapath: game.speed
 
-function set_players_menuitems(self)
-
+function set_players_menuitems()
+    local items = {
+        MenuItem:new('ADD PLAYER', 'ACTION', add_player)
+    }
+    for i, player in ipairs(players) do
+        table.insert(items, MenuItem:new('#'..tostring(i)..' '..player.name, 'MENU'))
+    end
+    menu.items = items
 end
 
-function add_player(self)
+function add_player()
     players:new()
-    -- set_players_menuitems
+    set_players_menuitems()
 end
 
 local root_items = {
@@ -99,7 +105,8 @@ menu = {
 }
 
 -- inital menu
-menu.items = players_items
+--menu.items = options_items
+set_players_menuitems()
 
 function menu:keypressed(key)
     local item = menu.items[menu.active_index]
