@@ -69,6 +69,15 @@ function add_player()
     set_players_menuitems()
 end
 
+function remove_player(p)
+    for k, v in pairs(players) do
+        if v == p then
+            table.remove(players, k)
+        end
+    end
+    set_players_menuitems()
+end
+
 local root_items = {
     MenuItem:new('START GAME', 'ACTION'),
     MenuItem:new('OPTIONS', 'MENU'),
@@ -158,6 +167,13 @@ function menu:keypressed(key)
                 item.text = player.name
             end
         end
+
+    elseif key == 'delete' then
+        if item.subtype == 'PLAYER' then
+            local player = players[self.active_index]
+            remove_player(player)
+            print(player)
+        end
     end
 end
 
@@ -201,7 +217,7 @@ function menu:draw()
             elseif item.subtype == 'ACTION' then
                 text = '> ' .. text
             elseif item.subtype == 'PLAYER' then
-                text = '> #' ..tostring(i).. ' ' .. text
+                text = '> #' ..tostring(i).. ' ' .. text .. '_'
             end
 
         else
