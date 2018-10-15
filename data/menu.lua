@@ -1,3 +1,5 @@
+local utf8 = require('utf8')
+
 local GAME_TITLE = {
     text = 'SUPER POLYGON',
     color = {1.0, 0.7, 0.3}
@@ -38,7 +40,7 @@ function MenuItem:set_value(val)
     --[[]]
     local value = _G
     for i, v in pairs(self.datapath) do
-        -- stop before the last value to make it value settable
+        -- stop before the last value to make the value settable
         if i == #self.datapath then
             goto continue
         end
@@ -54,12 +56,11 @@ end
 -- ............................... datapath: game.speed
 
 function set_players_menuitems()
-    local items = {
-        MenuItem:new('ADD PLAYER', 'ACTION', add_player)
-    }
+    local items = {}
     for i, player in ipairs(players) do
-        table.insert(items, MenuItem:new('#'..tostring(i)..' '..player.name, 'MENU'))
+        table.insert(items, MenuItem:new(player.name, 'PLAYER'))
     end
+    table.insert(items, MenuItem:new('ADD PLAYER', 'ACTION', add_player))
     menu.items = items
 end
 
@@ -92,7 +93,8 @@ local ITEM_TYPE = {
     'TEXTINPUT',
     'COLORHUE',
     'NUMBER',
-    'BOOLEAN'
+    'BOOLEAN',
+    'PLAYER',
 }
 ]]
 
@@ -101,21 +103,31 @@ local ITEM_TYPE = {
 menu = {
     active = true,
     active_index = 1,
-    items = {},
+    items = {}
 }
 
 -- inital menu
 --menu.items = options_items
 set_players_menuitems()
 
+
+function menu:edit_textinput(t)
+    local item = self.items[self.active_index]
+    if item.subtype == 'PLAYER' then
+        local player = players[self.active_index]
+        player.name = player.name .. t -- update player name
+        item.text = player.name -- update player name in menu
+    end
+end
+
 function menu:keypressed(key)
-    local item = menu.items[menu.active_index]
+    local item = self.items[self.active_index]
 
     if key == 'up' then
-        menu:next_item(-1)
+        self:next_item(-1)
 
     elseif key == 'down' then
-        menu:next_item(1)
+        self:next_item(1)
 
     elseif key == 'space' or key == 'return' then
         if item.subtype == 'BOOLEAN' then
@@ -135,6 +147,16 @@ function menu:keypressed(key)
         if item.subtype == 'NUMBER' then
             local val = item:get_value() + direction
             item:set_value(val)
+        end
+
+    elseif key == 'backspace' then
+        if item.subtype == 'PLAYER' then
+            local player = players[self.active_index]
+            local byteoffset = utf8.offset(player.name, -1)
+            if byteoffset then
+                player.name = string.sub(player.name, 1, byteoffset - 1)
+                item.text = player.name
+            end
         end
     end
 end
@@ -168,17 +190,28 @@ function menu:draw()
         local text = item.text
         if self.active_index == i then
             love.graphics.setColor(item.active_color)
-            text = '> ' .. text
             if item.subtype == 'BOOLEAN' then
+                text = '> ' .. text
                 local value = item:get_value()
                 if value then text = text .. ' [*]' else text = text .. ' [_]' end
             elseif item.subtype == 'NUMBER' then
+                text = '> ' .. text
                 local value = item:get_value()
                 text = text .. ' ['.. value ..']'
+            elseif item.subtype == 'ACTION' then
+                text = '> ' .. text
+            elseif item.subtype == 'PLAYER' then
+                text = '> #' ..tostring(i).. ' ' .. text
             end
+
         else
             love.graphics.setColor(item.color)
+            if item.subtype == 'PLAYER' then
+                text = '#' ..tostring(i).. ' ' .. text
+            end
+
         end
+
         love.graphics.print(
             text,
             width/2 - font.menu:getWidth(text)/2,

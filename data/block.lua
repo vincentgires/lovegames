@@ -102,8 +102,8 @@ function block_sequence:update(dt)
         scene.segments = self.blocks[1].segments
 
         -- add next pattern
-        -- if #self.blocks <= 3 then
-        if #self.blocks <= 1 then
+        if #self.blocks <= 3 then
+        -- if #self.blocks <= 1 then
             local group, segments = get_random_group()
             self:add_group(group, segments)
         end

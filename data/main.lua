@@ -11,7 +11,15 @@ camera = require 'camera'
 function love.load()
     love.window.setTitle('SUPER POLYGON')
     love.graphics.setDefaultFilter('nearest', 'nearest')
+    love.keyboard.setKeyRepeat(true)
     font:create_or_update()
+end
+
+
+function love.textinput(t)
+    if menu.active then
+        menu:edit_textinput(t)
+    end
 end
 
 
