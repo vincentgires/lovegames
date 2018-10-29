@@ -70,11 +70,18 @@ function add_player()
 end
 
 function set_player_options_menuitems(player)
+    local player_num = nil
+    for i, p in ipairs(players) do
+        if p == player then
+            player_num = i
+        end
+    end
+
     local items = {
         MenuItem:new(player.name, 'PLAYER'),
         MenuItem:new('LEFT KEY', 'ACTION'),
         MenuItem:new('RIGHT KEY', 'ACTION'),
-        MenuItem:new('COLOR', 'COLORHUE', {'game', 'camera', 'rotation'})
+        MenuItem:new('COLOR', 'COLORHUE', {'players', player_num, 'color'})
     }
     menu.items = items
 end
@@ -163,12 +170,23 @@ function menu:keypressed(key)
 
     elseif key == 'left' or key == 'right' then
         local direction = nil
-        if key == 'left' then direction = -1
-        elseif key == 'right' then direction = 1 end
 
         if item.subtype == 'NUMBER' then
+            if key == 'left' then direction = -1
+            elseif key == 'right' then direction = 1 end
             local val = item:get_value() + direction
             item:set_value(val)
+        end
+
+        if item.subtype == 'COLORHUE' then
+            local r = item:get_value()[1]
+            local g = item:get_value()[2]
+            local b = item:get_value()[3]
+            local h, s, v = rgb_to_hsv(r, g, b)
+            if key == 'left' then direction = -0.05
+            elseif key == 'right' then direction = 0.05 end
+            r, g, b = hsv_to_rgb(h+direction, s, v)
+            item:set_value({r, g, b})
         end
 
     elseif key == 'backspace' then
@@ -265,11 +283,10 @@ function menu:draw()
 
             -- player position in the ramp
             do
-                -- WIP: hardcoded player
-                pr = players[1].color[1]
-                pg = players[1].color[2]
-                pb = players[1].color[3]
-                local h, s, v = rgb_to_hsv(pr, pg, pb)
+                local r = item:get_value()[1]
+                local g = item:get_value()[2]
+                local b = item:get_value()[3]
+                local h, s, v = rgb_to_hsv(r, g, b)
                 love.graphics.setColor(1, 1, 1)
                 love.graphics.rectangle("fill", hue_width+(h*hue_step)*w, y+30, w, hue_height*2)
             end
