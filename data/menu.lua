@@ -69,6 +69,16 @@ function add_player()
     set_players_menuitems()
 end
 
+function set_player_options_menuitems(player)
+    local items = {
+        MenuItem:new(player.name, 'PLAYER'),
+        MenuItem:new('LEFT KEY', 'ACTION'),
+        MenuItem:new('RIGHT KEY', 'ACTION'),
+        MenuItem:new('COLOR', 'COLORHUE', {'game', 'camera', 'rotation'})
+    }
+    menu.items = items
+end
+
 function remove_player(p)
     for k, v in pairs(players) do
         if v == p then
@@ -91,9 +101,11 @@ local options_items = {
     MenuItem:new('MULTIPLAYER COLLISION', 'BOOLEAN', {'game', 'multiplayer', 'collision'})
 }
 
+--[[
 local players_items = {
     MenuItem:new('ADD PLAYER', 'ACTION', add_player)
 }
+--]]
 
 --[[
 local ITEM_TYPE = {
@@ -116,8 +128,9 @@ menu = {
 }
 
 -- inital menu
---menu.items = options_items
-set_players_menuitems()
+-- menu.items = options_items
+-- set_players_menuitems()
+set_player_options_menuitems(players[1])
 
 
 function menu:edit_textinput(t)
@@ -228,11 +241,38 @@ function menu:draw()
 
         end
 
+        local y = ((items_y_step * i) - items_y_step/#self.items
+                   - font.menu:getHeight(text) + items_area/2)
+
         love.graphics.print(
             text,
             width/2 - font.menu:getWidth(text)/2,
-            ((items_y_step * i) - items_y_step/#self.items
-             - font.menu:getHeight(text) + items_area/2)
+            y
         )
+
+        if item.subtype == 'COLORHUE' then
+            local hue_height = 10*window.scale
+            local hue_width = width/3
+            local hue_step = 50
+            local w = hue_width/hue_step
+
+            -- HUE ramp
+            for i=1, hue_step, 1 do
+                local r, g, b = hsv_to_rgb(i/hue_step, 1, 1)
+                love.graphics.setColor(r, g, b)
+                love.graphics.rectangle("fill", hue_width+i*w, y+30, w, hue_height)
+            end
+
+            -- player position in the ramp
+            do
+                -- WIP: hardcoded player
+                pr = players[1].color[1]
+                pg = players[1].color[2]
+                pb = players[1].color[3]
+                local h, s, v = rgb_to_hsv(pr, pg, pb)
+                love.graphics.setColor(1, 1, 1)
+                love.graphics.rectangle("fill", hue_width+(h*hue_step)*w, y+30, w, hue_height*2)
+            end
+        end
     end
 end

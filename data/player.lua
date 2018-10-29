@@ -151,7 +151,7 @@ players = {}
 
 
 function players:new(name, leftkey, rightkey, color)
-    name = name or 'Player'
+    name = name or 'Player' .. ' ' .. tostring(#self+1)
     leftkey = leftkey or 'left'
     rightkey = rightkey or 'right'
     color = color or {1, 1, 1}
@@ -161,7 +161,6 @@ function players:new(name, leftkey, rightkey, color)
     player.key_right = rightkey
     player.color = color
 
-    self.number = #self + 1
     table.insert(self, player)
 end
 
