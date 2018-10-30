@@ -78,9 +78,9 @@ function set_player_options_menuitems(player)
     end
 
     local items = {
-        MenuItem:new(player.name, 'PLAYER'),
-        MenuItem:new('LEFT KEY', 'ACTION'),
-        MenuItem:new('RIGHT KEY', 'ACTION'),
+        MenuItem:new(player.name, 'TEXTINPUT'),
+        MenuItem:new('LEFT KEY', 'ACTION', {'players', player_num, 'player.key_left'}),
+        MenuItem:new('RIGHT KEY', 'ACTION', {'players', player_num, 'player.key_right'}),
         MenuItem:new('COLOR', 'COLORHUE', {'players', player_num, 'color'})
     }
     menu.items = items
@@ -142,7 +142,7 @@ set_player_options_menuitems(players[1])
 
 function menu:edit_textinput(t)
     local item = self.items[self.active_index]
-    if item.subtype == 'PLAYER' then
+    if item.subtype == 'PLAYER' or item.subtype == 'TEXTINPUT' then
         local player = players[self.active_index]
         player.name = player.name .. t -- update player name
         item.text = player.name -- update player name in menu
@@ -190,7 +190,7 @@ function menu:keypressed(key)
         end
 
     elseif key == 'backspace' then
-        if item.subtype == 'PLAYER' then
+        if item.subtype == 'PLAYER' or item.subtype == 'TEXTINPUT' then
             local player = players[self.active_index]
             local byteoffset = utf8.offset(player.name, -1)
             if byteoffset then
@@ -249,6 +249,8 @@ function menu:draw()
                 text = '> ' .. text
             elseif item.subtype == 'PLAYER' then
                 text = '> #' ..tostring(i).. ' ' .. text .. '_'
+            elseif item.subtype == 'TEXTINPUT' then
+                text = '> ' .. text .. '_'
             end
 
         else
