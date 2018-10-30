@@ -24,10 +24,6 @@ end
 
 
 function love.update(dt)
-    -- DEBUG
-    print(menu.wait_for_key)
-    -- DEBUG
-
     scene:update(dt)
     camera:update(dt)
     block_sequence:update(dt)

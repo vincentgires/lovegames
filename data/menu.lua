@@ -149,74 +149,76 @@ function menu:edit_textinput(t)
         local player = players[self.active_index]
         player.name = player.name .. t -- update player name
         item.text = player.name -- update player name in menu
-    elseif item.subtype == 'SETKEY' then
-        -- BUG DOES NOT RUN
-        if menu.wait_for_key then
-            print('WIP')
-            menu.wait_for_key = false
-        end
     end
 end
 
 function menu:keypressed(key)
     local item = self.items[self.active_index]
 
-    if key == 'up' then
-        self:next_item(-1)
-
-    elseif key == 'down' then
-        self:next_item(1)
-
-    elseif key == 'space' or key == 'return' then
-        if item.subtype == 'BOOLEAN' then
-            local val = not item:get_value()
-            item:set_value(val)
-        end
-
-        if item.subtype == 'ACTION' then
-            item.datapath()
-        end
-
+    -- Set player keys
+    if menu.wait_for_key then
         if item.subtype == 'SETKEY' then
-            -- print(item:set_value('n'))
-            menu.wait_for_key = true
+            item:set_value(key)
+            menu.wait_for_key = false
         end
 
-    elseif key == 'left' or key == 'right' then
-        local direction = nil
+    else
+        if key == 'up' then
+            self:next_item(-1)
 
-        if item.subtype == 'NUMBER' then
-            if key == 'left' then direction = -1
-            elseif key == 'right' then direction = 1 end
-            local val = item:get_value() + direction
-            item:set_value(val)
-        end
+        elseif key == 'down' then
+            self:next_item(1)
 
-        if item.subtype == 'COLORHUE' then
-            local r = item:get_value()[1]
-            local g = item:get_value()[2]
-            local b = item:get_value()[3]
-            local h, s, v = rgb_to_hsv(r, g, b)
-            if key == 'left' then direction = -0.05
-            elseif key == 'right' then direction = 0.05 end
-            r, g, b = hsv_to_rgb(h+direction, s, v)
-            item:set_value({r, g, b})
-        end
-
-    elseif key == 'backspace' then
-        if item.subtype == 'PLAYER' or item.subtype == 'TEXTINPUT' then
-            local player = players[self.active_index]
-            local byteoffset = utf8.offset(player.name, -1)
-            if byteoffset then
-                player.name = string.sub(player.name, 1, byteoffset - 1)
-                item.text = player.name
+        elseif key == 'space' or key == 'return' then
+            if item.subtype == 'BOOLEAN' then
+                local val = not item:get_value()
+                item:set_value(val)
             end
-        end
 
-    elseif key == 'delete' then
-        if item.subtype == 'PLAYER' then
-            local player = players[self.active_index]
-            remove_player(player)
+            if item.subtype == 'ACTION' then
+                item.datapath()
+            end
+
+            if item.subtype == 'SETKEY' then
+                menu.wait_for_key = true
+            end
+
+        elseif key == 'left' or key == 'right' then
+            local direction = nil
+
+            if item.subtype == 'NUMBER' then
+                if key == 'left' then direction = -1
+                elseif key == 'right' then direction = 1 end
+                local val = item:get_value() + direction
+                item:set_value(val)
+            end
+
+            if item.subtype == 'COLORHUE' then
+                local r = item:get_value()[1]
+                local g = item:get_value()[2]
+                local b = item:get_value()[3]
+                local h, s, v = rgb_to_hsv(r, g, b)
+                if key == 'left' then direction = -0.05
+                elseif key == 'right' then direction = 0.05 end
+                r, g, b = hsv_to_rgb(h+direction, s, v)
+                item:set_value({r, g, b})
+            end
+
+        elseif key == 'backspace' then
+            if item.subtype == 'PLAYER' or item.subtype == 'TEXTINPUT' then
+                local player = players[self.active_index]
+                local byteoffset = utf8.offset(player.name, -1)
+                if byteoffset then
+                    player.name = string.sub(player.name, 1, byteoffset - 1)
+                    item.text = player.name
+                end
+            end
+
+        elseif key == 'delete' then
+            if item.subtype == 'PLAYER' then
+                local player = players[self.active_index]
+                remove_player(player)
+            end
         end
     end
 end
