@@ -79,8 +79,8 @@ function set_player_options_menuitems(player)
 
     local items = {
         MenuItem:new(player.name, 'TEXTINPUT'),
-        MenuItem:new('LEFT KEY', 'ACTION', {'players', player_num, 'player.key_left'}),
-        MenuItem:new('RIGHT KEY', 'ACTION', {'players', player_num, 'player.key_right'}),
+        MenuItem:new('LEFT KEY', 'SETKEY', {'players', player_num, 'key_left'}),
+        MenuItem:new('RIGHT KEY', 'SETKEY', {'players', player_num, 'key_right'}),
         MenuItem:new('COLOR', 'COLORHUE', {'players', player_num, 'color'})
     }
     menu.items = items
@@ -123,6 +123,7 @@ local ITEM_TYPE = {
     'NUMBER',
     'BOOLEAN',
     'PLAYER',
+    'SETKEY',
 }
 ]]
 
@@ -131,7 +132,8 @@ local ITEM_TYPE = {
 menu = {
     active = true,
     active_index = 1,
-    items = {}
+    items = {},
+    wait_for_key = false
 }
 
 -- inital menu
@@ -143,9 +145,16 @@ set_player_options_menuitems(players[1])
 function menu:edit_textinput(t)
     local item = self.items[self.active_index]
     if item.subtype == 'PLAYER' or item.subtype == 'TEXTINPUT' then
+        -- TODO: make it more generic, no direct call to player
         local player = players[self.active_index]
         player.name = player.name .. t -- update player name
         item.text = player.name -- update player name in menu
+    elseif item.subtype == 'SETKEY' then
+        -- BUG DOES NOT RUN
+        if menu.wait_for_key then
+            print('WIP')
+            menu.wait_for_key = false
+        end
     end
 end
 
@@ -166,6 +175,11 @@ function menu:keypressed(key)
 
         if item.subtype == 'ACTION' then
             item.datapath()
+        end
+
+        if item.subtype == 'SETKEY' then
+            -- print(item:set_value('n'))
+            menu.wait_for_key = true
         end
 
     elseif key == 'left' or key == 'right' then
@@ -203,7 +217,6 @@ function menu:keypressed(key)
         if item.subtype == 'PLAYER' then
             local player = players[self.active_index]
             remove_player(player)
-            print(player)
         end
     end
 end
@@ -251,6 +264,14 @@ function menu:draw()
                 text = '> #' ..tostring(i).. ' ' .. text .. '_'
             elseif item.subtype == 'TEXTINPUT' then
                 text = '> ' .. text .. '_'
+            elseif item.subtype == 'SETKEY' then
+                text = '> ' .. text
+                if menu.wait_for_key then
+                    text = text .. ' [_]'
+                else
+                    local value = item:get_value()
+                    text = text .. ' ['.. value ..']'
+                end
             end
 
         else
