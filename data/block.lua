@@ -5,10 +5,20 @@ function get_random_group(group)
 
     local blocks = {}
     for i, b in pairs(group.blocks) do
-        local block = Block:new()
-        block.position = b['position']
-        block.offset = b['offset']
-        table.insert(blocks, block)
+        if b.range then
+            for j=b.range[1], b.range[2] do
+                print(j)
+                local block = Block:new()
+                block.position = j
+                block.offset = b['offset']
+                table.insert(blocks, block)
+            end
+        else
+            local block = Block:new()
+            block.position = b['position']
+            block.offset = b['offset']
+            table.insert(blocks, block)
+        end
     end
 
     return blocks, segments
@@ -128,7 +138,7 @@ end
 -------------------------------------------------------------------------------
 
 
-block_groups = {
+--[[block_groups = {
     {
         segments = 5,
         blocks = {
@@ -152,6 +162,16 @@ block_groups = {
             {position = 6, offset = 9},
             {position = 7, offset = 9},
             {position = 3, offset = 9}
+        }
+    }
+}]]
+
+block_groups = {
+    {
+        segments = 50,
+        blocks = {
+            {range = {1,10}, offset = 0},
+            {range = {10,30}, offset = 5},
         }
     }
 }
