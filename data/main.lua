@@ -13,6 +13,9 @@ function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.keyboard.setKeyRepeat(true)
     font:create_or_update()
+
+    -- default player
+    players:new('Player 1', 'left', 'right', {1, 0, 1})
 end
 
 

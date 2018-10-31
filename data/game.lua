@@ -34,9 +34,11 @@ function game:start()
         player.failure = 0
     end
 
+    -- reset attributes
+    camera.angle = 0
+
     -- reset pattern
     block_sequence.blocks = {}
-
     -- first pattern
     local group, segments = get_random_group()
     block_sequence:add_group(group, segments)

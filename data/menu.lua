@@ -58,7 +58,8 @@ end
 local options_items = {
     MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
     MenuItem:new('SHAKE', 'BOOLEAN', {'game', 'camera', 'shake'}),
-    MenuItem:new('ROTATIONS', 'BOOLEAN', {'game', 'camera', 'rotation'}),
+    MenuItem:new('CAMERA ROTATIONS', 'BOOLEAN', {'game', 'camera', 'rotation'}),
+    MenuItem:new('CAMERA SPEED', 'NUMBER', {'camera', 'speed'}),
     MenuItem:new('SWAP COLORS', 'BOOLEAN', {'game', 'scene', 'swap_bg_colors'}),
     MenuItem:new('MULTIPLAYER COLLISION', 'BOOLEAN', {'game', 'multiplayer', 'collision'})
 }

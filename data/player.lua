@@ -179,6 +179,3 @@ function players:draw()
         player:draw()
     end
 end
-
-players:new('Player 1', 'left', 'right', {1, 0, 1})
-players:new('Player 2', 'q', 'd', {0, 1, 1})
