@@ -55,13 +55,35 @@ end
 -- MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
 -- ............................... datapath: game.speed
 
+local ITEM_TYPE = {
+    'ACTION',
+    'TEXTINPUT',
+    'COLORHUE',
+    'NUMBER',
+    'BOOLEAN',
+    'PLAYER',
+    'SETKEY',
+}
+
 local options_items = {
-    MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
-    MenuItem:new('SHAKE', 'BOOLEAN', {'game', 'camera', 'shake'}),
-    MenuItem:new('CAMERA ROTATIONS', 'BOOLEAN', {'game', 'camera', 'rotation'}),
-    MenuItem:new('CAMERA SPEED', 'NUMBER', {'camera', 'speed'}),
-    MenuItem:new('SWAP COLORS', 'BOOLEAN', {'game', 'scene', 'swap_bg_colors'}),
-    MenuItem:new('MULTIPLAYER COLLISION', 'BOOLEAN', {'game', 'multiplayer', 'collision'})
+    MenuItem:new(
+        'SPEED', 'NUMBER',
+        {'game', 'speed'}),
+    MenuItem:new(
+        'SHAKE', 'BOOLEAN',
+        {'game', 'camera', 'shake'}),
+    MenuItem:new(
+        'CAMERA ROTATIONS', 'BOOLEAN',
+        {'game', 'camera', 'rotation'}),
+    MenuItem:new(
+        'CAMERA SPEED', 'NUMBER',
+        {'camera', 'speed'}),
+    MenuItem:new(
+        'SWAP COLORS', 'BOOLEAN',
+        {'game', 'scene', 'swap_bg_colors'}),
+    MenuItem:new(
+        'MULTIPLAYER COLLISION', 'BOOLEAN',
+        {'game', 'multiplayer', 'collision'})
 }
 
 local function start_game()
@@ -70,7 +92,7 @@ local function start_game()
 end
 
 local function set_options_menuitems()
-    menu.items = options_items
+    menu:set_items(options_items)
 end
 
 function set_players_menuitems()
@@ -79,7 +101,7 @@ function set_players_menuitems()
         table.insert(items, MenuItem:new(player.name, 'PLAYER'))
     end
     table.insert(items, MenuItem:new('ADD PLAYER', 'ACTION', add_player))
-    menu.items = items
+    menu:set_items(items)
 end
 
 function add_player()
@@ -96,12 +118,19 @@ function set_player_options_menuitems(player)
     end
 
     local items = {
-        MenuItem:new(player.name, 'TEXTINPUT'),
-        MenuItem:new('LEFT KEY', 'SETKEY', {'players', player_num, 'key_left'}),
-        MenuItem:new('RIGHT KEY', 'SETKEY', {'players', player_num, 'key_right'}),
-        MenuItem:new('COLOR', 'COLORHUE', {'players', player_num, 'color'})
+        MenuItem:new(
+            player.name, 'TEXTINPUT'),
+        MenuItem:new(
+            'LEFT KEY', 'SETKEY',
+            {'players', player_num, 'key_left'}),
+        MenuItem:new(
+            'RIGHT KEY', 'SETKEY',
+            {'players', player_num, 'key_right'}),
+        MenuItem:new(
+            'COLOR', 'COLORHUE',
+            {'players', player_num, 'color'})
     }
-    menu.items = items
+    menu:set_items(items)
 end
 
 function remove_player(p)
@@ -119,25 +148,6 @@ root_items = {
     MenuItem:new('OPTIONS', 'ACTION', set_options_menuitems),
 }
 
-
---[[
-local players_items = {
-    MenuItem:new('ADD PLAYER', 'ACTION', add_player)
-}
---]]
-
---[[
-local ITEM_TYPE = {
-    'ACTION',
-    'TEXTINPUT',
-    'COLORHUE',
-    'NUMBER',
-    'BOOLEAN',
-    'PLAYER',
-    'SETKEY',
-}
-]]
-
 -------------------------------------------------------------------------------
 
 menu = {
@@ -147,11 +157,10 @@ menu = {
     wait_for_key = false
 }
 
--- inital menu
-menu.items = root_items
---set_players_menuitems()
---set_player_options_menuitems(players[1])
-
+function menu:set_items(items)
+    self.items = items
+    self.active_index = 1
+end
 
 function menu:edit_textinput(t)
     local item = self.items[self.active_index]

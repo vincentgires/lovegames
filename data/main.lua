@@ -16,6 +16,9 @@ function love.load()
 
     -- default player
     players:new('Player 1', 'left', 'right', {1, 0, 1})
+
+    -- default menu
+    menu:set_items(root_items)
 end
 
 
@@ -157,7 +160,7 @@ function love.keypressed(key)
             if menu.items == root_items then
                 love.event.quit()
             else
-                menu.items = root_items
+                menu:set_items(root_items)
             end
         else
             menu.active = true
