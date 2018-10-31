@@ -25,18 +25,19 @@ function game:start()
         b = random_float(0, 0.5)
     }
 
-    -- set position
     for i, player in ipairs(players) do
+        -- set position
         local num = #players
         player.angle = 360/(num/i)
+
+        -- reset attributes
+        player.failure = 0
     end
+
+    -- reset pattern
+    block_sequence.blocks = {}
 
     -- first pattern
     local group, segments = get_random_group()
     block_sequence:add_group(group, segments)
-end
-
-
-function game:reset()
-
 end

@@ -134,7 +134,8 @@ end
 
 
 function love.keypressed(key)
-    if key == 'f' then
+
+    if key == 'f11' then
         if love.window.getFullscreen() then
             love.window.setFullscreen(false, 'desktop')
         else
@@ -142,14 +143,19 @@ function love.keypressed(key)
         end
     end
 
-    if key == 'return' then
+    --[[if key == 'return' then
         menu.active = false
         game:start()
-    end
+    end]]
 
     if key == 'escape' then
         if menu.active then
-            love.event.quit()
+            -- TODO: root_items should not be a glbal variable, change to a module level
+            if menu.items == root_items then
+                love.event.quit()
+            else
+                menu.items = root_items
+            end
         else
             menu.active = true
         end

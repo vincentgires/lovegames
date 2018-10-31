@@ -55,6 +55,23 @@ end
 -- MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
 -- ............................... datapath: game.speed
 
+local options_items = {
+    MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
+    MenuItem:new('SHAKE', 'BOOLEAN', {'game', 'camera', 'shake'}),
+    MenuItem:new('ROTATIONS', 'BOOLEAN', {'game', 'camera', 'rotation'}),
+    MenuItem:new('SWAP COLORS', 'BOOLEAN', {'game', 'scene', 'swap_bg_colors'}),
+    MenuItem:new('MULTIPLAYER COLLISION', 'BOOLEAN', {'game', 'multiplayer', 'collision'})
+}
+
+local function start_game()
+    menu.active = false
+    game:start()
+end
+
+local function set_options_menuitems()
+    menu.items = options_items
+end
+
 function set_players_menuitems()
     local items = {}
     for i, player in ipairs(players) do
@@ -95,18 +112,12 @@ function remove_player(p)
     set_players_menuitems()
 end
 
-local root_items = {
-    MenuItem:new('START GAME', 'ACTION'),
-    MenuItem:new('OPTIONS', 'MENU'),
+root_items = {
+    MenuItem:new('START GAME', 'ACTION', start_game),
+    MenuItem:new('PLAYERS', 'ACTION', set_players_menuitems),
+    MenuItem:new('OPTIONS', 'ACTION', set_options_menuitems),
 }
 
-local options_items = {
-    MenuItem:new('SPEED', 'NUMBER', {'game', 'speed'}),
-    MenuItem:new('SHAKE', 'BOOLEAN', {'game', 'camera', 'shake'}),
-    MenuItem:new('ROTATIONS', 'BOOLEAN', {'game', 'camera', 'rotation'}),
-    MenuItem:new('SWAP COLORS', 'BOOLEAN', {'game', 'scene', 'swap_bg_colors'}),
-    MenuItem:new('MULTIPLAYER COLLISION', 'BOOLEAN', {'game', 'multiplayer', 'collision'})
-}
 
 --[[
 local players_items = {
@@ -117,7 +128,6 @@ local players_items = {
 --[[
 local ITEM_TYPE = {
     'ACTION',
-    'MENU',
     'TEXTINPUT',
     'COLORHUE',
     'NUMBER',
@@ -137,9 +147,9 @@ menu = {
 }
 
 -- inital menu
--- menu.items = options_items
--- set_players_menuitems()
-set_player_options_menuitems(players[1])
+menu.items = root_items
+--set_players_menuitems()
+--set_player_options_menuitems(players[1])
 
 
 function menu:edit_textinput(t)
@@ -169,7 +179,7 @@ function menu:keypressed(key)
         elseif key == 'down' then
             self:next_item(1)
 
-        elseif key == 'space' or key == 'return' then
+        elseif key == 'return' then
             if item.subtype == 'BOOLEAN' then
                 local val = not item:get_value()
                 item:set_value(val)
@@ -181,6 +191,12 @@ function menu:keypressed(key)
 
             if item.subtype == 'SETKEY' then
                 menu.wait_for_key = true
+            end
+
+            if item.subtype == 'PLAYER' then
+                -- TODO: change it because self.active_index could not be the active player
+                local player = players[self.active_index]
+                set_player_options_menuitems(player)
             end
 
         elseif key == 'left' or key == 'right' then
@@ -216,6 +232,7 @@ function menu:keypressed(key)
 
         elseif key == 'delete' then
             if item.subtype == 'PLAYER' then
+                -- TODO: change it because self.active_index could not be the active player
                 local player = players[self.active_index]
                 remove_player(player)
             end
@@ -250,6 +267,7 @@ function menu:draw()
         local items_area = height/2
         local items_y_step = items_area/#self.items
         local text = item.text
+
         if self.active_index == i then
             love.graphics.setColor(item.active_color)
             if item.subtype == 'BOOLEAN' then
