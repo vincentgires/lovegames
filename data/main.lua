@@ -162,7 +162,7 @@ function love.keypressed(key)
 
     if key == 'escape' then
         if menu.active then
-            -- TODO: root_items should not be a glbal variable, change to a module level
+            -- TODO: root_items should not be a global variable, change to a module level
             if menu.items == root_items then
                 love.event.quit()
             else

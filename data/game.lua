@@ -40,6 +40,7 @@ function game:reset()
     }
 
     -- reset attributes
+    scene.base_time = 0
     scene.frame = 0
     scene.seconds = 0
     camera.angle = 0

@@ -138,7 +138,7 @@ end
 -------------------------------------------------------------------------------
 
 
---[[block_groups = {
+block_groups = {
     {
         segments = 5,
         blocks = {
@@ -163,17 +163,14 @@ end
             {position = 7, offset = 9},
             {position = 3, offset = 9}
         }
-    }
-}]]
-
-block_groups = {
+    },
     {
-        segments = 13,
+        segments = 10,
         blocks = {
-            {range = {1,10}, offset = 0},
-            {range = {7,11}, offset = 6},
-            {range = {4,8}, offset = 9},
-            {range = {2,8}, offset = 11},
+            {range = {1,5}, offset = 0},
+            {range = {1,3}, offset = 6},
+            {range = {5,7}, offset = 9},
+            {range = {7,11}, offset = 13},
         }
     }
 }

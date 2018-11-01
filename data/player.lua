@@ -70,8 +70,8 @@ function Player:update_points()
 
     for i, p in ipairs(points) do
         if i%2 == 1 then
-            x = points[i] * math.cos(angle) - points[i+1] * math.sin(angle)
-            y = points[i+1] * math.cos(angle) + points[i] * math.sin(angle)
+            local x = points[i] * math.cos(angle) - points[i+1] * math.sin(angle)
+            local y = points[i+1] * math.cos(angle) + points[i] * math.sin(angle)
             points[i] = x + offset_points[1]
             points[i+1] = y + offset_points[2]
         end
@@ -97,8 +97,15 @@ function Player:draw()
         love.graphics.polygon('fill', self.points)
     end
 
-    -- name
-    love.graphics.print(self.name, x, y)
+    -- draw name and compensate camera rotation
+    -- TODO: create ont text objet for each player
+    -- TODO: use *dt to be sure the blink looks correct on all machines
+    if scene.seconds <= 2 then
+        local text = love.graphics.newText(font.game, self.name)
+        if scene.frame % 4 == 1 or scene.seconds < 1 then -- blink the last second
+            love.graphics.draw(text, x, y, -camera.angle)
+        end
+    end
 
     -- collision hitbox for debug
     if game.debug.hitbox then
@@ -158,7 +165,7 @@ function players:new(name, leftkey, rightkey, color)
     name = name or 'Player' .. ' ' .. tostring(#self+1)
     leftkey = leftkey or 'left'
     rightkey = rightkey or 'right'
-    color = color or {1, 1, 1}
+    color = color or {1, 0, 0}
 
     local player = Player:new(name)
     player.key_left = leftkey
