@@ -19,6 +19,11 @@ function love.load()
 
     -- default menu
     menu:set_items(root_items)
+
+    -- settings
+    --if not love.filesystem.getInfo('settings.txt') then
+    --    love.filesystem.newFile('settings.txt')
+    --end
 end
 
 
@@ -149,10 +154,11 @@ function love.keypressed(key)
         end
     end
 
-    --[[if key == 'return' then
-        menu.active = false
-        game:start()
-    end]]
+    if key == 'return' then
+        if game.state == 'END' then
+            game:reset()
+        end
+    end
 
     if key == 'escape' then
         if menu.active then

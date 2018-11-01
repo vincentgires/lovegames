@@ -24,11 +24,12 @@ function Player:update(dt)
     self.freeze = false
     local direction = nil
 
-    if love.keyboard.isDown(self.key_left) then
-        direction = -1
-    end
-    if love.keyboard.isDown(self.key_right) then
-        direction = 1
+    if game.state == 'PLAY' then
+        if love.keyboard.isDown(self.key_left) then
+            direction = -1
+        elseif love.keyboard.isDown(self.key_right) then
+            direction = 1
+        end
     end
 
     if direction then
@@ -54,7 +55,10 @@ function Player:update(dt)
     end
 
     self:update_points()
-    self:check_block_collision()
+    collide = self:check_block_collision()
+    if collide then
+        game.state = 'END'
+    end
 end
 
 

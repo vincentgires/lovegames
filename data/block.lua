@@ -7,7 +7,6 @@ function get_random_group(group)
     for i, b in pairs(group.blocks) do
         if b.range then
             for j=b.range[1], b.range[2] do
-                print(j)
                 local block = Block:new()
                 block.position = j
                 block.offset = b['offset']
@@ -71,12 +70,13 @@ end
 
 
 function Block:update(dt)
-    self.radius = self.radius - game.speed
-    if self.radius+(self.offset*self.size) <= 0 then
-        self.finished = true
+    if game.state == 'PLAY' then
+        self.radius = self.radius - game.speed
+        if self.radius+(self.offset*self.size) <= 0 then
+            self.finished = true
+        end
+        self:update_points(self.position)
     end
-
-    self:update_points(self.position)
 end
 
 
@@ -168,10 +168,12 @@ end
 
 block_groups = {
     {
-        segments = 50,
+        segments = 13,
         blocks = {
             {range = {1,10}, offset = 0},
-            {range = {10,30}, offset = 5},
+            {range = {7,11}, offset = 6},
+            {range = {4,8}, offset = 9},
+            {range = {2,8}, offset = 11},
         }
     }
 }

@@ -1,5 +1,6 @@
+local gamestates = {'PLAY', 'PAUSE', 'END'}
+
 game = {
-    players = 1,
     multiplayer = {
         collision = true
     },
@@ -13,18 +14,12 @@ game = {
     },
     debug = {
         hithox = true
-    }
+    },
+    state = 'PLAY'
 }
 
 
 function game:start()
-    scene.seconds = 0
-    scene.bg_colors = {
-        r = random_float(0, 0.5),
-        g = random_float(0, 0.5),
-        b = random_float(0, 0.5)
-    }
-
     for i, player in ipairs(players) do
         -- set position
         local num = #players
@@ -34,7 +29,19 @@ function game:start()
         player.failure = 0
     end
 
+    self:reset()
+end
+
+function game:reset()
+    scene.bg_colors = {
+        r = random_float(0, 0.5),
+        g = random_float(0, 0.5),
+        b = random_float(0, 0.5)
+    }
+
     -- reset attributes
+    scene.frame = 0
+    scene.seconds = 0
     camera.angle = 0
 
     -- reset pattern
@@ -42,4 +49,6 @@ function game:start()
     -- first pattern
     local group, segments = get_random_group()
     block_sequence:add_group(group, segments)
+
+    game.state = 'PLAY'
 end
