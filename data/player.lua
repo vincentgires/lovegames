@@ -98,7 +98,7 @@ function Player:draw()
     end
 
     -- draw name and compensate camera rotation
-    -- TODO: create ont text objet for each player
+    -- TODO: create one text object for each player and not on each draw
     -- TODO: use *dt to be sure the blink looks correct on all machines
     if scene.seconds <= 2 then
         local text = love.graphics.newText(font.game, self.name)

@@ -139,7 +139,6 @@ function love.draw()
             love.graphics.print(text, 0, y)
             y = y + font.game:getHeight(text)
         end
-
     end
 end
 

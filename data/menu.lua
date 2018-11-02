@@ -288,7 +288,7 @@ function menu:draw()
                 text = '> ' .. text
                 local value = item:get_value()
                 text = text .. ' ['.. value ..']'
-            elseif item.subtype == 'ACTION' then
+            elseif item.subtype == 'ACTION' or item.subtype == 'COLORHUE' then
                 text = '> ' .. text
             elseif item.subtype == 'PLAYER' then
                 text = '> #' ..tostring(i).. ' ' .. text .. '_'
@@ -327,11 +327,12 @@ function menu:draw()
             local hue_step = 50
             local w = hue_width/hue_step
 
+            local hue_y = y+font.menu:getHeight(text)
             -- HUE ramp
             for i=1, hue_step, 1 do
                 local r, g, b = hsv_to_rgb(i/hue_step, 1, 1)
                 love.graphics.setColor(r, g, b)
-                love.graphics.rectangle("fill", hue_width+i*w, y+30, w, hue_height)
+                love.graphics.rectangle('fill', hue_width+i*w, hue_y, w, hue_height)
             end
 
             -- player position in the ramp
@@ -340,8 +341,12 @@ function menu:draw()
                 local g = item:get_value()[2]
                 local b = item:get_value()[3]
                 local h, s, v = rgb_to_hsv(r, g, b)
-                love.graphics.setColor(1, 1, 1)
-                love.graphics.rectangle("fill", hue_width+(h*hue_step)*w, y+30, w, hue_height*2)
+                love.graphics.setColor(r, g, b)
+                local tri_x = hue_width+(h*hue_step)*w
+                local tri_y = hue_y+hue_height
+                local s = 5*window.scale
+                local vertices = {tri_x-s, tri_y+s*2, tri_x, tri_y, tri_x+s, tri_y+s*2}
+                love.graphics.polygon('fill', vertices)
             end
         end
     end
