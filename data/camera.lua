@@ -31,11 +31,20 @@ function camera:update(dt)
         self.speed = self.speed * -1
     end
 
-    local end_game = 1
-    if game.state == 'END' then end_game = 0.7 end
     if game.camera.rotation then
-        self.angle = self.angle + dt * self.speed * end_game
+        if game.state == 'END' then
+            self.angle = self.angle + dt * 1.2
+        else
+            self.angle = self.angle + dt * self.speed
+        end
     end
+
+    if game.state == 'END' then
+        if self.scale <= 1.5 then
+            self.scale = self.scale + 0.3
+        end
+    end
+
 end
 
 return camera

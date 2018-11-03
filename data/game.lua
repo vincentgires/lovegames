@@ -44,6 +44,7 @@ function game:reset()
     scene.frame = 0
     scene.seconds = 0
     camera.angle = 0
+    camera.scale = 1
 
     -- reset pattern
     block_sequence.blocks = {}
