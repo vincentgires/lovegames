@@ -98,7 +98,8 @@ end
 function set_players_menuitems()
     local items = {}
     for i, player in ipairs(players) do
-        table.insert(items, MenuItem:new(player.name, 'PLAYER'))
+        player_menuitem = MenuItem:new(player.name, 'PLAYER', {'players', i, 'name'})
+        table.insert(items, player_menuitem)
     end
     table.insert(items, MenuItem:new('ADD PLAYER', 'ACTION', add_player))
     menu:set_items(items)
@@ -119,7 +120,8 @@ function set_player_options_menuitems(player)
 
     local items = {
         MenuItem:new(
-            player.name, 'TEXTINPUT'),
+            player.name, 'TEXTINPUT',
+            {'players', player_num, 'name'}),
         MenuItem:new(
             'LEFT KEY', 'SETKEY',
             {'players', player_num, 'key_left'}),
@@ -165,10 +167,10 @@ end
 function menu:edit_textinput(t)
     local item = self.items[self.active_index]
     if item.subtype == 'PLAYER' or item.subtype == 'TEXTINPUT' then
-        -- TODO: make it more generic, no direct call to player
-        local player = players[self.active_index]
-        player.name = player.name .. t -- update player name
-        item.text = player.name -- update player name in menu
+        local val = item:get_value()
+        val = val .. t -- add input text
+        item:set_value(val) -- update datapath value
+        item.text = val -- update text menu
     end
 end
 
@@ -232,11 +234,12 @@ function menu:keypressed(key)
 
         elseif key == 'backspace' then
             if item.subtype == 'PLAYER' or item.subtype == 'TEXTINPUT' then
-                local player = players[self.active_index]
-                local byteoffset = utf8.offset(player.name, -1)
+                local val = item:get_value()
+                local byteoffset = utf8.offset(val, -1)
                 if byteoffset then
-                    player.name = string.sub(player.name, 1, byteoffset - 1)
-                    item.text = player.name
+                    val = string.sub(val, 1, byteoffset - 1)
+                    item:set_value(val)
+                    item.text = val
                 end
             end
 
