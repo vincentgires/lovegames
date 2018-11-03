@@ -23,12 +23,12 @@ function camera:update(dt)
                 end
             end
         end
-    end
 
-    -- change direction and reset timer
-    if self.angle_timer <= 0 then
-        self.angle_timer = love.math.random(1,10)
-        self.speed = self.speed * -1
+        -- change direction and reset timer
+        if self.angle_timer <= 0 then
+            self.angle_timer = love.math.random(1,10)
+            self.speed = self.speed * -1
+        end
     end
 
     if game.camera.rotation then

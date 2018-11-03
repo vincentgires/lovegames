@@ -15,7 +15,7 @@ game = {
     debug = {
         hithox = true
     },
-    state = 'PLAY'
+    state = 'END'
 }
 
 

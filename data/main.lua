@@ -154,7 +154,7 @@ function love.keypressed(key)
     end
 
     if key == 'return' then
-        if game.state == 'END' then
+        if game.state == 'END' and not menu.active then
             game:reset()
         end
     end
