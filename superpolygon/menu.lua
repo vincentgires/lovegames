@@ -302,8 +302,6 @@ function menu:draw()
 
     love.graphics.setFont(font.menu)
     for i, item in pairs(self.items) do
-        local items_area = height/2
-        local items_y_step = items_area/#self.items
         local text = item.text
 
         if self.active_index == i then
@@ -331,23 +329,19 @@ function menu:draw()
                     text = text .. ' ['.. value ..']'
                 end
             end
-
         else
             love.graphics.setColor(item.color)
             if item.subtype == 'PLAYER' then
                 text = '#' ..tostring(i).. ' ' .. text
             end
-
         end
 
-        local y = ((items_y_step * i) - items_y_step/#self.items
-                   - font.menu:getHeight(text) + items_area/2)
-
-        love.graphics.print(
-            text,
-            width/2 - font.menu:getWidth(text)/2,
-            y
-        )
+        local x = width/2 - font.menu:getWidth(text)/2
+        local text_height = font.menu:getHeight(text)
+        local text_center = (height/2 - text_height/2)
+        local y = text_center + text_height*i
+        local y = y - (text_height*#self.items)/2
+        love.graphics.print(text, x, y)
 
         if item.subtype == 'COLORHUE' then
             local hue_height = 10*window.scale
