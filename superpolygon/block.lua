@@ -129,14 +129,7 @@ function block_sequence:update(dt)
 
 end
 
-
-function block_sequence:draw()
-
-end
-
-
 -------------------------------------------------------------------------------
-
 
 block_groups = {
     name = 'Default pattern',

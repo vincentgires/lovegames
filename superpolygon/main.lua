@@ -128,9 +128,11 @@ function love.draw()
         love.graphics.reset()
         love.graphics.setColor(1, 1, 1)
         love.graphics.setFont(font.game)
-        love.graphics.print('TIMER: ' .. scene.seconds, 0, 0)
-        local y = 20
+        local timer_text = 'TIMER: ' .. scene.seconds
+        love.graphics.print(timer_text, 0, 0)
+        local y = font.game:getHeight(timer_text)
         for i, p in ipairs(players) do
+            love.graphics.setColor(p.color)
             local text = p.name .. ' - FAILURE ' .. p.failure
             love.graphics.print(text, 0, y)
             y = y + font.game:getHeight(text)
