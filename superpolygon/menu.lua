@@ -13,13 +13,14 @@ MenuItem = {
     active_color = {1.0, 1.0, 1.0}
 }
 
-function MenuItem:new(text, subtype, datapath)
+function MenuItem:new(text, subtype, datapath, options)
     self.__index = self
     local instance = {}
     setmetatable(instance, self)
     instance.text = text or '---'
     instance.subtype = subtype
     instance.datapath = datapath
+    instance.options = options
     return instance
 end
 
@@ -98,7 +99,7 @@ end
 function set_players_menuitems()
     local items = {}
     for i, player in ipairs(players) do
-        player_menuitem = MenuItem:new(player.name, 'PLAYER', {'players', i, 'name'})
+        local player_menuitem = MenuItem:new(player.name, 'PLAYER', {'players', i, 'name'})
         table.insert(items, player_menuitem)
     end
     table.insert(items, MenuItem:new('ADD PLAYER', 'ACTION', add_player))
@@ -135,6 +136,26 @@ function set_player_options_menuitems(player)
     menu:set_items(items)
 end
 
+function set_blockgroups(t)
+    block_groups = t
+    start_game()
+end
+
+function set_local_blockgroups_menuitems()
+    -- TODO: display local save_directory = love.filesystem.getSaveDirectory()..'/blockgroups'
+    local items = {}
+    local files = love.filesystem.getDirectoryItems(BLOCKGROUPS_FOLDER)
+    for i, file in ipairs(files) do
+        local chunk = love.filesystem.load(BLOCKGROUPS_FOLDER..'/'..file)
+        local result = chunk()
+        local name = result.name or file
+        local blockgroups_menuitem = MenuItem:new(
+            name, 'ACTION', set_blockgroups, result)
+        table.insert(items, blockgroups_menuitem)
+    end
+    menu:set_items(items)
+end
+
 function remove_player(p)
     for k, v in pairs(players) do
         if v == p then
@@ -145,7 +166,8 @@ function remove_player(p)
 end
 
 root_items = {
-    MenuItem:new('START GAME', 'ACTION', start_game),
+    --MenuItem:new('START GAME', 'ACTION', start_game),
+    MenuItem:new('START GAME', 'ACTION', set_local_blockgroups_menuitems),
     MenuItem:new('PLAYERS', 'ACTION', set_players_menuitems),
     MenuItem:new('OPTIONS', 'ACTION', set_options_menuitems),
 }
@@ -198,7 +220,11 @@ function menu:keypressed(key)
             end
 
             if item.subtype == 'ACTION' then
-                item.datapath()
+                if item.options then
+                    item.datapath(item.options)
+                else
+                    item.datapath()
+                end
             end
 
             if item.subtype == 'SETKEY' then

@@ -7,6 +7,7 @@ require 'menu'
 scene = require 'scene'
 camera = require 'camera'
 
+BLOCKGROUPS_FOLDER = 'blockgroups'
 
 function love.load()
     love.window.setTitle('SUPER POLYGON')
@@ -19,11 +20,6 @@ function love.load()
 
     -- default menu
     menu:set_items(root_items)
-
-    -- settings
-    --if not love.filesystem.getInfo('settings.txt') then
-    --    love.filesystem.newFile('settings.txt')
-    --end
 end
 
 

@@ -139,6 +139,7 @@ end
 
 
 block_groups = {
+    name = 'Default pattern',
     {
         segments = 5,
         blocks = {
