@@ -99,7 +99,8 @@ end
 function set_players_menuitems()
     local items = {}
     for i, player in ipairs(players) do
-        local player_menuitem = MenuItem:new(player.name, 'PLAYER', {'players', i, 'name'})
+        local player_menuitem = MenuItem:new(
+            player.name, 'PLAYER', {'players', i, 'name'}, {player=player})
         table.insert(items, player_menuitem)
     end
     table.insert(items, MenuItem:new('ADD PLAYER', 'ACTION', add_player))
@@ -137,7 +138,7 @@ function set_player_options_menuitems(player)
 end
 
 function set_blockgroups(t)
-    block_groups = t
+    block_groups = t.blockgroups
     start_game()
 end
 
@@ -150,7 +151,7 @@ function set_local_blockgroups_menuitems()
         local result = chunk()
         local name = result.name or file
         local blockgroups_menuitem = MenuItem:new(
-            name, 'ACTION', set_blockgroups, result)
+            name, 'ACTION', set_blockgroups, {blockgroups=result})
         table.insert(items, blockgroups_menuitem)
     end
     menu:set_items(items)
@@ -232,8 +233,7 @@ function menu:keypressed(key)
             end
 
             if item.subtype == 'PLAYER' then
-                -- TODO: change it because self.active_index could not be the active player
-                local player = players[self.active_index]
+                local player = item.options.player
                 set_player_options_menuitems(player)
             end
 
@@ -271,8 +271,7 @@ function menu:keypressed(key)
 
         elseif key == 'delete' then
             if item.subtype == 'PLAYER' then
-                -- TODO: change it because self.active_index could not be the active player
-                local player = players[self.active_index]
+                local player = item.options.player
                 remove_player(player)
             end
         end
