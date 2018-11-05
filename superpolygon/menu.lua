@@ -143,8 +143,7 @@ function set_blockgroups(t)
     start_game()
 end
 
-function set_local_blockgroups_menuitems()
-    -- TODO: display local save_directory = love.filesystem.getSaveDirectory()..'/blockgroups'
+function set_blockgroups_menuitems()
     local items = {}
     local files = love.filesystem.getDirectoryItems(BLOCKGROUPS_FOLDER)
     for i, file in ipairs(files) do
@@ -170,8 +169,7 @@ function remove_player(p)
 end
 
 root_items = {
-    --MenuItem:new('START GAME', 'ACTION', start_game),
-    MenuItem:new('START GAME', 'ACTION', set_local_blockgroups_menuitems),
+    MenuItem:new('START GAME', 'ACTION', set_blockgroups_menuitems),
     MenuItem:new('PLAYERS', 'ACTION', set_players_menuitems),
     MenuItem:new('OPTIONS', 'ACTION', set_options_menuitems),
 }

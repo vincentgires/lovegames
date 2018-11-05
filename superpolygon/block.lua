@@ -131,6 +131,7 @@ end
 
 -------------------------------------------------------------------------------
 
+-- TODO: remove this part
 block_groups = {
     name = 'Default pattern',
     {
