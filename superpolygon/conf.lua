@@ -11,7 +11,8 @@ font = {
 
 function font:create_or_update()
     self.title = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 35*window.scale)
-    self.menu = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 25*window.scale)
+    self.menu_items = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 25*window.scale)
+    self.menu_info = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 16*window.scale)
     self.game = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 16*window.scale)
 end
 

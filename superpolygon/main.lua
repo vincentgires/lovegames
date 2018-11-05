@@ -164,6 +164,7 @@ function love.keypressed(key)
                 love.event.quit()
             else
                 menu:set_items(root_items)
+                menu.info = nil
             end
         else
             menu.active = true

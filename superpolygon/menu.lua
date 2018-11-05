@@ -105,6 +105,7 @@ function set_players_menuitems()
     end
     table.insert(items, MenuItem:new('ADD PLAYER', 'ACTION', add_player))
     menu:set_items(items)
+    menu.info = 'Remove player with DEL key'
 end
 
 function add_player()
@@ -155,6 +156,8 @@ function set_local_blockgroups_menuitems()
         table.insert(items, blockgroups_menuitem)
     end
     menu:set_items(items)
+    local save_directory = love.filesystem.getSaveDirectory()..'/blockgroups'
+    menu.info = save_directory
 end
 
 function remove_player(p)
@@ -179,7 +182,8 @@ menu = {
     active = true,
     active_index = 1,
     items = {},
-    wait_for_key = false
+    wait_for_key = false,
+    info = nil
 }
 
 function menu:set_items(items)
@@ -300,7 +304,7 @@ function menu:draw()
         width/2 - font.title:getWidth(GAME_TITLE.text)/2,
         height/100*10)
 
-    love.graphics.setFont(font.menu)
+    love.graphics.setFont(font.menu_items)
     for i, item in pairs(self.items) do
         local text = item.text
 
@@ -336,8 +340,8 @@ function menu:draw()
             end
         end
 
-        local x = width/2 - font.menu:getWidth(text)/2
-        local text_height = font.menu:getHeight(text)
+        local x = width/2 - font.menu_items:getWidth(text)/2
+        local text_height = font.menu_items:getHeight(text)
         local text_center = (height/2 - text_height/2)
         local y = text_center + text_height*i
         local y = y - (text_height*#self.items)/2
@@ -349,7 +353,7 @@ function menu:draw()
             local hue_step = 50
             local w = hue_width/hue_step
 
-            local hue_y = y+font.menu:getHeight(text)
+            local hue_y = y+font.menu_items:getHeight(text)
             -- HUE ramp
             for i=1, hue_step, 1 do
                 local r, g, b = hsv_to_rgb(i/hue_step, 1, 1)
@@ -371,5 +375,15 @@ function menu:draw()
                 love.graphics.polygon('fill', vertices)
             end
         end
+    end
+    if menu.info then
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.setFont(font.menu_info)
+        local info_text = menu.info
+        local info_width = font.menu_info:getWidth(info_text)
+        local info_height = font.menu_info:getHeight(info_text)
+        local x = width/2 - info_width/2
+        local y = height - info_height*2
+        love.graphics.print(info_text, x, y)
     end
 end
