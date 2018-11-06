@@ -166,6 +166,8 @@ function love.keypressed(key)
                 -- TODO: root_items should not be a global variable
                 if menu.items == root_items then
                     love.event.quit()
+                elseif menu.set_parent_items then
+                    menu.set_parent_items()
                 else
                     menu:set_items(root_items)
                     menu.info = nil

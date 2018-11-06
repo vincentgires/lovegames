@@ -135,7 +135,7 @@ function set_player_options_menuitems(player)
             'COLOR', 'COLORHUE',
             {'players', player_num, 'color'})
     }
-    menu:set_items(items)
+    menu:set_items(items, set_players_menuitems)
     menu.info = nil
 end
 
@@ -181,12 +181,14 @@ menu = {
     active = true,
     active_index = 1,
     items = {},
+    set_parent_items = nil, -- expect a function
     wait_for_key = false,
     info = nil
 }
 
-function menu:set_items(items)
+function menu:set_items(items, set_parent_items)
     self.items = items
+    self.set_parent_items = set_parent_items
     self.active_index = 1
 end
 
