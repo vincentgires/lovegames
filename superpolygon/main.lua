@@ -162,12 +162,14 @@ function love.keypressed(key)
 
     if key == 'escape' then
         if menu.active then
-            -- TODO: root_items should not be a global variable, change to a module level
-            if menu.items == root_items then
-                love.event.quit()
-            else
-                menu:set_items(root_items)
-                menu.info = nil
+            if not menu.wait_for_key then
+                -- TODO: root_items should not be a global variable
+                if menu.items == root_items then
+                    love.event.quit()
+                else
+                    menu:set_items(root_items)
+                    menu.info = nil
+                end
             end
         else
             menu.active = true
