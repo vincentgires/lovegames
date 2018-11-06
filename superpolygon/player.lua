@@ -21,7 +21,6 @@ end
 
 
 function Player:update(dt)
-    print(self.collide)
     self.freeze = false
     local direction = nil
 
