@@ -175,6 +175,7 @@ function players:new(name, leftkey, rightkey, color)
     player.color = color
 
     table.insert(self, player)
+    return player
 end
 
 function players:remove(number)

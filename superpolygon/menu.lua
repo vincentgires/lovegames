@@ -109,8 +109,17 @@ function set_players_menuitems()
 end
 
 function add_player()
-    players:new()
+    local player = players:new()
     set_players_menuitems()
+
+    -- set menu active_index to new player
+    for i, item in ipairs(menu.items) do
+        if item.options then
+            if item.options.player == player then
+                menu.active_index = i
+            end
+        end
+    end
 end
 
 function set_player_options_menuitems(player)
