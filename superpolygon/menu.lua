@@ -136,6 +136,7 @@ function set_player_options_menuitems(player)
             {'players', player_num, 'color'})
     }
     menu:set_items(items)
+    menu.info = nil
 end
 
 function set_blockgroups(t)
@@ -155,7 +156,7 @@ function set_blockgroups_menuitems()
         table.insert(items, blockgroups_menuitem)
     end
     menu:set_items(items)
-    local save_directory = love.filesystem.getSaveDirectory()..'/blockgroups'
+    local save_directory = love.filesystem.getSaveDirectory()..'/'..BLOCKGROUPS_FOLDER
     menu.info = save_directory
 end
 
@@ -246,6 +247,11 @@ function menu:keypressed(key)
                 if key == 'left' then direction = -1
                 elseif key == 'right' then direction = 1 end
                 local val = item:get_value() + direction
+                item:set_value(val)
+            end
+
+            if item.subtype == 'BOOLEAN' then
+                local val = not item:get_value()
                 item:set_value(val)
             end
 
