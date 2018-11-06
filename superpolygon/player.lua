@@ -21,6 +21,7 @@ end
 
 
 function Player:update(dt)
+    print(self.collide)
     self.freeze = false
     local direction = nil
 
@@ -55,8 +56,9 @@ function Player:update(dt)
     end
 
     self:update_points()
-    collide = self:check_block_collision()
+    local collide = self:check_block_collision()
     if collide then
+        self.collide = true
         game.state = 'END'
     end
 end
@@ -95,6 +97,10 @@ function Player:draw()
     love.graphics.setColor(self.color)
     if self.points then
         love.graphics.polygon('fill', self.points)
+        if self.collide then
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.polygon('line', self.points)
+        end
     end
 
     -- draw name and compensate camera rotation
@@ -109,7 +115,6 @@ function Player:draw()
 
     -- collision hitbox for debug
     if game.debug.hitbox then
-        love.graphics.setColor(0, 0, 1)
         love.graphics.setColor(0, 1, 0)
         love.graphics.circle('line', x, y, self.hitbox_size)
     end
@@ -134,7 +139,6 @@ function Player:check_block_collision()
                     end
                 end
 
-                -- if block.points and not self.collide then
                 if block.points then
                     -- bottom of the block \->_____<-/
                     local bx1 = block.points[1]
@@ -145,7 +149,6 @@ function Player:check_block_collision()
                         px1, px2, py1, py2, bx1, bx2, by1, by2)
                     if collide then
                         table.insert(block.collided_players, self)
-                        -- self.collide = true
                         self.failure = self.failure + 1
                         return true, x, y
                     end

@@ -21,10 +21,6 @@ game = {
 
 function game:start()
     for i, player in ipairs(players) do
-        -- set position
-        local num = #players
-        player.angle = 360/(num/i)
-
         -- reset attributes
         player.failure = 0
     end
@@ -45,6 +41,11 @@ function game:reset()
     scene.seconds = 0
     camera.angle = 0
     camera.scale = 1
+
+    for i, player in ipairs(players) do
+        player.angle = 360/(#players/i)
+        player.collide = false
+    end
 
     -- reset pattern
     block_sequence.blocks = {}
