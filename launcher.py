@@ -2,9 +2,13 @@
 
 import os
 import subprocess
+import sys
 
 currentpath = os.path.dirname(__file__)
 gamepath = os.path.join(currentpath, 'superpolygon')
-love = 'love'
+if sys.platform.startswith('win'):
+    love = 'love.exe'
+else:
+    love = 'love'
 command = [love, gamepath]
 subprocess.call(command)
