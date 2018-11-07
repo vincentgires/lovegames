@@ -146,7 +146,8 @@ function love.keypressed(key)
     if key == 'f11' then
         if love.window.getFullscreen() then
             love.window.setFullscreen(false, 'desktop')
-            love.window.setMode(window.default_width, window.default_height, {resizable=true})
+            love.window.setMode(
+                window.default_width, window.default_height, {resizable=true})
             love.resize(window.default_width, window.default_height)
 
         else
