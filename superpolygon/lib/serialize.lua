@@ -17,11 +17,8 @@ function table.tostring(t)
         else
             error('Invalid value: '..tostring(v))
         end
+        -- TODO: don't add comma at the end an array
         result = result..','
-    end
-    -- Remove leading commas from the result
-    if result ~= '' then
-        result = result:sub(1, #result-1)
     end
     return result..'}'
 end
