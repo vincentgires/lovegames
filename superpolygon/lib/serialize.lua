@@ -3,8 +3,7 @@ function table.tostring(t)
     for k, v in pairs(t) do
         -- Check key type
         if type(k) == 'string' then
-            local f = string.format(k)
-            result = result..string.format('%q', f)..'='
+            result = result..k..'='
         end
         -- Check value type
         if type(v) == 'table' then
