@@ -6,6 +6,7 @@ require 'game'
 require 'menu'
 scene = require 'scene'
 camera = require 'camera'
+require 'lib/serialize'
 
 BLOCKGROUPS_FOLDER = 'blockgroups'
 
