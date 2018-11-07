@@ -1,5 +1,6 @@
 return {
     name = 'Hexagon',
+    speed = 5,
     {
         segments = 6,
         blocks = {

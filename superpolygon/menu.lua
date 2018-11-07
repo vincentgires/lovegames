@@ -68,9 +68,6 @@ local ITEM_TYPE = {
 
 local options_items = {
     MenuItem:new(
-        'SPEED', 'NUMBER',
-        {'game', 'speed'}),
-    MenuItem:new(
         'SHAKE', 'BOOLEAN',
         {'game', 'camera', 'shake'}),
     MenuItem:new(
@@ -150,6 +147,7 @@ end
 
 function set_blockgroups(t)
     block_groups = t.blockgroups
+    block_sequence.speed = t.blockgroups.speed
     start_game()
 end
 

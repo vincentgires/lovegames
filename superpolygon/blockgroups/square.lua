@@ -1,5 +1,6 @@
 return {
     name = 'Square',
+    speed = 5,
     {
         segments = 4,
         blocks = {

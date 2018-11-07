@@ -1,5 +1,6 @@
 return {
     name = 'Pentagon',
+    speed = 5,
     {
         segments = 5,
         blocks = {

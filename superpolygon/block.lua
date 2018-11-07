@@ -71,7 +71,7 @@ end
 
 function Block:update(dt)
     if game.state == 'PLAY' then
-        self.radius = self.radius - game.speed
+        self.radius = self.radius - block_sequence.speed
         if self.radius+(self.offset*self.size) <= 0 then
             self.finished = true
         end
@@ -91,7 +91,8 @@ end
 -------------------------------------------------------------------------------
 
 block_sequence = {
-    blocks = {} -- {position, offset, segments}
+    blocks = {}, -- {position, offset, segments}
+    speed = nil
 }
 
 function block_sequence:add_group(group, segments)
