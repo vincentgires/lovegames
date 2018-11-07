@@ -2,8 +2,10 @@ function table.tostring(t)
     local result = '{'
     for k, v in pairs(t) do
         -- Check key type
-        if type(k) == 'string' then
-            result = result..k..'='
+        if type(v) ~= 'function' then
+            if type(k) == 'string' then
+                result = result..k..'='
+            end
         end
         -- Check value type
         if type(v) == 'table' then
@@ -14,8 +16,6 @@ function table.tostring(t)
             result = result..v
         elseif type(v) == 'string' then
             result = result..string.format('%q', v)
-        else
-            error('Invalid value: '..tostring(v))
         end
         -- TODO: don't add comma at the end an array
         result = result..','
