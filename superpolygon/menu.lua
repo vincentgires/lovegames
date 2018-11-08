@@ -1,5 +1,7 @@
 local utf8 = require('utf8')
 
+local BLOCKGROUPS_FOLDER = 'blockgroups'
+
 local GAME_TITLE = {
     text = 'SUPER POLYGON',
     color = {1.0, 0.7, 0.3}

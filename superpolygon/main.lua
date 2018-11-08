@@ -8,7 +8,7 @@ scene = require 'scene'
 camera = require 'camera'
 require 'lib/serialize'
 
-BLOCKGROUPS_FOLDER = 'blockgroups'
+local SETTINGS_FILE = 'settings.lua'
 
 function love.load()
     love.window.setTitle('SUPER POLYGON')
@@ -16,11 +16,14 @@ function love.load()
     love.keyboard.setKeyRepeat(true)
     font:create_or_update()
 
-    -- default player
-    players:new('Player 1', 'left', 'right', {1, 0, 1})
-
     -- default menu
     menu:set_items(root_items)
+
+    if not load_settings() then
+        -- default player
+        players:new('Player 1', 'left', 'right', {1, 0, 1})
+    end
+
 end
 
 
@@ -168,6 +171,7 @@ function love.keypressed(key)
                 -- TODO: root_items should not be a global variable
                 if menu.items == root_items then
                     love.event.quit()
+                    save_settings()
                 elseif menu.set_parent_items then
                     menu.set_parent_items()
                 else
@@ -189,4 +193,39 @@ end
 function love.resize(w, h)
     window.scale = w/window.default_width
     font:create_or_update()
+end
+
+
+function load_settings()
+    local file = love.filesystem.getInfo(SETTINGS_FILE)
+    if file then
+        local chunk = love.filesystem.load(SETTINGS_FILE)
+        settings = chunk()
+        for i, player in ipairs(settings.players) do
+            players:new(
+                player.name,
+                player.key_left,
+                player.key_right,
+                player.color)
+        end
+        return true
+    else
+        return false
+    end
+end
+
+
+function save_settings()
+    local settings = {}
+    settings.players = {}
+    for i, p in ipairs(players) do
+        local player = {
+            name = p.name,
+            key_left = p.key_left,
+            key_right = p.key_right,
+            color = p.color}
+        table.insert(settings.players, player)
+    end
+    local settings_string = table.tostring(settings)
+    love.filesystem.write(SETTINGS_FILE, 'return '..settings_string)
 end

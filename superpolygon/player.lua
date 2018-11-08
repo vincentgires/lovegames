@@ -164,7 +164,7 @@ players = {}
 
 
 function players:new(name, leftkey, rightkey, color)
-    name = name or 'Player' .. ' ' .. tostring(#self+1)
+    name = name or 'Player'..' '..tostring(#self+1)
     leftkey = leftkey or 'left'
     rightkey = rightkey or 'right'
     color = color or {1, 0, 0}
