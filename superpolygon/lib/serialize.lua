@@ -1,6 +1,7 @@
 function table.tostring(t)
     local result = '{'
     for k, v in pairs(t) do
+        local valid = true
         -- Check key type
         if type(v) ~= 'function' then
             if type(k) == 'string' then
@@ -16,9 +17,13 @@ function table.tostring(t)
             result = result..v
         elseif type(v) == 'string' then
             result = result..string.format('%q', v)
+        else
+            valid = false
         end
         -- TODO: don't add comma at the end an array
-        result = result..','
+        if valid then
+            result = result..','
+        end
     end
     return result..'}'
 end
