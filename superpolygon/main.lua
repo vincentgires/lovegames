@@ -141,6 +141,25 @@ function love.draw()
             love.graphics.print(text, 0, y)
             y = y + font.game:getHeight(text)
         end
+
+        if game.state == 'END' then
+            local info_font = font.title
+            love.graphics.setFont(info_font)
+            love.graphics.setColor{1.0, 0.7, 0.3}
+
+            local text = 'PRESS ENTER TO RESTART'
+            local text_width = info_font:getWidth(text)
+            local text_height = info_font:getHeight(text)
+            local x = width/2 - text_width/2
+            local y = height - text_height*2
+            love.graphics.print(text, x, y)
+
+            local text = scene.seconds..' SECONDS'
+            local text_width = info_font:getWidth(text)
+            local text_height = info_font:getHeight(text)
+            local x = width/2 - text_width/2
+            love.graphics.print(text, x, text_height)
+        end
     end
 end
 
