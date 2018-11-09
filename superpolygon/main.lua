@@ -220,12 +220,14 @@ function load_settings()
     if file then
         local chunk = love.filesystem.load(SETTINGS_FILE)
         settings = chunk()
-        for i, player in ipairs(settings.players) do
-            players:new(
-                player.name,
-                player.key_left,
-                player.key_right,
-                player.color)
+        if settings.players then
+            for i, player in ipairs(settings.players) do
+                players:new(
+                    player.name,
+                    player.key_left,
+                    player.key_right,
+                    player.color)
+            end
         end
         return true
     else
