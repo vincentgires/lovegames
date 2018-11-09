@@ -1,5 +1,12 @@
+function table.length(t)
+  local count = 0
+  for _ in pairs(t) do count = count + 1 end
+  return count
+end
+
 function table.tostring(t)
     local result = '{'
+    local count = 1
     for k, v in pairs(t) do
         local valid = true
         -- Check key type
@@ -20,10 +27,10 @@ function table.tostring(t)
         else
             valid = false
         end
-        -- TODO: don't add comma at the end an array
-        if valid then
+        if valid and count ~= table.length(t) then
             result = result..','
         end
+        count = count + 1
     end
     return result..'}'
 end
