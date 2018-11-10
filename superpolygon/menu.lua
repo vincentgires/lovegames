@@ -9,20 +9,20 @@ local GAME_TITLE = {
 
 -------------------------------------------------------------------------------
 
-MenuItem = {
+local MenuItem = {
     subtype = nil,
     color = {1.0, 0.7, 0.3},
     active_color = {1.0, 1.0, 1.0}
 }
 
-function MenuItem:new(text, subtype, datapath, options)
+function MenuItem:new(t)
     self.__index = self
     local instance = {}
     setmetatable(instance, self)
-    instance.text = text or '---'
-    instance.subtype = subtype
-    instance.datapath = datapath
-    instance.options = options
+    instance.text = t.text or '---'
+    instance.subtype = t.subtype
+    instance.datapath = t.datapath
+    instance.options = t.options
     return instance
 end
 
@@ -69,21 +69,31 @@ local ITEM_TYPE = {
 }
 
 local options_items = {
-    MenuItem:new(
-        'SHAKE', 'BOOLEAN',
-        {'game', 'camera', 'shake'}),
-    MenuItem:new(
-        'CAMERA ROTATIONS', 'BOOLEAN',
-        {'game', 'camera', 'rotation'}),
-    MenuItem:new(
-        'CAMERA SPEED', 'NUMBER',
-        {'camera', 'speed'}),
-    MenuItem:new(
-        'SWAP COLORS', 'BOOLEAN',
-        {'game', 'scene', 'swap_bg_colors'}),
-    MenuItem:new(
-        'MULTIPLAYER COLLISION', 'BOOLEAN',
-        {'game', 'multiplayer', 'collision'})
+    MenuItem:new{
+        text='SHAKE',
+        subtype='BOOLEAN',
+        datapath={'game', 'camera', 'shake'}
+    },
+    MenuItem:new{
+        text='CAMERA ROTATIONS',
+        subtype='BOOLEAN',
+        datapath={'game', 'camera', 'rotation'}
+    },
+    MenuItem:new{
+        text='CAMERA SPEED',
+        subtype='NUMBER',
+        datapath={'camera', 'speed'}
+    },
+    MenuItem:new{
+        text='SWAP COLORS',
+        subtype='BOOLEAN',
+        datapath={'game', 'scene', 'swap_bg_colors'}
+    },
+    MenuItem:new{
+        text='MULTIPLAYER COLLISION',
+        subtype='BOOLEAN',
+        datapath={'game', 'multiplayer', 'collision'}
+    }
 }
 
 local function start_game()
@@ -98,11 +108,17 @@ end
 function set_players_menuitems()
     local items = {}
     for i, player in ipairs(players) do
-        local player_menuitem = MenuItem:new(
-            player.name, 'PLAYER', {'players', i, 'name'}, {player=player})
+        local player_menuitem = MenuItem:new{
+            text=player.name,
+            subtype='PLAYER',
+            datapath={'players', i, 'name'},
+            options={player=player}
+        }
         table.insert(items, player_menuitem)
     end
-    table.insert(items, MenuItem:new('ADD PLAYER', 'ACTION', add_player))
+    table.insert(items, MenuItem:new{text='ADD PLAYER',
+                                     subtype='ACTION',
+                                     datapath=add_player})
     menu:set_items(items)
     menu.info = 'Remove player with DEL key'
 end
@@ -130,18 +146,26 @@ function set_player_options_menuitems(player)
     end
 
     local items = {
-        MenuItem:new(
-            player.name, 'TEXTINPUT',
-            {'players', player_num, 'name'}),
-        MenuItem:new(
-            'LEFT KEY', 'SETKEY',
-            {'players', player_num, 'key_left'}),
-        MenuItem:new(
-            'RIGHT KEY', 'SETKEY',
-            {'players', player_num, 'key_right'}),
-        MenuItem:new(
-            'COLOR', 'COLORHUE',
-            {'players', player_num, 'color'})
+        MenuItem:new{
+            text=player.name,
+            subtype='TEXTINPUT',
+            datapath={'players', player_num, 'name'}
+        },
+        MenuItem:new{
+            text='LEFT KEY',
+            subtype='SETKEY',
+            datapath={'players', player_num, 'key_left'}
+        },
+        MenuItem:new{
+            text='RIGHT KEY',
+            subtype='SETKEY',
+            datapath={'players', player_num, 'key_right'}
+        },
+        MenuItem:new{
+            text='COLOR',
+            subtype='COLORHUE',
+            datapath={'players', player_num, 'color'}
+        }
     }
     menu:set_items(items, set_players_menuitems)
     menu.info = nil
@@ -160,8 +184,12 @@ function set_blockgroups_menuitems()
         local chunk = love.filesystem.load(BLOCKGROUPS_FOLDER..'/'..file)
         local result = chunk()
         local name = result.name or file
-        local blockgroups_menuitem = MenuItem:new(
-            name, 'ACTION', set_blockgroups, {blockgroups=result})
+        local blockgroups_menuitem = MenuItem:new{
+            text=name,
+            subtype='ACTION',
+            datapath=set_blockgroups,
+            options={blockgroups=result}
+        }
         table.insert(items, blockgroups_menuitem)
     end
     menu:set_items(items)
@@ -179,9 +207,15 @@ function remove_player(p)
 end
 
 root_items = {
-    MenuItem:new('START GAME', 'ACTION', set_blockgroups_menuitems),
-    MenuItem:new('PLAYERS', 'ACTION', set_players_menuitems),
-    MenuItem:new('OPTIONS', 'ACTION', set_options_menuitems),
+    MenuItem:new{text='START GAME',
+                 subtype='ACTION',
+                 datapath=set_blockgroups_menuitems},
+    MenuItem:new{text='PLAYERS',
+                 subtype='ACTION',
+                 datapath=set_players_menuitems},
+    MenuItem:new{text='OPTIONS',
+                 subtype='ACTION',
+                 datapath=set_options_menuitems},
 }
 
 -------------------------------------------------------------------------------
