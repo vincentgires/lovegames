@@ -1,4 +1,8 @@
 local utf8 = require('utf8')
+local game = require 'game'
+local players = require 'players'
+local camera = require 'camera'
+local blocksequence = require 'blocksequence'
 
 local BLOCKGROUPS_FOLDER = 'blockgroups'
 
@@ -7,8 +11,6 @@ local GAME_TITLE = {
     color = {1.0, 0.7, 0.3}
 }
 
--------------------------------------------------------------------------------
-
 local MenuItem = {
     subtype = nil,
     color = {1.0, 0.7, 0.3},
@@ -16,42 +18,37 @@ local MenuItem = {
 }
 
 function MenuItem:new(t)
+    -- t = {text, subtype, datapath, property, options}
+    t = t or {}
     self.__index = self
-    local instance = {}
-    setmetatable(instance, self)
-    instance.text = t.text or '---'
-    instance.subtype = t.subtype
-    instance.datapath = t.datapath
-    instance.options = t.options
-    return instance
+    setmetatable(t, self)
+    return t
 end
 
 function MenuItem:get_value()
     if not self.datapath then
         return nil
     end
-
-    -- the result should be something like _G['game']['camera']['rotation']
-    local value = _G
-    for i, v in pairs(self.datapath) do
+    local value = self.datapath
+    for _, v in pairs(self.property) do
         value = value[v]
     end
+    -- the result should be something like my_table['my']['property']
     return value
 end
 
 function MenuItem:set_value(val)
-    --[[]]
-    local value = _G
-    for i, v in pairs(self.datapath) do
+    local value = self.datapath
+    for i, v in pairs(self.property) do
         -- stop before the last value to make the value settable
-        if i == #self.datapath then
+        if i == #self.property then
             goto continue
         end
         value = value[v]
     end
     ::continue::
-    local attr = self.datapath[#self.datapath]
-    value[attr] = val
+    local prop = self.property[#self.property]
+    value[prop] = val
 end
 
 -------------------------------------------------------------------------------
@@ -72,27 +69,32 @@ local options_items = {
     MenuItem:new{
         text='SHAKE',
         subtype='BOOLEAN',
-        datapath={'game', 'camera', 'shake'}
+        datapath=game,
+        property={'camera', 'shake'}
     },
     MenuItem:new{
         text='CAMERA ROTATIONS',
         subtype='BOOLEAN',
-        datapath={'game', 'camera', 'rotation'}
+        datapath=game,
+        property={'camera', 'rotation'}
     },
     MenuItem:new{
         text='CAMERA SPEED',
         subtype='NUMBER',
-        datapath={'camera', 'speed'}
+        datapath=camera,
+        property={'speed'}
     },
     MenuItem:new{
         text='SWAP COLORS',
         subtype='BOOLEAN',
-        datapath={'game', 'scene', 'swap_bg_colors'}
+        datapath=game,
+        property={'scene', 'swap_bg_colors'}
     },
     MenuItem:new{
         text='MULTIPLAYER COLLISION',
         subtype='BOOLEAN',
-        datapath={'game', 'multiplayer', 'collision'}
+        datapath=game,
+        property={'multiplayer', 'collision'}
     }
 }
 
@@ -105,13 +107,14 @@ local function set_options_menuitems()
     menu:set_items(options_items)
 end
 
-function set_players_menuitems()
+local function set_players_menuitems()
     local items = {}
     for i, player in ipairs(players) do
         local player_menuitem = MenuItem:new{
             text=player.name,
             subtype='PLAYER',
-            datapath={'players', i, 'name'},
+            datapath=players,
+            property={i, 'name'},
             options={player=player}
         }
         table.insert(items, player_menuitem)
@@ -123,7 +126,7 @@ function set_players_menuitems()
     menu.info = 'Remove player with DEL key'
 end
 
-function add_player()
+local function add_player()
     local player = players:new()
     set_players_menuitems()
 
@@ -137,7 +140,7 @@ function add_player()
     end
 end
 
-function set_player_options_menuitems(player)
+local function set_player_options_menuitems(player)
     local player_num = nil
     for i, p in ipairs(players) do
         if p == player then
@@ -149,35 +152,40 @@ function set_player_options_menuitems(player)
         MenuItem:new{
             text=player.name,
             subtype='TEXTINPUT',
-            datapath={'players', player_num, 'name'}
+            datapath=players,
+            property={player_num, 'name'}
         },
         MenuItem:new{
             text='LEFT KEY',
             subtype='SETKEY',
-            datapath={'players', player_num, 'key_left'}
+            datapath=players,
+            property={player_num, 'key_left'}
         },
         MenuItem:new{
             text='RIGHT KEY',
             subtype='SETKEY',
-            datapath={'players', player_num, 'key_right'}
+            datapath=players,
+            property={player_num, 'key_right'}
         },
         MenuItem:new{
             text='COLOR',
             subtype='COLORHUE',
-            datapath={'players', player_num, 'color'}
+            datapath=players,
+            property={player_num, 'color'}
         }
     }
     menu:set_items(items, set_players_menuitems)
     menu.info = nil
 end
 
-function set_blockgroups(t)
-    block_groups = t.blockgroups
-    block_sequence.speed = t.blockgroups.speed
+local function set_blockgroups(t)
+    -- TODO: make blockgroups local variable
+    blockgroups = t.blockgroups
+    blocksequence.speed = t.blockgroups.speed
     start_game()
 end
 
-function set_blockgroups_menuitems()
+local function set_blockgroups_menuitems()
     local items = {}
     local files = love.filesystem.getDirectoryItems(BLOCKGROUPS_FOLDER)
     for i, file in ipairs(files) do
@@ -197,7 +205,7 @@ function set_blockgroups_menuitems()
     menu.info = save_directory
 end
 
-function remove_player(p)
+local function remove_player(p)
     for k, v in pairs(players) do
         if v == p then
             table.remove(players, k)
@@ -206,6 +214,7 @@ function remove_player(p)
     set_players_menuitems()
 end
 
+-- TODO: make it local
 root_items = {
     MenuItem:new{text='START GAME',
                  subtype='ACTION',
@@ -220,6 +229,7 @@ root_items = {
 
 -------------------------------------------------------------------------------
 
+-- TODO: make it local
 menu = {
     active = true,
     active_index = 1,
@@ -412,6 +422,7 @@ function menu:draw()
 
             -- player position in the ramp
             do
+                -- TODO: use table.unpack({1,2,3})
                 local r = item:get_value()[1]
                 local g = item:get_value()[2]
                 local b = item:get_value()[3]
@@ -436,3 +447,5 @@ function menu:draw()
         love.graphics.print(info_text, x, y)
     end
 end
+
+return menu

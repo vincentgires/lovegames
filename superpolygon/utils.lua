@@ -5,11 +5,9 @@ function merge_tables(t1, t2)
    return t1
 end
 
-
 function random_float(lower, greater)
     return lower + love.math.random() * (greater - lower)
 end
-
 
 function circle_points(radius)
     local points = {}
@@ -24,7 +22,6 @@ function circle_points(radius)
 
     return points
 end
-
 
 function points_from_angle(radius, angle)
     local points = {}

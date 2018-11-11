@@ -1,4 +1,11 @@
-Player = {
+local game = require 'game'
+local camera = require 'camera'
+local scene = require 'scene'
+local collision = require 'collision'
+
+local players = {}
+
+local Player = {
     angle = 0,
     speed = 5,
     size = 5,
@@ -10,7 +17,6 @@ Player = {
     collide = nil
 }
 
-
 function Player:new(name)
     local instance = {}
     instance.name = name
@@ -18,7 +24,6 @@ function Player:new(name)
     self.__index = self
     return instance
 end
-
 
 function Player:update(dt)
     self.freeze = false
@@ -41,7 +46,7 @@ function Player:update(dt)
                     local player_y = points_from_angle(player.center, player.angle)[2]
                     local x = points_from_angle(self.center, self.angle + (self.speed * direction))[1]
                     local y = points_from_angle(self.center, self.angle + (self.speed * direction))[2]
-                    local collide = point_in_circle(x, y, player_x, player_y, self.hitbox_size)
+                    local collide = collision.point_in_circle(x, y, player_x, player_y, self.hitbox_size)
                     if collide then
                         self.freeze = true
                     end
@@ -61,7 +66,6 @@ function Player:update(dt)
         game.state = 'END'
     end
 end
-
 
 function Player:update_points()
     local angle = self.angle * math.pi / 180 -- convert to radians
@@ -86,7 +90,6 @@ function Player:update_points()
         self.angle = 360 - self.angle
     end
 end
-
 
 function Player:draw()
     local x = points_from_angle(self.center, self.angle)[1]
@@ -119,17 +122,17 @@ function Player:draw()
     end
 end
 
-
 function Player:check_block_collision()
     if self.points then
         for i=1,3,2 do
             -- front player shape /\
+            -- TODO: use table.unpack({1,2,3})
             local px1 = self.points[i]
             local px2 = self.points[i+1]
             local py1 = self.points[i+2]
             local py2 = self.points[i+3]
 
-            for _, block in pairs(block_sequence.blocks) do
+            for _, block in pairs(blocksequence.blocks) do
 
                 -- check if the player has already hit the block
                 for i, player in ipairs(block.collided_players) do
@@ -140,11 +143,12 @@ function Player:check_block_collision()
 
                 if block.points then
                     -- bottom of the block \->_____<-/
+                    -- TODO: use table.unpack({1,2,3})
                     local bx1 = block.points[1]
                     local bx2 = block.points[2]
                     local by1 = block.points[3]
                     local by2 = block.points[4]
-                    local collide, x, y = segment_vs_segment(
+                    local collide, x, y = collision.segment_vs_segment(
                         px1, px2, py1, py2, bx1, bx2, by1, by2)
                     if collide then
                         table.insert(block.collided_players, self)
@@ -159,9 +163,6 @@ function Player:check_block_collision()
 end
 
 -------------------------------------------------------------------------------
-
-players = {}
-
 
 function players:new(name, leftkey, rightkey, color)
     name = name or 'Player'..' '..tostring(#self+1)
@@ -193,3 +194,5 @@ function players:draw()
         player:draw()
     end
 end
+
+return players

@@ -16,7 +16,6 @@ function font:create_or_update()
     self.game = love.graphics.newFont('fonts/VCR_OSD_MONO.ttf', 16*window.scale)
 end
 
-
 function love.conf(t)
     t.window.width = window.default_width
     t.window.height = window.default_height

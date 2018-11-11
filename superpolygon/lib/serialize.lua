@@ -1,10 +1,12 @@
-function table.length(t)
+local serialize = {}
+
+local function table_length(t)
   local count = 0
   for _ in pairs(t) do count = count + 1 end
   return count
 end
 
-function table.tostring(t)
+function serialize.table_tostring(t)
     local result = '{'
     local count = 1
     for k, v in pairs(t) do
@@ -17,7 +19,7 @@ function table.tostring(t)
         end
         -- Check value type
         if type(v) == 'table' then
-            result = result..table.tostring(v)
+            result = result..serialize.table_tostring(v)
         elseif type(v) == 'boolean' then
             result = result..tostring(v)
         elseif type(v) == 'number' then
@@ -27,7 +29,7 @@ function table.tostring(t)
         else
             valid = false
         end
-        if valid and count ~= table.length(t) then
+        if valid and count ~= table_length(t) then
             result = result..','
         end
         count = count + 1
@@ -35,8 +37,10 @@ function table.tostring(t)
     return result..'}'
 end
 
+return serialize
+
 --[[
 local test_table = {a='aa', 1,2,3,'ss4','ss5', b=false, t={1,2,{c='cc'}}}
-local serialized = table.tostring(test_table)
+local serialized = serialize.table_tostring(test_table)
 print(serialized)
 ]]

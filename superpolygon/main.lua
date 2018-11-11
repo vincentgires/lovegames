@@ -1,12 +1,11 @@
-require 'player'
 require 'utils'
-require 'block'
-require 'collision'
-require 'game'
+local game = require 'game'
+local camera = require 'camera'
+local players = require 'players'
+local scene = require 'scene'
+local blocksequence = require 'blocksequence'
+local serialize = require 'lib/serialize'
 require 'menu'
-scene = require 'scene'
-camera = require 'camera'
-require 'lib/serialize'
 
 local SETTINGS_FILE = 'settings.lua'
 
@@ -37,7 +36,7 @@ end
 function love.update(dt)
     scene:update(dt)
     camera:update(dt)
-    block_sequence:update(dt)
+    blocksequence:update(dt)
     players:update(dt)
 
     -- seconds timer
@@ -113,7 +112,7 @@ function love.draw()
 
         -- blocks
         love.graphics.setColor(1, 1, 1)
-        for i, block in pairs(block_sequence.blocks) do
+        for i, block in pairs(blocksequence.blocks) do
             block:draw()
         end
 
@@ -247,6 +246,44 @@ function save_settings()
             color = p.color}
         table.insert(settings.players, player)
     end
-    local settings_string = table.tostring(settings)
+    local settings_string = serialize.table_tostring(settings)
     love.filesystem.write(SETTINGS_FILE, 'return '..settings_string)
+end
+
+
+function game:start()
+    for i, player in ipairs(players) do
+        -- reset attributes
+        player.failure = 0
+    end
+
+    self:reset()
+end
+
+function game:reset()
+    scene.bg_colors = {
+        r = random_float(0, 0.5),
+        g = random_float(0, 0.5),
+        b = random_float(0, 0.5)
+    }
+
+    -- reset attributes
+    scene.base_time = 0
+    scene.frame = 0
+    scene.seconds = 0
+    camera.angle = 0
+    camera.scale = 1
+
+    for i, player in ipairs(players) do
+        player.angle = 360/(#players/i)
+        player.collide = false
+    end
+
+    -- reset pattern
+    blocksequence.blocks = {}
+    -- first pattern
+    local group, segments = get_random_group()
+    blocksequence:add_group(group, segments)
+
+    game.state = 'PLAY'
 end
