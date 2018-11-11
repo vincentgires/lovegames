@@ -2,6 +2,7 @@ local game = require 'game'
 local camera = require 'camera'
 local scene = require 'scene'
 local collision = require 'collision'
+local utils = require 'utils'
 
 local players = {}
 
@@ -42,10 +43,10 @@ function Player:update(dt)
         if game.multiplayer.collision then
             for i, player in ipairs(players) do
                 if self ~= player then
-                    local player_x = points_from_angle(player.center, player.angle)[1]
-                    local player_y = points_from_angle(player.center, player.angle)[2]
-                    local x = points_from_angle(self.center, self.angle + (self.speed * direction))[1]
-                    local y = points_from_angle(self.center, self.angle + (self.speed * direction))[2]
+                    local player_x = utils.points_from_angle(player.center, player.angle)[1]
+                    local player_y = utils.points_from_angle(player.center, player.angle)[2]
+                    local x = utils.points_from_angle(self.center, self.angle + (self.speed * direction))[1]
+                    local y = utils.points_from_angle(self.center, self.angle + (self.speed * direction))[2]
                     local collide = collision.point_in_circle(x, y, player_x, player_y, self.hitbox_size)
                     if collide then
                         self.freeze = true
@@ -71,7 +72,7 @@ function Player:update_points()
     local angle = self.angle * math.pi / 180 -- convert to radians
     local s = self.size
     local points = {-s, -s, s, 0, -s, s}
-    local offset_points = points_from_angle(self.center, self.angle)
+    local offset_points = utils.points_from_angle(self.center, self.angle)
 
     for i, p in ipairs(points) do
         if i%2 == 1 then
@@ -92,8 +93,8 @@ function Player:update_points()
 end
 
 function Player:draw()
-    local x = points_from_angle(self.center, self.angle)[1]
-    local y = points_from_angle(self.center, self.angle)[2]
+    local x = utils.points_from_angle(self.center, self.angle)[1]
+    local y = utils.points_from_angle(self.center, self.angle)[2]
 
     -- shape
     love.graphics.setColor(self.color)

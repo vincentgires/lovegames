@@ -1,5 +1,6 @@
 local game = require 'game'
 local camera = require 'camera'
+local utils = require 'utils'
 
 local scene = {
     segments = 5,
@@ -7,9 +8,9 @@ local scene = {
     seconds = 0,
     frame = 0,
     bg_colors = {
-        r = random_float(0, 0.5),
-        g = random_float(0, 0.5),
-        b = random_float(0, 0.5)
+        r = utils.random_float(0, 0.5),
+        g = utils.random_float(0, 0.5),
+        b = utils.random_float(0, 0.5)
     },
     bg_colors_switch = false
 }

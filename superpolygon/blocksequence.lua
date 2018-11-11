@@ -26,16 +26,16 @@ function Block:update_points(position)
     local angle = slice + slice * position
 
     points = utils.merge_tables(
-        points, points_from_angle(
+        points, utils.points_from_angle(
             self.radius+(self.offset*self.size), angle))
     points = utils.merge_tables(
-        points, points_from_angle(
+        points, utils.points_from_angle(
             self.radius+(self.offset*self.size), angle+slice))
     points = utils.merge_tables(
-        points, points_from_angle(
+        points, utils.points_from_angle(
             self.radius+self.size+(self.offset*self.size), angle+slice))
     points = utils.merge_tables(
-        points, points_from_angle(
+        points, utils.points_from_angle(
             self.radius+self.size+(self.offset*self.size), angle))
 
     self.points = points

@@ -1,8 +1,9 @@
-local utf8 = require('utf8')
+local utf8 = require 'utf8'
 local game = require 'game'
 local players = require 'players'
 local camera = require 'camera'
 local blocksequence = require 'blocksequence'
+local colorutils = require 'lib/colorutils'
 
 local BLOCKGROUPS_FOLDER = 'blockgroups'
 
@@ -314,10 +315,10 @@ function menu:keypressed(key)
                 local r = item:get_value()[1]
                 local g = item:get_value()[2]
                 local b = item:get_value()[3]
-                local h, s, v = rgb_to_hsv(r, g, b)
+                local h, s, v = colorutils.rgb_to_hsv(r, g, b)
                 if key == 'left' then direction = -0.05
                 elseif key == 'right' then direction = 0.05 end
-                r, g, b = hsv_to_rgb(h+direction, s, v)
+                r, g, b = colorutils.hsv_to_rgb(h+direction, s, v)
                 item:set_value({r, g, b})
             end
 
@@ -415,7 +416,7 @@ function menu:draw()
             local hue_y = y+font.menu_items:getHeight(text)
             -- HUE ramp
             for i=1, hue_step, 1 do
-                local r, g, b = hsv_to_rgb(i/hue_step, 1, 1)
+                local r, g, b = colorutils.hsv_to_rgb(i/hue_step, 1, 1)
                 love.graphics.setColor(r, g, b)
                 love.graphics.rectangle('fill', hue_width+i*w, hue_y, w, hue_height)
             end
@@ -426,7 +427,7 @@ function menu:draw()
                 local r = item:get_value()[1]
                 local g = item:get_value()[2]
                 local b = item:get_value()[3]
-                local h, s, v = rgb_to_hsv(r, g, b)
+                local h, s, v = colorutils.rgb_to_hsv(r, g, b)
                 love.graphics.setColor(r, g, b)
                 local tri_x = hue_width+(h*hue_step)*w
                 local tri_y = hue_y+hue_height

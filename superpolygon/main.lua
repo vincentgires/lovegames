@@ -1,4 +1,4 @@
-require 'utils'
+local utils = require 'utils'
 local game = require 'game'
 local camera = require 'camera'
 local players = require 'players'
@@ -103,10 +103,10 @@ function love.draw()
             local points = {}
             local angle = (360/scene.segments)*segment
             local slice = 360/scene.segments
-            points = merge_tables(points, points_from_angle(40, angle))
-            points = merge_tables(points, points_from_angle(40, angle+slice))
-            points = merge_tables(points, points_from_angle(900, angle+slice))
-            points = merge_tables(points, points_from_angle(900, angle))
+            points = utils.merge_tables(points, utils.points_from_angle(40, angle))
+            points = utils.merge_tables(points, utils.points_from_angle(40, angle+slice))
+            points = utils.merge_tables(points, utils.points_from_angle(900, angle+slice))
+            points = utils.merge_tables(points, utils.points_from_angle(900, angle))
             love.graphics.polygon('fill', points)
         end
 
@@ -262,9 +262,9 @@ end
 
 function game:reset()
     scene.bg_colors = {
-        r = random_float(0, 0.5),
-        g = random_float(0, 0.5),
-        b = random_float(0, 0.5)
+        r = utils.random_float(0, 0.5),
+        g = utils.random_float(0, 0.5),
+        b = utils.random_float(0, 0.5)
     }
 
     -- reset attributes
