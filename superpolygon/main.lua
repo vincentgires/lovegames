@@ -250,7 +250,7 @@ function save_settings()
     love.filesystem.write(SETTINGS_FILE, 'return '..settings_string)
 end
 
-
+-- TODO: keep game methods or use regular fonctions ?
 function game:start()
     for i, player in ipairs(players) do
         -- reset attributes

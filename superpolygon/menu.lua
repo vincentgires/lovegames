@@ -263,7 +263,7 @@ function menu:keypressed(key)
     if menu.wait_for_key then
         if item.subtype == 'SETKEY' then
             item:set_value(key)
-            menu.wait_for_key = false
+            self.wait_for_key = false
         end
 
     else
@@ -288,7 +288,7 @@ function menu:keypressed(key)
             end
 
             if item.subtype == 'SETKEY' then
-                menu.wait_for_key = true
+                self.wait_for_key = true
             end
 
             if item.subtype == 'PLAYER' then
@@ -386,7 +386,7 @@ function menu:draw()
                 text = '> ' .. text .. '_'
             elseif item.subtype == 'SETKEY' then
                 text = '> ' .. text
-                if menu.wait_for_key then
+                if self.wait_for_key then
                     text = text .. ' [_]'
                 else
                     local value = item:get_value()
@@ -437,10 +437,10 @@ function menu:draw()
             end
         end
     end
-    if menu.info then
+    if self.info then
         love.graphics.setColor(1, 1, 1)
         love.graphics.setFont(font.menu_info)
-        local info_text = menu.info
+        local info_text = self.info
         local info_width = font.menu_info:getWidth(info_text)
         local info_height = font.menu_info:getHeight(info_text)
         local x = width/2 - info_width/2
