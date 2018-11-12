@@ -9,15 +9,16 @@ local menuengine = require 'lib/menuengine'
 local menu = require 'menu'
 
 local SETTINGS_FILE = 'settings.lua'
+local GAME_TITLE = 'SUPER POLYGON'
 
 function love.load()
-    love.window.setTitle('SUPER POLYGON')
+    love.window.setTitle(GAME_TITLE)
     love.graphics.setDefaultFilter('nearest', 'nearest')
     love.keyboard.setKeyRepeat(true)
     font:create_or_update()
 
     -- default menu
-    menuengine.title = 'SUPER POLYGON'
+    menuengine.title = GAME_TITLE
     -- TODO: make root_items local variable
     menuengine:set_items(root_items)
 
