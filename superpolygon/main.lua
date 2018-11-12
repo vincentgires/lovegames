@@ -5,7 +5,8 @@ local players = require 'players'
 local scene = require 'scene'
 local blocksequence = require 'blocksequence'
 local serialize = require 'lib/serialize'
-require 'menu'
+local menuengine = require 'lib/menuengine'
+local menu = require 'menu'
 
 local SETTINGS_FILE = 'settings.lua'
 
@@ -16,7 +17,9 @@ function love.load()
     font:create_or_update()
 
     -- default menu
-    menu:set_items(root_items)
+    menuengine.title = 'SUPER POLYGON'
+    -- TODO: make root_items local variable
+    menuengine:set_items(root_items)
 
     if not load_settings() then
         -- default player
@@ -25,13 +28,11 @@ function love.load()
 
 end
 
-
 function love.textinput(t)
-    if menu.active then
-        menu:edit_textinput(t)
+    if menuengine.active then
+        menuengine:edit_textinput(t)
     end
 end
-
 
 function love.update(dt)
     scene:update(dt)
@@ -48,13 +49,12 @@ function love.update(dt)
     io.flush()
 end
 
-
 function love.draw()
     local width = love.graphics.getWidth()
     local height = love.graphics.getHeight()
 
     if menu.active then
-        menu:draw()
+        menuengine:draw()
 
     else
         love.graphics.translate(width/2, height/2)
@@ -162,9 +162,7 @@ function love.draw()
     end
 end
 
-
 function love.keypressed(key)
-
     if key == 'f11' then
         if love.window.getFullscreen() then
             love.window.setFullscreen(false, 'desktop')
@@ -176,43 +174,38 @@ function love.keypressed(key)
             love.window.setFullscreen(true, 'desktop')
         end
     end
-
     if key == 'return' then
         if game.state == 'END' and not menu.active then
             game:reset()
         end
     end
-
     if key == 'escape' then
         if menu.active then
-            if not menu.wait_for_key then
+            if not menuengine.wait_for_key then
                 -- TODO: root_items should not be a global variable
-                if menu.items == root_items then
+                if menuengine.items == root_items then
                     love.event.quit()
                     save_settings()
-                elseif menu.set_parent_items then
-                    menu.set_parent_items()
+                elseif menuengine.set_parent_items then
+                    menuengine.set_parent_items()
                 else
-                    menu:set_items(root_items)
-                    menu.info = nil
+                    menuengine:set_items(root_items)
+                    menuengine.info = nil
                 end
             end
         else
             menu.active = true
         end
     end
-
     if menu.active then
-        menu:keypressed(key)
+        menuengine:keypressed(key)
     end
 end
-
 
 function love.resize(w, h)
     window.scale = w/window.default_width
     font:create_or_update()
 end
-
 
 function load_settings()
     local file = love.filesystem.getInfo(SETTINGS_FILE)
@@ -233,7 +226,6 @@ function load_settings()
         return false
     end
 end
-
 
 function save_settings()
     local settings = {}
