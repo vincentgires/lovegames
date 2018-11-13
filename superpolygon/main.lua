@@ -30,7 +30,7 @@ function love.load()
 end
 
 function love.textinput(t)
-    if menuengine.active then
+    if menu.active then
         menuengine:edit_textinput(t)
     end
 end
@@ -187,7 +187,7 @@ function love.keypressed(key)
                 if menuengine.items == root_items then
                     love.event.quit()
                     save_settings()
-                elseif menuengine.set_parent_items then
+                elseif menuengine.set_parent_items then -- TODO: put this login inside menuengine.lua
                     menuengine.set_parent_items()
                 else
                     menuengine:set_items(root_items)

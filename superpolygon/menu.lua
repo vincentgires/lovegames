@@ -52,25 +52,6 @@ local function set_options_menuitems()
     menuengine:set_items(options_items)
 end
 
-local function set_players_menuitems()
-    local items = {}
-    for i, player in ipairs(players) do
-        local player_menuitem = menuengine:create_item{
-            text=player.name,
-            subtype='PLAYER',
-            datapath=players,
-            property={i, 'name'},
-            options={player=player}
-        }
-        table.insert(items, player_menuitem)
-    end
-    table.insert(items, menuengine:create_item{text='ADD PLAYER',
-                                     subtype='ACTION',
-                                     datapath=add_player})
-    menuengine:set_items(items)
-    menuengine.info = 'Remove player with DEL key'
-end
-
 local function add_player()
     local player = players:new()
     set_players_menuitems()
@@ -85,7 +66,8 @@ local function add_player()
     end
 end
 
-local function set_player_options_menuitems(player)
+local function set_player_options_menuitems(t)
+    local player = t.player
     local player_num = nil
     for i, p in ipairs(players) do
         if p == player then
@@ -119,8 +101,30 @@ local function set_player_options_menuitems(player)
             property={player_num, 'color'}
         }
     }
-    menuengine:set_items(items, set_players_menuitems)
+    local parent_items = menuengine.items
+    menuengine:set_items(items, parent_items)
     menuengine.info = nil
+end
+
+local function set_players_menuitems()
+    local items = {}
+    for i, player in ipairs(players) do
+        local menuitem = menuengine:create_item{
+            text=player.name,
+            subtype='ACTION',
+            datapath=set_player_options_menuitems,
+            options={player=player}
+        }
+        table.insert(items, menuitem)
+    end
+    table.insert(
+        items,
+        menuengine:create_item{
+            text='ADD PLAYER',
+            subtype='ACTION',
+            datapath=add_player})
+    menuengine:set_items(items)
+    menuengine.info = 'Remove player with DEL key'
 end
 
 local function set_blockgroups(t)

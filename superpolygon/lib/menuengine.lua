@@ -7,7 +7,6 @@ local ITEM_TYPE = {
     'COLORHUE',
     'NUMBER',
     'BOOLEAN',
-    'PLAYER',
     'SETKEY'
 }
 local DEFAULT_ITEM_COLOR = {1.0, 0.7, 0.3}
@@ -75,7 +74,7 @@ end
 
 function menuengine:edit_textinput(t)
     local item = self.items[self.active_index]
-    if item.subtype == 'PLAYER' or item.subtype == 'TEXTINPUT' then
+    if item.subtype == 'TEXTINPUT' then
         local val = item:get_value()
         val = val..t -- add input text
         item:set_value(val) -- update datapath value
@@ -119,10 +118,10 @@ function menuengine:keypressed(key)
             end
 
             -- TODO: make this generic?! replace by ACTION
-            if item.subtype == 'PLAYER' then
+            --[[if item.subtype == 'PLAYER' then
                 local player = item.options.player
                 set_player_options_menuitems(player)
-            end
+            end]]
 
         elseif key == 'left' or key == 'right' then
             local direction = nil
@@ -209,8 +208,6 @@ function menuengine:draw()
                 text = text .. ' ['.. value ..']'
             elseif item.subtype == 'ACTION' or item.subtype == 'COLORHUE' then
                 text = '> ' .. text
-            elseif item.subtype == 'PLAYER' then
-                text = '> #' ..tostring(i).. ' ' .. text .. '_'
             elseif item.subtype == 'TEXTINPUT' then
                 text = '> ' .. text .. '_'
             elseif item.subtype == 'SETKEY' then
@@ -224,9 +221,9 @@ function menuengine:draw()
             end
         else
             love.graphics.setColor(item.color)
-            if item.subtype == 'PLAYER' then
+            --[[if item.subtype == 'PLAYER' then
                 text = '#' ..tostring(i).. ' ' .. text
-            end
+            end]]
         end
 
         local x = width/2 - font.menu_items:getWidth(text)/2
@@ -250,7 +247,7 @@ function menuengine:draw()
                 love.graphics.rectangle('fill', hue_width+i*w, hue_y, w, hue_height)
             end
 
-            -- player position in the ramp
+            -- cursor position in the ramp
             do
                 -- TODO: use table.unpack({1,2,3})
                 local r = item:get_value()[1]
