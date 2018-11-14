@@ -56,7 +56,7 @@ local menuengine = {
     title = nil,
     active_index = 1,
     items = {},
-    set_parent_items = nil, -- expect a function
+    parent_items = nil,
     wait_for_key = false,
     info = nil
 }
@@ -66,9 +66,9 @@ function menuengine:create_item(t)
     return item
 end
 
-function menuengine:set_items(items, set_parent_items)
+function menuengine:set_items(items, parent_items)
     self.items = items
-    self.set_parent_items = set_parent_items
+    self.parent_items = parent_items
     self.active_index = 1
 end
 
@@ -85,7 +85,7 @@ end
 function menuengine:keypressed(key)
     local item = self.items[self.active_index]
 
-    -- Set player keys
+    -- Set keys
     if menuengine.wait_for_key then
         if item.subtype == 'SETKEY' then
             item:set_value(key)
@@ -150,7 +150,7 @@ function menuengine:keypressed(key)
             end
 
         elseif key == 'backspace' then
-            if item.subtype == 'PLAYER' or item.subtype == 'TEXTINPUT' then
+            if item.subtype == 'TEXTINPUT' then
                 local val = item:get_value()
                 local byteoffset = utf8.offset(val, -1)
                 if byteoffset then

@@ -1,3 +1,5 @@
+-- BUG: change player name doesn't change menuengine.parent_items names
+
 local game = require 'game'
 local players = require 'players'
 local camera = require 'camera'
@@ -52,18 +54,25 @@ local function set_options_menuitems()
     menuengine:set_items(options_items)
 end
 
-local function add_player()
-    local player = players:new()
-    set_players_menuitems()
-
-    -- set menu active_index to new player
-    for i, item in ipairs(menuengine.items) do
-        if item.options then
-            if item.options.player == player then
-                menuengine.active_index = i
+local function remove_player(t)
+    local player = t.player
+    -- delete player in parent menuitems
+    for k, v in pairs(menuengine.parent_items) do
+        if v.options then
+            local p = v.options.player
+            if p == player then
+                table.remove(menuengine.parent_items, k)
             end
         end
     end
+    -- delete player object
+    for k, v in pairs(players) do
+        if v == player then
+            table.remove(players, k)
+        end
+    end
+    -- set_players_menuitems()
+    menuengine:set_items(menuengine.parent_items)
 end
 
 local function set_player_options_menuitems(t)
@@ -99,6 +108,12 @@ local function set_player_options_menuitems(t)
             subtype='COLORHUE',
             datapath=players,
             property={player_num, 'color'}
+        },
+        menuengine:create_item{
+            text='REMOVE',
+            subtype='ACTION',
+            datapath=remove_player,
+            options={player=player}
         }
     }
     local parent_items = menuengine.items
@@ -106,15 +121,36 @@ local function set_player_options_menuitems(t)
     menuengine.info = nil
 end
 
+local function create_player_menuitem(player)
+    local menuitem = menuengine:create_item{
+        text=player.name,
+        subtype='ACTION',
+        datapath=set_player_options_menuitems,
+        options={player=player}
+    }
+    return menuitem
+end
+
+local function add_player()
+    local player = players:new()
+    local menuitem = create_player_menuitem(player)
+    -- insert before 'ADD PLAYER'
+    table.insert(menuengine.items, #menuengine.items, menuitem)
+
+    -- set menu active_index to new player
+    for i, item in ipairs(menuengine.items) do
+        if item.options then
+            if item.options.player == player then
+                menuengine.active_index = i
+            end
+        end
+    end
+end
+
 local function set_players_menuitems()
     local items = {}
     for i, player in ipairs(players) do
-        local menuitem = menuengine:create_item{
-            text=player.name,
-            subtype='ACTION',
-            datapath=set_player_options_menuitems,
-            options={player=player}
-        }
+        local menuitem = create_player_menuitem(player)
         table.insert(items, menuitem)
     end
     table.insert(
@@ -124,7 +160,6 @@ local function set_players_menuitems()
             subtype='ACTION',
             datapath=add_player})
     menuengine:set_items(items)
-    menuengine.info = 'Remove player with DEL key'
 end
 
 local function set_blockgroups(t)
@@ -152,15 +187,6 @@ local function set_blockgroups_menuitems()
     menuengine:set_items(items)
     local save_directory = love.filesystem.getSaveDirectory()..'/'..BLOCKGROUPS_FOLDER
     menuengine.info = save_directory
-end
-
-local function remove_player(p)
-    for k, v in pairs(players) do
-        if v == p then
-            table.remove(players, k)
-        end
-    end
-    set_players_menuitems()
 end
 
 -- TODO: make it local

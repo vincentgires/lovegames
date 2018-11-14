@@ -187,8 +187,8 @@ function love.keypressed(key)
                 if menuengine.items == root_items then
                     love.event.quit()
                     save_settings()
-                elseif menuengine.set_parent_items then -- TODO: put this login inside menuengine.lua
-                    menuengine.set_parent_items()
+                elseif menuengine.parent_items then -- TODO: put this function inside menuengine.lua
+                    menuengine:set_items(menuengine.parent_items)
                 else
                     menuengine:set_items(root_items)
                     menuengine.info = nil
