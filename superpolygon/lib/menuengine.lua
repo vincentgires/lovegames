@@ -1,3 +1,13 @@
+--[[
+TODO:
+- text alignment
+- sound
+- manage more items than screen can display
+- set not selectable item (grey it out) (attr: enable/use)
+- second action (to delete item or increase color intensity)
+- or add unlimited ACTIONS with custom key binding
+]]
+
 local utf8 = require 'utf8'
 local colorutils = require 'lib/colorutils'
 
@@ -55,8 +65,8 @@ end
 local menuengine = {
     title = nil,
     active_index = 1,
-    items = {},
-    parent_items = nil,
+    items = {}, -- current MenuItems
+    parent_items = {}, -- list of tables of MenuItems
     wait_for_key = false,
     info = nil
 }
@@ -66,10 +76,17 @@ function menuengine:create_item(t)
     return item
 end
 
-function menuengine:set_items(items, parent_items)
+function menuengine:set_items(items)
+    table.insert(self.parent_items, self.items)
     self.items = items
-    self.parent_items = parent_items
     self.active_index = 1
+end
+
+function menuengine:set_parent_items()
+    if #self.parent_items ~= 0 then
+        self.items = self.parent_items[#self.parent_items]
+        table.remove(self.parent_items, #self.parent_items)
+    end
 end
 
 function menuengine:edit_textinput(t)
@@ -86,14 +103,19 @@ function menuengine:keypressed(key)
     local item = self.items[self.active_index]
 
     -- Set keys
-    if menuengine.wait_for_key then
+    if self.wait_for_key then
         if item.subtype == 'SETKEY' then
             item:set_value(key)
             self.wait_for_key = false
         end
 
     else
-        if key == 'up' then
+        if key == 'escape' then
+            if not self.wait_for_key then
+                self:set_parent_items()
+            end
+
+        elseif key == 'up' then
             self:next_item(-1)
 
         elseif key == 'down' then
@@ -116,12 +138,6 @@ function menuengine:keypressed(key)
             if item.subtype == 'SETKEY' then
                 self.wait_for_key = true
             end
-
-            -- TODO: make this generic?! replace by ACTION
-            --[[if item.subtype == 'PLAYER' then
-                local player = item.options.player
-                set_player_options_menuitems(player)
-            end]]
 
         elseif key == 'left' or key == 'right' then
             local direction = nil
@@ -158,13 +174,6 @@ function menuengine:keypressed(key)
                     item:set_value(val)
                     item.text = val
                 end
-            end
-
-        elseif key == 'delete' then
-            -- TODO: make this generic?! replace by ACTION
-            if item.subtype == 'PLAYER' then
-                local player = item.options.player
-                remove_player(player)
             end
         end
     end
@@ -221,9 +230,6 @@ function menuengine:draw()
             end
         else
             love.graphics.setColor(item.color)
-            --[[if item.subtype == 'PLAYER' then
-                text = '#' ..tostring(i).. ' ' .. text
-            end]]
         end
 
         local x = width/2 - font.menu_items:getWidth(text)/2

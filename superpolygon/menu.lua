@@ -71,7 +71,6 @@ local function remove_player(t)
             table.remove(players, k)
         end
     end
-    -- set_players_menuitems()
     menuengine:set_items(menuengine.parent_items)
 end
 
@@ -116,8 +115,7 @@ local function set_player_options_menuitems(t)
             options={player=player}
         }
     }
-    local parent_items = menuengine.items
-    menuengine:set_items(items, parent_items)
+    menuengine:set_items(items)
     menuengine.info = nil
 end
 
@@ -191,15 +189,18 @@ end
 
 -- TODO: make it local
 root_items = {
-    menuengine:create_item{text='START GAME',
-                 subtype='ACTION',
-                 datapath=set_blockgroups_menuitems},
-    menuengine:create_item{text='PLAYERS',
-                 subtype='ACTION',
-                 datapath=set_players_menuitems},
-    menuengine:create_item{text='OPTIONS',
-                 subtype='ACTION',
-                 datapath=set_options_menuitems},
+    menuengine:create_item{
+        text='START GAME',
+        subtype='ACTION',
+        datapath=set_blockgroups_menuitems},
+    menuengine:create_item{
+        text='PLAYERS',
+        subtype='ACTION',
+        datapath=set_players_menuitems},
+    menuengine:create_item{
+        text='OPTIONS',
+        subtype='ACTION',
+        datapath=set_options_menuitems}
 }
 
 return menu

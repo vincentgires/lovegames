@@ -20,11 +20,12 @@ function love.load()
     -- default menu
     menuengine.title = GAME_TITLE
     -- TODO: make root_items local variable
-    menuengine:set_items(root_items)
+    --menuengine:set_items(root_items) -- double the menu
+    menuengine.items = root_items
 
     if not load_settings() then
         -- default player
-        players:new('Player 1', 'left', 'right', {1, 0, 1})
+        players:new('PLAYER1', 'left', 'right', {1, 0, 1})
     end
 
 end
@@ -184,14 +185,9 @@ function love.keypressed(key)
         if menu.active then
             if not menuengine.wait_for_key then
                 -- TODO: root_items should not be a global variable
-                if menuengine.items == root_items then
-                    love.event.quit()
-                    save_settings()
-                elseif menuengine.parent_items then -- TODO: put this function inside menuengine.lua
-                    menuengine:set_items(menuengine.parent_items)
-                else
-                    menuengine:set_items(root_items)
-                    menuengine.info = nil
+                if not menuengine.parent_items then
+                    --love.event.quit()
+                    --save_settings()
                 end
             end
         else
