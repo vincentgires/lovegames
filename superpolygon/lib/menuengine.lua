@@ -84,9 +84,15 @@ end
 
 function menuengine:set_parent_items()
     if #self.parent_items ~= 0 then
-        self.items = self.parent_items[#self.parent_items]
+        self.items = self:get_parent_item()
         table.remove(self.parent_items, #self.parent_items)
     end
+    self.active_index = 1
+end
+
+function menuengine:get_parent_item()
+    local parent_item = self.parent_items[#self.parent_items]
+    return parent_item
 end
 
 function menuengine:edit_textinput(t)
@@ -208,24 +214,24 @@ function menuengine:draw()
         if self.active_index == i then
             love.graphics.setColor(item.active_color)
             if item.subtype == 'BOOLEAN' then
-                text = '> ' .. text
+                text = '> '..text
                 local value = item:get_value()
-                if value then text = text .. ' [*]' else text = text .. ' [_]' end
+                if value then text = text..' [*]' else text = text..' [_]' end
             elseif item.subtype == 'NUMBER' then
-                text = '> ' .. text
+                text = '> '..text
                 local value = item:get_value()
-                text = text .. ' ['.. value ..']'
+                text = text..' ['..value..']'
             elseif item.subtype == 'ACTION' or item.subtype == 'COLORHUE' then
-                text = '> ' .. text
+                text = '> '..text
             elseif item.subtype == 'TEXTINPUT' then
-                text = '> ' .. text .. '_'
+                text = '> '..text..'_'
             elseif item.subtype == 'SETKEY' then
-                text = '> ' .. text
+                text = '> '..text
                 if self.wait_for_key then
-                    text = text .. ' [_]'
+                    text = text..' [_]'
                 else
                     local value = item:get_value()
-                    text = text .. ' ['.. value ..']'
+                    text = text..' ['..value..']'
                 end
             end
         else

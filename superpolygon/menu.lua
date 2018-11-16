@@ -1,5 +1,3 @@
--- BUG: change player name doesn't change menuengine.parent_items names
-
 local game = require 'game'
 local players = require 'players'
 local camera = require 'camera'
@@ -124,7 +122,8 @@ local function create_player_menuitem(player)
         text=player.name,
         subtype='ACTION',
         datapath=set_player_options_menuitems,
-        options={player=player}
+        options={player=player},
+        is_player=true -- needed to detect if text could be updated
     }
     return menuitem
 end
