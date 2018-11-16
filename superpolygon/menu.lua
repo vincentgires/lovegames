@@ -69,7 +69,7 @@ local function remove_player(t)
             table.remove(players, k)
         end
     end
-    menuengine:set_items(menuengine.parent_items)
+    menuengine:set_items(menuengine:get_parent_menuitems())
 end
 
 local function set_player_options_menuitems(t)

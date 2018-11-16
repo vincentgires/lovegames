@@ -186,11 +186,11 @@ function love.keypressed(key)
             if not menuengine.wait_for_key then
                 -- TODO: root_items should not be a global variable
                 if #menuengine.parent_items == 0 then
-                    love.event.quit()
                     save_settings()
+                    love.event.quit()
                 else
                     -- set player to be sure it's up-to-date
-                    local parent_item = menuengine:get_parent_item()
+                    local parent_item = menuengine:get_parent_menuitems()
                     for i, item in ipairs(parent_item) do
                         if item.is_player then
                             item.text = item.options.player.name

@@ -84,13 +84,13 @@ end
 
 function menuengine:set_parent_items()
     if #self.parent_items ~= 0 then
-        self.items = self:get_parent_item()
+        self.items = self:get_parent_menuitems()
         table.remove(self.parent_items, #self.parent_items)
     end
     self.active_index = 1
 end
 
-function menuengine:get_parent_item()
+function menuengine:get_parent_menuitems()
     local parent_item = self.parent_items[#self.parent_items]
     return parent_item
 end
