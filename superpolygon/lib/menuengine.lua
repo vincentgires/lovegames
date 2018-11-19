@@ -23,13 +23,14 @@ local DEFAULT_ITEM_COLOR = {1.0, 0.7, 0.3}
 local DEFAULT_ACTIVE_COLOR = {1.0, 1.0, 1.0}
 
 local MenuItem = {
+    use = true,
     subtype = nil,
     color = DEFAULT_ITEM_COLOR,
     active_color = DEFAULT_ACTIVE_COLOR
 }
 
 function MenuItem:new(t)
-    -- t = {text, subtype, datapath, property, options}
+    -- t = {text, subtype, datapath, property, options, use}
     t = t or {}
     self.__index = self
     setmetatable(t, self)
@@ -193,6 +194,9 @@ function menuengine:next_item(direction)
         self.active_index = #self.items
     else
         self.active_index = new_index
+    end
+    if not self.items[self.active_index].use then
+        menuengine:next_item(direction)
     end
 end
 

@@ -107,6 +107,10 @@ local function set_player_options_menuitems(t)
             property={player_num, 'color'}
         },
         menuengine:create_item{
+            text='',
+            use=false
+        },
+        menuengine:create_item{
             text='REMOVE',
             subtype='ACTION',
             datapath=remove_player,
