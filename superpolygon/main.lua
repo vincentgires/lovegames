@@ -190,8 +190,8 @@ function love.keypressed(key)
                     love.event.quit()
                 else
                     -- set player to be sure it's up-to-date
-                    local parent_item = menuengine:get_parent_menuitems()
-                    for i, item in ipairs(parent_item) do
+                    local parent_items = menuengine:get_parent_menuitems()
+                    for _, item in ipairs(parent_items) do
                         if item.is_player then
                             item.text = item.options.player.name
                         end

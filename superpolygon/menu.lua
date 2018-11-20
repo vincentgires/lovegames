@@ -54,12 +54,14 @@ end
 
 local function remove_player(t)
     local player = t.player
+    local parent_items = menuengine:get_parent_menuitems()
     -- delete player in parent menuitems
-    for k, v in pairs(menuengine.parent_items) do
+    for k, v in pairs(parent_items) do
         if v.options then
             local p = v.options.player
             if p == player then
-                table.remove(menuengine.parent_items, k)
+                print('yoyoyo', k)
+                table.remove(parent_items, k)
             end
         end
     end
@@ -69,7 +71,10 @@ local function remove_player(t)
             table.remove(players, k)
         end
     end
-    menuengine:set_items(menuengine:get_parent_menuitems())
+    -- delete last elements of menuengine.parent_items and get to previous menu
+    table.remove(menuengine.parent_items, #menuengine.parent_items)
+    menuengine.items = parent_items
+    menuengine.active_index = 1
 end
 
 local function set_player_options_menuitems(t)
