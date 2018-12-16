@@ -9,7 +9,7 @@ TODO:
 ]]
 
 local utf8 = require 'utf8'
-local colorutils = require 'lib/colorutils'
+local colorutils = require 'colorutils'
 
 local ITEM_TYPE = {
     'ACTION',

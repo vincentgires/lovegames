@@ -2,7 +2,7 @@ local game = require 'game'
 local players = require 'players'
 local camera = require 'camera'
 local blocksequence = require 'blocksequence'
-local menuengine = require 'lib/menuengine'
+local menuengine = require 'menuengine'
 
 local BLOCKGROUPS_FOLDER = 'blockgroups'
 
