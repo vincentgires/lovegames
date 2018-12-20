@@ -14,11 +14,12 @@ else:
     love = 'love'
 
 env = os.environ.copy()
-env_path = os.path.join(libpath, '?.lua')
-if 'LUA_PATH' in env:
-    env['LUA_PATH'] += ';{}'.format(env_path)
-else:
-    env['LUA_PATH'] = env_path
+env_filepath = os.path.join(libpath, '?.lua')
+env_dirpath = os.path.join(libpath, '?', 'init.lua')
+
+if 'LUA_PATH' not in env:
+    env['LUA_PATH'] = ''
+env['LUA_PATH'] += f';{env_filepath};{env_dirpath}'
 
 command = [love, gamepath]
 subprocess.call(command, env=env)
