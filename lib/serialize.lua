@@ -37,6 +37,10 @@ function serialize.table_tostring(t)
     return result..'}'
 end
 
+function serialize.print_table(t)
+    print(serialize.table_tostring(t))
+end
+
 return serialize
 
 --[[
