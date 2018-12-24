@@ -2,23 +2,21 @@
 TODO:
 - pressed/released support
 - define the axis deadzone
-- multi input for the same control
 ]]
 
-joysticks = love.joystick.getJoysticks()
+local joysticks = love.joystick.getJoysticks()
 
-local INPUT_SUBTYPES = {
-    'KEYBOARD',
-    'MOUSE_BUTTON',
-    'MOUSE_WHEEL',
-    'JOYSTICK_BUTTON',
-    'JOYSTICK_HAT',
-    'JOYSTICK_AXIS'
+--[[
+local controllers = {
+    keyboard = {},
+    mouse = {'button', 'wheel'},
+    joystick = {'button', 'hat', 'axis'}
 }
+]]
 
 local Input = {
     -- axis_threshold = 0.1,
-    controls = {},
+    actions = {}
 }
 
 function Input:new(t)
@@ -28,47 +26,60 @@ function Input:new(t)
     return t
 end
 
-function Input:add_control(name, t)
-    -- t = {name='jump', subtype='JOYSTICK_BUTTON', value=1}
-    t = t or {}
-    t.name = name
-    self.controls[name] = t
+function Input:bind_action(name, t)
+    -- Bind action to controller and value
+    -- t = {controller='joystick', number=2, event='button', value=1}
+    -- t = {controller='keyboard', value='return'}
+
+    -- can support multi input for the same action
+    -- check if action doesn't already exist
+    if not self.actions[name] then
+        self.actions[name] = {}
+    end
+    table.insert(self.actions[name], t)
 end
 
+function Input:unbind_action(name)
+
+end
+--[[
 function Input:check_active_control(subtype, value)
-    for _, control in pairs(self.controls) do
-        if control.subtype == subtype and control.value == value then
-            print('-------', control.name)
+    for _, action in pairs(self.actions) do
+        if action.subtype == subtype and action.value == value then
+            --print('-------', action.name)
+            action.active = true
+        else
+            action.active = false
         end
     end
 end
-
+]]
 function Input:update(dt)
     -- mouse
     -- TODO: add scroll wheels
     for btn=1, 3 do -- TODO: mouse could have more than 3 buttons
         if love.mouse.isDown(btn) then
-            print('mouse', btn)
-            self:check_active_control('MOUSE_BUTTON', btn)
+            --print('mouse', btn)
+            --self:check_active_control('MOUSE_BUTTON', btn)
         end
     end
     -- keyboard
     --love.keyboard.isDown
     -- joystick
-    for _, joystick in ipairs(joysticks) do
+    for num, joystick in ipairs(joysticks) do
         -- buttons
         for btn=1, joystick:getButtonCount() do
             if joystick:isDown(btn) then
-                print('boutton', joystick, btn)
-                self:check_active_control('JOYSTICK_BUTTON', btn)
+                --print('boutton', joystick, btn, 'num', num)
+                --self:check_active_control('JOYSTICK_BUTTON', btn)
             end
         end
         -- hat
         for i=1, joystick:getHatCount() do
             local hat = joystick:getHat(i)
             if hat ~= 'c' then -- 'c' is the rest hat position
-                print('hat', joystick, hat)
-                self:check_active_control('JOYSTICK_HAT', hat)
+                --print('hat', joystick, hat)
+                --self:check_active_control('JOYSTICK_HAT', hat)
             end
         end
         -- axis
@@ -81,16 +92,38 @@ function Input:update(dt)
     end
 end
 
-function Input:down(control)
+function Input:is_down(action_name)
+    local controllers = self.actions[action_name]
+    for _, controller in ipairs(controllers) do
+
+        if controller.device == 'keybord' then
+
+        elseif controller.device == 'mouse' then
+            if love.mouse.isDown(controller.value) then
+                print(action_name, 'mouse')
+            end
+        elseif controller.device == 'joystick' then
+            local joystick = joysticks[controller.number]
+            if controller.event == 'button' then
+                if joystick:isDown(controller.value) then
+                    print(action_name, 'button')
+                end
+            elseif controller.event == 'hat' then
+                local hat = joystick:getHat(controller.value)
+                if hat ~= 'c' then -- 'c' is the rest hat position
+                    print(action_name, 'hat')
+                end
+            end
+        end
+    end
+end
+
+function Input:is_pressed(action_name)
 
 end
 
-function Input:pressed(control)
+function Input:is_released(action_name)
 
 end
 
-function Input:released(control)
-
-end
-
-return Input
+return {Input=Input}
