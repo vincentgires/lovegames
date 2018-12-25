@@ -2,6 +2,7 @@
 TODO:
 - pressed/released support
 - define the axis deadzone
+- method to get active action
 ]]
 
 local joysticks = love.joystick.getJoysticks()
@@ -91,7 +92,10 @@ function Input:is_down(action_name)
     for _, controller in ipairs(controllers) do
 
         if controller.device == 'keybord' then
-
+            if love.keyboard.isDown(controller.value) then
+                print(action_name, 'keybord')
+                return true
+            end
         elseif controller.device == 'mouse' then
             if love.mouse.isDown(controller.value) then
                 if controller.event == 'button' then
