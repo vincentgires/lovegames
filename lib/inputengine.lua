@@ -6,20 +6,14 @@ TODO:
 
 local joysticks = love.joystick.getJoysticks()
 
---[[
-local controllers = {
-    keyboard = {},
-    mouse = {'button', 'wheel'},
-    joystick = {'button', 'hat', 'axis'}
-}
-]]
-
 local Input = {
     -- axis_threshold = 0.1,
     actions = {}
 }
 
 function Input:new(t)
+    -- Input can be instanciated, for exemple, to set a second input manager
+    -- for a second player
     t = t or {}
     setmetatable(t, self)
     self.__index = self
@@ -100,18 +94,23 @@ function Input:is_down(action_name)
 
         elseif controller.device == 'mouse' then
             if love.mouse.isDown(controller.value) then
-                print(action_name, 'mouse')
+                if controller.event == 'button' then
+                    print(action_name, 'mouse')
+                    return true
+                end
             end
         elseif controller.device == 'joystick' then
             local joystick = joysticks[controller.number]
             if controller.event == 'button' then
                 if joystick:isDown(controller.value) then
                     print(action_name, 'button')
+                    return true
                 end
             elseif controller.event == 'hat' then
                 local hat = joystick:getHat(controller.value)
                 if hat ~= 'c' then -- 'c' is the rest hat position
                     print(action_name, 'hat')
+                    return true
                 end
             end
         end
@@ -126,4 +125,4 @@ function Input:is_released(action_name)
 
 end
 
-return {Input=Input}
+return Input
