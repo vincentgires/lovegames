@@ -2,7 +2,7 @@
 TODO:
 - pressed/released support
 - define the axis deadzone
-- method to get active action
+- add a listener to set controller by user input
 ]]
 
 local joysticks = love.joystick.getJoysticks()
@@ -93,13 +93,11 @@ function Input:is_down(action_name)
 
         if controller.device == 'keybord' then
             if love.keyboard.isDown(controller.value) then
-                print(action_name, 'keybord')
                 return true
             end
         elseif controller.device == 'mouse' then
             if love.mouse.isDown(controller.value) then
                 if controller.event == 'button' then
-                    print(action_name, 'mouse')
                     return true
                 end
             end
@@ -107,13 +105,11 @@ function Input:is_down(action_name)
             local joystick = joysticks[controller.number]
             if controller.event == 'button' then
                 if joystick:isDown(controller.value) then
-                    print(action_name, 'button')
                     return true
                 end
             elseif controller.event == 'hat' then
                 local hat = joystick:getHat(controller.value)
                 if hat ~= 'c' then -- 'c' is the rest hat position
-                    print(action_name, 'hat')
                     return true
                 end
             end
@@ -127,6 +123,17 @@ end
 
 function Input:is_released(action_name)
 
+end
+
+function Input:get_active_actions()
+    -- returns a table with action that are active
+    local actions = {}
+    for name, action in pairs(self.actions) do
+        if self:is_down(name) then
+            table.insert(actions, name)
+        end
+    end
+    return actions
 end
 
 return Input

@@ -11,20 +11,12 @@ function love.load()
     input:bind_action('jump', jump_control_hat)
     input:bind_action('click', click_control)
     input:bind_action('key', key_control)
-    -- serialize.print_table(input.controls)
 end
 
 function love.update(dt)
-    --input:update()
-    if input:is_down('jump') then
-        print(input:is_down('jump'))
-    end
-    if input:is_down('click') then
-        print(input:is_down('click'))
-    end
-    if input:is_down('key') then
-        print(input:is_down('key'))
-    end
+    local active_actions = input:get_active_actions()
+    if #active_actions > 0 then serialize.print_table(input:get_active_actions()) end
+
     -- force console output
     io.flush()
 end
