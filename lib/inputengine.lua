@@ -3,6 +3,7 @@ TODO:
 - pressed/released support
 - define the axis deadzone
 - add a listener to set controller by user input
+- save/read from file: lua/json?
 ]]
 
 local joysticks = love.joystick.getJoysticks()
@@ -73,7 +74,7 @@ function Input:update(dt)
         for i=1, joystick:getHatCount() do
             local hat = joystick:getHat(i)
             if hat ~= 'c' then -- 'c' is the rest hat position
-                --print('hat', joystick, hat)
+                --print('hat', joystick, hat, i)
                 --self:check_active_control('JOYSTICK_HAT', hat)
             end
         end
@@ -82,7 +83,7 @@ function Input:update(dt)
         -- some axis of some controller start from -1 to 1 and not 0 to +/- 1
         --[[for i=1, joystick:getAxisCount() do
             local axis = joystick:getAxis(i)
-            print('axis', joystick, axis)
+            print('axis', joystick, axis, i)
         end]]
     end
 end
@@ -95,12 +96,14 @@ function Input:is_down(action_name)
             if love.keyboard.isDown(controller.value) then
                 return true
             end
+
         elseif controller.device == 'mouse' then
             if love.mouse.isDown(controller.value) then
                 if controller.event == 'button' then
                     return true
                 end
             end
+
         elseif controller.device == 'joystick' then
             local joystick = joysticks[controller.number]
             if controller.event == 'button' then
@@ -108,8 +111,8 @@ function Input:is_down(action_name)
                     return true
                 end
             elseif controller.event == 'hat' then
-                local hat = joystick:getHat(controller.value)
-                if hat ~= 'c' then -- 'c' is the rest hat position
+                local hat = joystick:getHat(controller.index)
+                if hat == controller.value then
                     return true
                 end
             end
