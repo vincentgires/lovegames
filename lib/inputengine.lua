@@ -112,7 +112,9 @@ function Input:is_down(action_name)
                 end
             elseif controller.event == 'hat' then
                 local hat = joystick:getHat(controller.index)
-                if hat == controller.value then
+                -- action detection is possible for 'up' and 'left'
+                -- while pressing the 'upleft' hat position
+                if string.find(hat, controller.value) then
                     return true
                 end
             end
