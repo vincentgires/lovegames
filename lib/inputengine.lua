@@ -106,6 +106,9 @@ function Input:is_down(action_name)
 
         elseif controller.device == 'joystick' then
             local joystick = joysticks[controller.number]
+            if not joystick then
+                goto continue
+            end
             if controller.event == 'button' then
                 if joystick:isDown(controller.value) then
                     return true
@@ -119,6 +122,7 @@ function Input:is_down(action_name)
                 end
             end
         end
+        ::continue::
     end
 end
 
