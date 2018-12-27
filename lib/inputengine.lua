@@ -4,7 +4,11 @@ TODO:
 - define the axis deadzone
 - add a listener to set controller by user input
 - save/read from file: lua/json?
+- sequence manipulation (fireball, dragon, etc)
 ]]
+
+local GAMEPAD_AXIS = {
+    'leftx', 'rightx', 'lefty', 'righty', 'triggerleft', 'triggerright'}
 
 local joysticks = love.joystick.getJoysticks()
 
@@ -24,8 +28,9 @@ end
 
 function Input:bind_action(name, t)
     -- Bind action to controller and value
-    -- t = {controller='joystick', number=2, event='button', value=1}
-    -- t = {controller='keyboard', value='return'}
+    -- t = {device='joystick', number=2, event='button', value=1}
+    -- t = {device='keyboard', value='return'}
+    -- t = {device='joystick', number=2, event='hat', index=1, value='r'}
 
     -- can support multi input for the same action
     -- check if action doesn't already exist
@@ -63,6 +68,7 @@ function Input:update(dt)
     --love.keyboard.isDown
     -- joystick
     for num, joystick in ipairs(joysticks) do
+        -- print(joystick:getName())
         -- buttons
         for btn=1, joystick:getButtonCount() do
             if joystick:isDown(btn) then
@@ -79,26 +85,33 @@ function Input:update(dt)
             end
         end
         -- axis
-        -- TODO: find a way to set a "rest" pose / deadzone
         -- some axis of some controller start from -1 to 1 and not 0 to +/- 1
-        --[[for i=1, joystick:getAxisCount() do
-            local axis = joystick:getAxis(i)
-            print('axis', joystick, axis, i)
-        end]]
+        if joystick:isGamepad() then
+            for i, axe in ipairs(GAMEPAD_AXIS) do
+                -- print(axe, joystick:getGamepadAxis(axe))
+            end
+        else
+            for i=1, joystick:getAxisCount() do
+                local axis = joystick:getAxis(i)
+                -- print('axis', joystick, axis, i)
+            end
+        end
+
     end
 end
 
 function Input:is_down(action_name)
     local controllers = self.actions[action_name]
     for _, controller in ipairs(controllers) do
+        local value = controller.value
 
         if controller.device == 'keybord' then
-            if love.keyboard.isDown(controller.value) then
+            if love.keyboard.isDown(value) then
                 return true
             end
 
         elseif controller.device == 'mouse' then
-            if love.mouse.isDown(controller.value) then
+            if love.mouse.isDown(value) then
                 if controller.event == 'button' then
                     return true
                 end
@@ -110,15 +123,33 @@ function Input:is_down(action_name)
                 goto continue
             end
             if controller.event == 'button' then
-                if joystick:isDown(controller.value) then
+                if joystick:isDown(value) then
                     return true
                 end
             elseif controller.event == 'hat' then
                 local hat = joystick:getHat(controller.index)
                 -- action detection is possible for 'up' and 'left'
                 -- while pressing the 'upleft' hat position
-                if string.find(hat, controller.value) then
+                if string.find(hat, value) then
                     return true
+                end
+            elseif controller.event == 'axis' then
+                -- detect gamepad can avoid that some axis like triggers
+                -- start from -1 to 1 and not 0 to +/- 1
+                -- TODO: use axis_threshold
+                local index = controller.index
+                if joystick:isGamepad() then
+                    if type(index) == 'string' then
+                        if joystick:getGamepadAxis(index) == value then
+                            return true
+                        end
+                    end
+                else
+                    if type(index) == 'number' then
+                        if joystick:getAxis(index) == value then
+                            return true
+                        end
+                    end
                 end
             end
         end
