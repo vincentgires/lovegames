@@ -13,13 +13,13 @@ local GAMEPAD_AXIS = {
 local joysticks = love.joystick.getJoysticks()
 
 local Input = {
-    -- axis_threshold = 0.1,
+    axis_threshold = 0.1,
     actions = {}
 }
 
 function Input:new(t)
-    -- Input can be instanciated, for exemple, to set a second input manager
-    -- for a second player
+    -- Input can be instanciated to set several input manager
+    -- example: two players, menu navigation
     t = t or {}
     setmetatable(t, self)
     self.__index = self
@@ -103,15 +103,14 @@ end
 function Input:is_down(action_name)
     local controllers = self.actions[action_name]
     for _, controller in ipairs(controllers) do
-        local value = controller.value
 
         if controller.device == 'keybord' then
-            if love.keyboard.isDown(value) then
+            if love.keyboard.isDown(controller.value) then
                 return true
             end
 
         elseif controller.device == 'mouse' then
-            if love.mouse.isDown(value) then
+            if love.mouse.isDown(controller.value) then
                 if controller.event == 'button' then
                     return true
                 end
@@ -123,14 +122,14 @@ function Input:is_down(action_name)
                 goto continue
             end
             if controller.event == 'button' then
-                if joystick:isDown(value) then
+                if joystick:isDown(controller.value) then
                     return true
                 end
             elseif controller.event == 'hat' then
                 local hat = joystick:getHat(controller.index)
                 -- action detection is possible for 'up' and 'left'
                 -- while pressing the 'upleft' hat position
-                if string.find(hat, value) then
+                if string.find(hat, controller.value) then
                     return true
                 end
             elseif controller.event == 'axis' then
@@ -138,19 +137,41 @@ function Input:is_down(action_name)
                 -- start from -1 to 1 and not 0 to +/- 1
                 -- TODO: use axis_threshold
                 local index = controller.index
+                local axis_value
+
+                -- detect if axis is active
+                -- 0 is the rest pose
                 if joystick:isGamepad() then
                     if type(index) == 'string' then
-                        if joystick:getGamepadAxis(index) == value then
-                            return true
+                        local active_value = joystick:getGamepadAxis(index)
+                        if active_value ~= 0 then
+                            axis_value = active_value
                         end
                     end
                 else
                     if type(index) == 'number' then
-                        if joystick:getAxis(index) == value then
+                        local active_value = joystick:getAxis(index)
+                        if active_value ~= 0 then
+                            axis_value = active_value
+                        end
+                    end
+                end
+
+                -- detect position
+                if axis_value then
+                    -- positif
+                    if axis_value > 0 and controller.value > 0 then
+                        if axis_value >= controller.value * self.axis_threshold then
+                            return true
+                        end
+                    -- negatif
+                    elseif axis_value < 0 and controller.value < 0 then
+                        if axis_value <= controller.value * self.axis_threshold then
                             return true
                         end
                     end
                 end
+
             end
         end
         ::continue::
