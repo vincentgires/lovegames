@@ -1,7 +1,6 @@
 --[[
 TODO:
 - pressed/released support
-- define the axis deadzone
 - add a listener to set controller by user input
 - save/read from file: lua/json?
 - sequence manipulation (fireball, dragon, etc)
@@ -13,7 +12,7 @@ local GAMEPAD_AXIS = {
 local joysticks = love.joystick.getJoysticks()
 
 local Input = {
-    axis_threshold = 0.1,
+    deadzone = 0.1,
     actions = {}
 }
 
@@ -135,7 +134,6 @@ function Input:is_down(action_name)
             elseif controller.event == 'axis' then
                 -- detect gamepad can avoid that some axis like triggers
                 -- start from -1 to 1 and not 0 to +/- 1
-                -- TODO: use axis_threshold
                 local index = controller.index
                 local axis_value
 
@@ -161,12 +159,12 @@ function Input:is_down(action_name)
                 if axis_value then
                     -- positif
                     if axis_value > 0 and controller.value > 0 then
-                        if axis_value >= controller.value * self.axis_threshold then
+                        if axis_value >= controller.value * self.deadzone then
                             return true
                         end
                     -- negatif
                     elseif axis_value < 0 and controller.value < 0 then
-                        if axis_value <= controller.value * self.axis_threshold then
+                        if axis_value <= controller.value * self.deadzone then
                             return true
                         end
                     end
