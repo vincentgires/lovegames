@@ -14,6 +14,8 @@ function love.load()
     local axis_right_control = {device='joystick', number=2, event='axis', index='leftx', value=1}
     local axis2_left_control = {device='joystick', number=2, event='axis', index='rightx', value=-1}
     local axis2_right_control = {device='joystick', number=2, event='axis', index='rightx', value=1}
+    -- ??? local axis2_right_control = {device='joystick', number=2, event='axis', index='rightx', value='+'} ???
+    -- ??? local axis2_right_control = {device='joystick', number=2, event='axis', index='rightx', value='-'} ???
     input:bind_action('jump', jump_control)
     input:bind_action('left', left_control)
     input:bind_action('right', right_control)
@@ -28,10 +30,19 @@ function love.load()
 end
 
 function love.update(dt)
-    local active_actions = input:get_active_actions()
-    if #active_actions > 0 then serialize.print_table(input:get_active_actions()) end
+    if #input.active_actions > 0 then
+        serialize.print_table(input.active_actions) end
 
-    -- input:update(dt)
+    -- needed to detect pressed/released actions
+    input:update(dt)
+
+    if input:is_pressed('jump') then
+        print(input:is_pressed('jump'))
+    end
+
+    if input:is_released('jump') then
+        print(input:is_released('jump'))
+    end
 
     -- force console output
     io.flush()

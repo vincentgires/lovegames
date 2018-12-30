@@ -1,10 +1,18 @@
 --[[
 TODO:
-- pressed/released support
 - add a listener to set controller by user input
 - save/read from file: lua/json?
 - sequence manipulation (fireball, dragon, etc)
 ]]
+
+local function is_item_in_table(item_name, t)
+    for i, item in ipairs(t) do
+        if item == item_name then
+            return true
+        end
+    end
+    return false
+end
 
 local GAMEPAD_AXIS = {
     'leftx', 'rightx', 'lefty', 'righty', 'triggerleft', 'triggerright'}
@@ -13,7 +21,9 @@ local joysticks = love.joystick.getJoysticks()
 
 local Input = {
     deadzone = 0.1,
-    actions = {}
+    actions = {},
+    active_actions = {},
+    prev_actions = {}
 }
 
 function Input:new(t)
@@ -42,6 +52,7 @@ end
 function Input:unbind_action(name)
 
 end
+
 --[[
 function Input:check_active_control(subtype, value)
     for _, action in pairs(self.actions) do
@@ -55,6 +66,8 @@ function Input:check_active_control(subtype, value)
 end
 ]]
 function Input:update(dt)
+
+    --[[
     -- mouse
     -- TODO: add scroll wheels
     for btn=1, 3 do -- TODO: mouse could have more than 3 buttons
@@ -95,11 +108,14 @@ function Input:update(dt)
                 -- print('axis', joystick, axis, i)
             end
         end
-
     end
+    ]]
+
+    self.prev_actions = self.active_actions
+    self.active_actions = self:get_active_actions()
 end
 
-function Input:is_down(action_name)
+function Input:is_active(action_name)
     local controllers = self.actions[action_name]
     for _, controller in ipairs(controllers) do
 
@@ -121,6 +137,8 @@ function Input:is_down(action_name)
                 goto continue
             end
             if controller.event == 'button' then
+                -- TODO: check if joystick:isGamepad()
+                -- joystick:isGamepadDown(controller.value)
                 if joystick:isDown(controller.value) then
                     return true
                 end
@@ -176,19 +194,29 @@ function Input:is_down(action_name)
     end
 end
 
-function Input:is_pressed(action_name)
-
+function Input:is_pressed(action)
+    local in_active = is_item_in_table(action, self.active_actions)
+    local in_prev = is_item_in_table(action, self.prev_actions)
+    if in_active and not in_prev then
+        return true
+    end
+    return false
 end
 
-function Input:is_released(action_name)
-
+function Input:is_released(action)
+    local in_active = is_item_in_table(action, self.active_actions)
+    local in_prev = is_item_in_table(action, self.prev_actions)
+    if in_prev and not in_active then
+        return true
+    end
+    return false
 end
 
 function Input:get_active_actions()
     -- returns a table with action that are active
     local actions = {}
     for name, action in pairs(self.actions) do
-        if self:is_down(name) then
+        if self:is_active(name) then
             table.insert(actions, name)
         end
     end
