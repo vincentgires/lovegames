@@ -1,6 +1,5 @@
 --[[
 TODO:
-- add a listener to set controller by user input
 - save/read from file: lua/json?
 - sequence manipulation (fireball, dragon, etc)
 ]]
@@ -20,7 +19,7 @@ end
 
 local function listen(deadzone)
     deadzone = deadzone or 0
-    local controls = {} -- list of {device, number, event, index, value}
+    local controls = {} -- list of {device, number, event, index, value, direction}
     -- mouse
     -- TODO: add scroll wheels
     for btn=1, 3 do -- TODO: mouse could have more than 3 buttons
@@ -38,7 +37,6 @@ local function listen(deadzone)
         -- buttons
         for btn=1, joystick:getButtonCount() do
             if joystick:isDown(btn) then
-                --print('boutton', joystick, btn, 'num', num)
                 local control = {device='joystick', number=num, event='button', value=btn}
                 table.insert(controls, control)
             end
@@ -57,26 +55,26 @@ local function listen(deadzone)
         if joystick:isGamepad() then
             for i, axe in ipairs(GAMEPAD_AXIS) do
                 local axis_value = joystick:getGamepadAxis(axe)
-                local control = {device='joystick', number=num, event='axis', index=i}
+                local control = {device='joystick', number=num, event='axis', index=axe, value=axis_value}
                 -- TODO: deadzone
                 -- TODO: this part is duplicated
                 if axis_value > 0 then
-                    control.value = '+' end
+                    control.direction = '+' end
                 if axis_value < 0 then
-                    control.value = '-' end
+                    control.direction = '-' end
                 if axis_value ~= 0 then
                     table.insert(controls, control) end
             end
         else
             for i=1, joystick:getAxisCount() do
                 local axis_value = joystick:getAxis(i)
-                local control = {device='joystick', number=num, event='axis', index=i}
+                local control = {device='joystick', number=num, event='axis', index=i, value=axis_value}
                 -- TODO: deadzone
                 -- TODO: this part is duplicated
                 if axis_value > 0 then
-                    control.value = '+' end
+                    control.direction = '+' end
                 if axis_value < 0 then
-                    control.value = '-' end
+                    control.direction = '-' end
                 if axis_value ~= 0 then
                     table.insert(controls, control) end
             end
@@ -106,6 +104,7 @@ function Input:bind_action(name, t)
     -- t = {device='joystick', number=2, event='button', value=1}
     -- t = {device='keyboard', value='return'}
     -- t = {device='joystick', number=2, event='hat', index=1, value='r'}
+    -- t = {device='joystick', number=2, event='axis', index='rightx', direction='+'}
 
     -- can support multi input for the same action
     -- check if action doesn't already exist
@@ -186,13 +185,13 @@ function Input:is_active(action_name)
                 -- detect position
                 if axis_value then
                     -- positif
-                    if axis_value > 0 and controller.value > 0 then
-                        if axis_value >= controller.value * self.deadzone then
+                    if axis_value > 0 and controller.direction == '+' then
+                        if axis_value >= self.deadzone then
                             return true
                         end
                     -- negatif
-                    elseif axis_value < 0 and controller.value < 0 then
-                        if axis_value <= controller.value * self.deadzone then
+                    elseif axis_value < 0 and controller.direction == '-' then
+                        if axis_value <= self.deadzone then
                             return true
                         end
                     end

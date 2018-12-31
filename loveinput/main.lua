@@ -8,14 +8,12 @@ function love.load()
     local right_control = {device='joystick', number=2, event='hat', index=1, value='r'}
     local click_control = {device='mouse', event='button', value=1}
     local key_control = {device='keybord', value='space'}
-    local axe_control = {device='joystick', number=2, event='axis', index=2, value=1}
-    local trigger_control = {device='joystick', number=2, event='axis', index='triggerleft', value=1}
-    local axis_left_control = {device='joystick', number=2, event='axis', index='leftx', value=-1}
-    local axis_right_control = {device='joystick', number=2, event='axis', index='leftx', value=1}
-    local axis2_left_control = {device='joystick', number=2, event='axis', index='rightx', value=-1}
-    local axis2_right_control = {device='joystick', number=2, event='axis', index='rightx', value=1}
-    -- ??? local axis2_right_control = {device='joystick', number=2, event='axis', index='rightx', value='+'} ???
-    -- ??? local axis2_right_control = {device='joystick', number=2, event='axis', index='rightx', value='-'} ???
+    local axe_control = {device='joystick', number=2, event='axis', index=2, direction='+'}
+    local trigger_control = {device='joystick', number=2, event='axis', index='triggerleft', direction='+'}
+    local axis_left_control = {device='joystick', number=2, event='axis', index='leftx', direction='-'}
+    local axis_right_control = {device='joystick', number=2, event='axis', index='leftx', direction='+'}
+    local axis2_left_control = {device='joystick', number=2, event='axis', index='rightx', direction='-'}
+    local axis2_right_control = {device='joystick', number=2, event='axis', index='rightx', direction='+'}
     input:bind_action('jump', jump_control)
     input:bind_action('left', left_control)
     input:bind_action('right', right_control)
