@@ -5,7 +5,7 @@ local players = require 'players'
 local scene = require 'scene'
 local blocksequence = require 'blocksequence'
 local serialize = require 'serialize'
-local menuengine = require 'menuengine'
+local lovemenu = require 'lovemenu'
 local menu = require 'menu'
 
 local SETTINGS_FILE = 'settings.lua'
@@ -18,10 +18,10 @@ function love.load()
     font:create_or_update()
 
     -- default menu
-    menuengine.title = GAME_TITLE
+    lovemenu.title = GAME_TITLE
     -- TODO: make root_items local variable
-    --menuengine:set_items(root_items) -- double the menu
-    menuengine.items = root_items
+    --lovemenu:set_items(root_items) -- double the menu
+    lovemenu.items = root_items
 
     if not load_settings() then
         -- default player
@@ -32,7 +32,7 @@ end
 
 function love.textinput(t)
     if menu.active then
-        menuengine:edit_textinput(t)
+        lovemenu:edit_textinput(t)
     end
 end
 
@@ -56,7 +56,7 @@ function love.draw()
     local height = love.graphics.getHeight()
 
     if menu.active then
-        menuengine:draw()
+        lovemenu:draw()
 
     else
         love.graphics.translate(width/2, height/2)
@@ -183,14 +183,14 @@ function love.keypressed(key)
     end
     if key == 'escape' then
         if menu.active then
-            if not menuengine.wait_for_key then
+            if not lovemenu.wait_for_key then
                 -- TODO: root_items should not be a global variable
-                if #menuengine.parent_items == 0 then
+                if #lovemenu.parent_items == 0 then
                     save_settings()
                     love.event.quit()
                 else
                     -- set player to be sure it's up-to-date
-                    local parent_items = menuengine:get_parent_menuitems()
+                    local parent_items = lovemenu:get_parent_menuitems()
                     for _, item in ipairs(parent_items) do
                         if item.is_player then
                             item.text = item.options.player.name
@@ -203,7 +203,7 @@ function love.keypressed(key)
         end
     end
     if menu.active then
-        menuengine:keypressed(key)
+        lovemenu:keypressed(key)
     end
 end
 

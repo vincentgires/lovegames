@@ -2,7 +2,7 @@ local game = require 'game'
 local players = require 'players'
 local camera = require 'camera'
 local blocksequence = require 'blocksequence'
-local menuengine = require 'menuengine'
+local lovemenu = require 'lovemenu'
 
 local BLOCKGROUPS_FOLDER = 'blockgroups'
 
@@ -11,31 +11,31 @@ local menu = {
 }
 
 local options_items = {
-    menuengine:create_item{
+    lovemenu:create_item{
         text='SHAKE',
         subtype='BOOLEAN',
         datapath=game,
         property={'camera', 'shake'}
     },
-    menuengine:create_item{
+    lovemenu:create_item{
         text='CAMERA ROTATIONS',
         subtype='BOOLEAN',
         datapath=game,
         property={'camera', 'rotation'}
     },
-    menuengine:create_item{
+    lovemenu:create_item{
         text='CAMERA SPEED',
         subtype='NUMBER',
         datapath=camera,
         property={'speed'}
     },
-    menuengine:create_item{
+    lovemenu:create_item{
         text='SWAP COLORS',
         subtype='BOOLEAN',
         datapath=game,
         property={'scene', 'swap_bg_colors'}
     },
-    menuengine:create_item{
+    lovemenu:create_item{
         text='MULTIPLAYER COLLISION',
         subtype='BOOLEAN',
         datapath=game,
@@ -49,18 +49,17 @@ local function start_game()
 end
 
 local function set_options_menuitems()
-    menuengine:set_items(options_items)
+    lovemenu:set_items(options_items)
 end
 
 local function remove_player(t)
     local player = t.player
-    local parent_items = menuengine:get_parent_menuitems()
+    local parent_items = lovemenu:get_parent_menuitems()
     -- delete player in parent menuitems
     for k, v in pairs(parent_items) do
         if v.options then
             local p = v.options.player
             if p == player then
-                print('yoyoyo', k)
                 table.remove(parent_items, k)
             end
         end
@@ -71,10 +70,10 @@ local function remove_player(t)
             table.remove(players, k)
         end
     end
-    -- delete last elements of menuengine.parent_items and get to previous menu
-    table.remove(menuengine.parent_items, #menuengine.parent_items)
-    menuengine.items = parent_items
-    menuengine.active_index = 1
+    -- delete last elements of lovemenu.parent_items and get to previous menu
+    table.remove(lovemenu.parent_items, #lovemenu.parent_items)
+    lovemenu.items = parent_items
+    lovemenu.active_index = 1
 end
 
 local function set_player_options_menuitems(t)
@@ -87,47 +86,47 @@ local function set_player_options_menuitems(t)
     end
 
     local items = {
-        menuengine:create_item{
+        lovemenu:create_item{
             text=player.name,
             subtype='TEXTINPUT',
             datapath=players,
             property={player_num, 'name'}
         },
-        menuengine:create_item{
+        lovemenu:create_item{
             text='LEFT KEY',
             subtype='SETKEY',
             datapath=players,
             property={player_num, 'key_left'}
         },
-        menuengine:create_item{
+        lovemenu:create_item{
             text='RIGHT KEY',
             subtype='SETKEY',
             datapath=players,
             property={player_num, 'key_right'}
         },
-        menuengine:create_item{
+        lovemenu:create_item{
             text='COLOR',
             subtype='COLORHUE',
             datapath=players,
             property={player_num, 'color'}
         },
-        menuengine:create_item{
+        lovemenu:create_item{
             text='',
             use=false
         },
-        menuengine:create_item{
+        lovemenu:create_item{
             text='REMOVE',
             subtype='ACTION',
             datapath=remove_player,
             options={player=player}
         }
     }
-    menuengine:set_items(items)
-    menuengine.info = nil
+    lovemenu:set_items(items)
+    lovemenu.info = nil
 end
 
 local function create_player_menuitem(player)
-    local menuitem = menuengine:create_item{
+    local menuitem = lovemenu:create_item{
         text=player.name,
         subtype='ACTION',
         datapath=set_player_options_menuitems,
@@ -141,13 +140,13 @@ local function add_player()
     local player = players:new()
     local menuitem = create_player_menuitem(player)
     -- insert before 'ADD PLAYER'
-    table.insert(menuengine.items, #menuengine.items, menuitem)
+    table.insert(lovemenu.items, #lovemenu.items, menuitem)
 
     -- set menu active_index to new player
-    for i, item in ipairs(menuengine.items) do
+    for i, item in ipairs(lovemenu.items) do
         if item.options then
             if item.options.player == player then
-                menuengine.active_index = i
+                lovemenu.active_index = i
             end
         end
     end
@@ -161,11 +160,11 @@ local function set_players_menuitems()
     end
     table.insert(
         items,
-        menuengine:create_item{
+        lovemenu:create_item{
             text='ADD PLAYER',
             subtype='ACTION',
             datapath=add_player})
-    menuengine:set_items(items)
+    lovemenu:set_items(items)
 end
 
 local function set_blockgroups(t)
@@ -182,7 +181,7 @@ local function set_blockgroups_menuitems()
         local chunk = love.filesystem.load(BLOCKGROUPS_FOLDER..'/'..file)
         local result = chunk()
         local name = result.name or file
-        local blockgroups_menuitem = menuengine:create_item{
+        local blockgroups_menuitem = lovemenu:create_item{
             text=name,
             subtype='ACTION',
             datapath=set_blockgroups,
@@ -190,22 +189,22 @@ local function set_blockgroups_menuitems()
         }
         table.insert(items, blockgroups_menuitem)
     end
-    menuengine:set_items(items)
+    lovemenu:set_items(items)
     local save_directory = love.filesystem.getSaveDirectory()..'/'..BLOCKGROUPS_FOLDER
-    menuengine.info = save_directory
+    lovemenu.info = save_directory
 end
 
 -- TODO: make it local
 root_items = {
-    menuengine:create_item{
+    lovemenu:create_item{
         text='START GAME',
         subtype='ACTION',
         datapath=set_blockgroups_menuitems},
-    menuengine:create_item{
+    lovemenu:create_item{
         text='PLAYERS',
         subtype='ACTION',
         datapath=set_players_menuitems},
-    menuengine:create_item{
+    lovemenu:create_item{
         text='OPTIONS',
         subtype='ACTION',
         datapath=set_options_menuitems}

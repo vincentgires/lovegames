@@ -63,7 +63,7 @@ function MenuItem:set_value(val)
     value[prop] = val
 end
 
-local menuengine = {
+local lovemenu = {
     title = nil,
     active_index = 1,
     items = {}, -- current MenuItems
@@ -72,18 +72,18 @@ local menuengine = {
     info = nil
 }
 
-function menuengine:create_item(t)
+function lovemenu:create_item(t)
     local item = MenuItem:new(t)
     return item
 end
 
-function menuengine:set_items(items)
+function lovemenu:set_items(items)
     table.insert(self.parent_items, self.items)
     self.items = items
     self.active_index = 1
 end
 
-function menuengine:set_parent_items()
+function lovemenu:set_parent_items()
     if #self.parent_items ~= 0 then
         self.items = self:get_parent_menuitems()
         table.remove(self.parent_items, #self.parent_items)
@@ -91,12 +91,12 @@ function menuengine:set_parent_items()
     self.active_index = 1
 end
 
-function menuengine:get_parent_menuitems()
+function lovemenu:get_parent_menuitems()
     local parent_item = self.parent_items[#self.parent_items]
     return parent_item
 end
 
-function menuengine:edit_textinput(t)
+function lovemenu:edit_textinput(t)
     local item = self.items[self.active_index]
     if item.subtype == 'TEXTINPUT' then
         local val = item:get_value()
@@ -106,7 +106,7 @@ function menuengine:edit_textinput(t)
     end
 end
 
-function menuengine:keypressed(key)
+function lovemenu:keypressed(key)
     local item = self.items[self.active_index]
 
     -- Set keys
@@ -186,7 +186,7 @@ function menuengine:keypressed(key)
     end
 end
 
-function menuengine:next_item(direction)
+function lovemenu:next_item(direction)
     local new_index = self.active_index + direction
     if new_index > #self.items then
         self.active_index = 1
@@ -196,11 +196,11 @@ function menuengine:next_item(direction)
         self.active_index = new_index
     end
     if not self.items[self.active_index].use then
-        menuengine:next_item(direction)
+        lovemenu:next_item(direction)
     end
 end
 
-function menuengine:draw()
+function lovemenu:draw()
     local width = love.graphics.getWidth()
     local height = love.graphics.getHeight()
 
@@ -291,4 +291,4 @@ function menuengine:draw()
     end
 end
 
-return menuengine
+return lovemenu
