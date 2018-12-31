@@ -5,6 +5,10 @@ TODO:
 - sequence manipulation (fireball, dragon, etc)
 ]]
 
+local GAMEPAD_AXIS = {
+    'leftx', 'rightx', 'lefty', 'righty', 'triggerleft', 'triggerright'}
+local joysticks = love.joystick.getJoysticks()
+
 local function is_item_in_table(item_name, t)
     for i, item in ipairs(t) do
         if item == item_name then
@@ -14,10 +18,72 @@ local function is_item_in_table(item_name, t)
     return false
 end
 
-local GAMEPAD_AXIS = {
-    'leftx', 'rightx', 'lefty', 'righty', 'triggerleft', 'triggerright'}
-
-local joysticks = love.joystick.getJoysticks()
+local function listen(deadzone)
+    deadzone = deadzone or 0
+    local controls = {} -- list of {device, number, event, index, value}
+    -- mouse
+    -- TODO: add scroll wheels
+    for btn=1, 3 do -- TODO: mouse could have more than 3 buttons
+        if love.mouse.isDown(btn) then
+            local control = {device='mouse', event='button', value=btn}
+            table.insert(controls, control)
+        end
+    end
+    -- keyboard
+    -- TODO
+    -- love.keyboard.isDown
+    -- joystick
+    for num, joystick in ipairs(joysticks) do
+        -- print(joystick:getName())
+        -- buttons
+        for btn=1, joystick:getButtonCount() do
+            if joystick:isDown(btn) then
+                --print('boutton', joystick, btn, 'num', num)
+                local control = {device='joystick', number=num, event='button', value=btn}
+                table.insert(controls, control)
+            end
+        end
+        -- hat
+        for i=1, joystick:getHatCount() do
+            local hat = joystick:getHat(i)
+            if hat ~= 'c' then -- 'c' is the rest hat position
+                local control = {device='joystick', number=num, event='hat', index=i, value=hat}
+                table.insert(controls, control)
+            end
+        end
+        -- axis
+        -- detect gamepad can avoid that some axis like triggers
+        -- start from -1 to 1 and not 0 to +/- 1
+        if joystick:isGamepad() then
+            for i, axe in ipairs(GAMEPAD_AXIS) do
+                local axis_value = joystick:getGamepadAxis(axe)
+                local control = {device='joystick', number=num, event='axis', index=i}
+                -- TODO: deadzone
+                -- TODO: this part is duplicated
+                if axis_value > 0 then
+                    control.value = '+' end
+                if axis_value < 0 then
+                    control.value = '-' end
+                if axis_value ~= 0 then
+                    table.insert(controls, control) end
+            end
+        else
+            for i=1, joystick:getAxisCount() do
+                local axis_value = joystick:getAxis(i)
+                local control = {device='joystick', number=num, event='axis', index=i}
+                -- TODO: deadzone
+                -- TODO: this part is duplicated
+                if axis_value > 0 then
+                    control.value = '+' end
+                if axis_value < 0 then
+                    control.value = '-' end
+                if axis_value ~= 0 then
+                    table.insert(controls, control) end
+            end
+        end
+    end
+    return controls
+end
 
 local Input = {
     deadzone = 0.1,
@@ -49,68 +115,12 @@ function Input:bind_action(name, t)
     table.insert(self.actions[name], t)
 end
 
+-- TODO
 function Input:unbind_action(name)
 
 end
 
---[[
-function Input:check_active_control(subtype, value)
-    for _, action in pairs(self.actions) do
-        if action.subtype == subtype and action.value == value then
-            --print('-------', action.name)
-            action.active = true
-        else
-            action.active = false
-        end
-    end
-end
-]]
 function Input:update(dt)
-
-    --[[
-    -- mouse
-    -- TODO: add scroll wheels
-    for btn=1, 3 do -- TODO: mouse could have more than 3 buttons
-        if love.mouse.isDown(btn) then
-            --print('mouse', btn)
-            --self:check_active_control('MOUSE_BUTTON', btn)
-        end
-    end
-    -- keyboard
-    --love.keyboard.isDown
-    -- joystick
-    for num, joystick in ipairs(joysticks) do
-        -- print(joystick:getName())
-        -- buttons
-        for btn=1, joystick:getButtonCount() do
-            if joystick:isDown(btn) then
-                --print('boutton', joystick, btn, 'num', num)
-                --self:check_active_control('JOYSTICK_BUTTON', btn)
-            end
-        end
-        -- hat
-        for i=1, joystick:getHatCount() do
-            local hat = joystick:getHat(i)
-            if hat ~= 'c' then -- 'c' is the rest hat position
-                --print('hat', joystick, hat, i)
-                --self:check_active_control('JOYSTICK_HAT', hat)
-            end
-        end
-        -- axis
-        -- some axis of some controller start from -1 to 1 and not 0 to +/- 1
-        if joystick:isGamepad() then
-            for i, axe in ipairs(GAMEPAD_AXIS) do
-                -- print(axe, joystick:getGamepadAxis(axe))
-            end
-        else
-            for i=1, joystick:getAxisCount() do
-                local axis = joystick:getAxis(i)
-                -- print('axis', joystick, axis, i)
-            end
-        end
-    end
-    ]]
-
     self.prev_actions = self.active_actions
     self.active_actions = self:get_active_actions()
 end
@@ -223,4 +233,4 @@ function Input:get_active_actions()
     return actions
 end
 
-return {Input=Input}
+return {Input=Input, listen=listen}

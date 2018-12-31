@@ -30,6 +30,7 @@ function love.load()
 end
 
 function love.update(dt)
+    --[[
     if #input.active_actions > 0 then
         serialize.print_table(input.active_actions) end
 
@@ -43,6 +44,12 @@ function love.update(dt)
     if input:is_released('jump') then
         print(input:is_released('jump'))
     end
+    ]]
+
+    --if loveinput.listen() then
+    --    serialize.print_table(loveinput.listen())
+    --end
+    serialize.print_table(loveinput.listen())
 
     -- force console output
     io.flush()
