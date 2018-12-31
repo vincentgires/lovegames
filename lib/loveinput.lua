@@ -223,4 +223,4 @@ function Input:get_active_actions()
     return actions
 end
 
-return Input
+return {Input=Input}

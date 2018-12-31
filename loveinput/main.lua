@@ -1,8 +1,8 @@
-inputengine = require 'inputengine'
+loveinput = require 'loveinput'
 serialize = require 'serialize'
 
 function love.load()
-    input = inputengine:new()
+    input = loveinput.Input:new()
     local jump_control = {device='joystick', number=2, event='button', value=1}
     local left_control = {device='joystick', number=2, event='hat', index=1, value='l'}
     local right_control = {device='joystick', number=2, event='hat', index=1, value='r'}
@@ -46,8 +46,4 @@ function love.update(dt)
 
     -- force console output
     io.flush()
-end
-
-function love.draw()
-
 end
