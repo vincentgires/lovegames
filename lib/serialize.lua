@@ -15,6 +15,8 @@ function serialize.table_tostring(t)
         if type(v) ~= 'function' then
             if type(k) == 'string' then
                 result = result..k..'='
+            elseif type(k) == 'number' then
+                result = result..'['..k..']='
             end
         end
         -- Check value type
@@ -41,10 +43,10 @@ function serialize.print_table(t)
     print(serialize.table_tostring(t))
 end
 
-return serialize
-
 --[[
-local test_table = {a='aa', 1,2,3,'ss4','ss5', b=false, t={1,2,{c='cc'}}}
+local test_table = {a='aa', 1,2,7,'ss4','ss5', b=false, t={1,2,{c='cc'}}}
 local serialized = serialize.table_tostring(test_table)
 print(serialized)
 ]]
+
+return serialize
